@@ -20,7 +20,7 @@ class Config:
     }
 
     # New Hampshire budget years
-    BUDGET_YEARS = [str(year) for year in range(2016, 2026)]
+    NH_BUDGET_YEARS = [str(year) for year in range(2016, 2026)]
 
     # Analysis parameters
     YEAR_CURRENT = '2025'
