@@ -91,18 +91,24 @@ def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
 
 
 def load_and_clean_nh_budget(year, data_dir='../z_Data/NH/'):
-    """Load and clean a single New Hampshire budget CSV file."""
+    """Load and clean a single New Hampshire budget CSV file. 
+       Returns DataFrame with columns: 
+       Department | Funding Source | year. 
+       Where funding source is always 'DEPARTMENT TOTAL'.
+    """
     df = pd.read_csv(f"{data_dir}{year} NH State Expenditure.csv")
     df_cleaned = df.dropna(axis=0, how='all').dropna(axis=1, how='all')
+    df_cleaned = df_cleaned.rename(columns={'DEPARTMENT': 'Department', 'APROPRIATION': 'Apropriation'})
     df_cleaned.columns = [col.upper().replace("\n", "").replace("JUNE ", "").replace(r'FY\d{2}', "") for col in df_cleaned.columns]
     df_cleaned.columns = [re.sub(r"FY\d{2} ", "", col).lstrip() for col in df_cleaned.columns]
+    df_cleaned['Funding Source'] = 'DEPARTMENT TOTAL'
 
-    df_appr = df_cleaned[['DEPARTMENT', 'APPROPRIATION']]
-    df_appr = df_appr.rename(columns={'APPROPRIATION': year})
+    df_appr = df_cleaned[['Department', 'Funding Source', 'Apropriation']]
+    df_appr = df_appr.rename(columns={'Apropriation': year})
     df_appr[year] = df_appr[year].astype(str).str.replace(",", "").astype(float)
-    df_appr['DEPARTMENT'] = df_appr['DEPARTMENT'].str.strip()
+    df_appr['Department'] = df_appr['Department'].str.strip()
 
-    df_appr.set_index('DEPARTMENT', inplace=True)
+    df_appr.set_index(('Department', 'Funding Source'), inplace=True)
     return df_appr
 
 
