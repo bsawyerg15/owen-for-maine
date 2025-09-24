@@ -4,9 +4,11 @@ Main script to run the Maine budget analysis pipeline.
 This replicates the functionality from maine_budget.ipynb in modular form.
 """
 
+
 import sys
 sys.path.append('.')
 
+import streamlit as st
 import matplotlib.pyplot as plt
 from fredapi import Fred
 
@@ -39,20 +41,20 @@ def main():
     budget_to_end_page = Config.ME_BUDGET_END_PAGES
     budget_years = Config.NH_BUDGET_YEARS
 
-    print("Loading data...")
+    st.write("Loading data...")
 
     # Load category mapping
     category_mapping_df = load_category_mapping(Config.CATEGORY_MAPPING_FILE)
 
     # Load Maine budget data
     me_as_reported_df = load_me_budget_as_reported(budget_to_end_page, Config.DATA_DIR_ME)
-    print(f"Loaded Maine budget data: {me_as_reported_df.shape}")
+    st.write(f"Loaded Maine budget data: {me_as_reported_df.shape}")
 
     # Load New Hampshire budget data
     nh_as_reported_df = load_nh_budget_as_reported(budget_years, Config.DATA_DIR_NH)
-    print(f"Loaded NH budget data: {nh_as_reported_df.shape}")
+    st.write(f"Loaded NH budget data: {nh_as_reported_df.shape}")
 
-    print("Processing data...")
+    st.write("Processing data...")
 
     # # Standardize data
     me_standardized_df = standardize_budget(me_as_reported_df, category_mapping_df, 'Maine')
@@ -91,7 +93,8 @@ def main():
     comparison_df_current = (create_state_comparison(year_current, me_standardized_df, nh_standardized_df, departments_to_ignore) / 1e6).round(0)
     comparison_df_previous = (create_state_comparison(year_previous, me_standardized_df, nh_standardized_df, departments_to_ignore) / 1e6).round(0)
 
-    plot_state_comparison(comparison_df_current, comparison_df_previous, year_current, year_previous)
+    fig = plot_state_comparison(comparison_df_current, comparison_df_previous, year_current, year_previous)
+    st.plotly_chart(fig)
 
     # # Create small departments summary
     # ex_big_df = filter_excluding_major_departments(me_as_reported_df)
