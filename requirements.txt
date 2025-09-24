@@ -3,3 +3,5 @@ pandas
 matplotlib
 fredapi
 plotly
+pdfplumber
+numpy

@@ -13,17 +13,17 @@ import matplotlib.pyplot as plt
 from fredapi import Fred
 
 # Import our modules
-from data_ingestion import (
+from b_App.data_ingestion import (
     load_category_mapping,
     load_me_budget_as_reported,
     load_nh_budget_as_reported,
     get_indexed_fred_series
 )
-from data_processing import (
+from b_App.data_processing import (
     standardize_budget,
     create_state_comparison
 )
-from visualizations import (
+from b_App.visualizations import (
     plot_funding_sources,
     plot_department_breakdown,
     plot_state_comparison,
