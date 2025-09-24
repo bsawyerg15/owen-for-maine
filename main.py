@@ -27,74 +27,60 @@ from b_App.visualizations import (
     plot_funding_sources,
     plot_department_breakdown,
     plot_state_comparison,
-    plot_small_departments_summary
+    plot_small_departments_summary,
+    plot_maine_total_spending_vs_gdp
 )
 from a_Configs.config import Config
 
 def main():
-    """Run the complete budget analysis pipeline."""
+    """Execute the streamlit app."""
 
     # Initialize FRED API client
     fred = Fred(api_key=Config.FRED_API_KEY)
 
-    # Get configuration values
+    #######################################################################################################
+    # Constants and Configurations
+    #######################################################################################################
+
     budget_to_end_page = Config.ME_BUDGET_END_PAGES
     budget_years = Config.NH_BUDGET_YEARS
 
-    st.write("Loading data...")
+    #######################################################################################################
+    # Input Dataframes
+    #######################################################################################################
 
-    # Load category mapping
+    me_as_reported_df = load_me_budget_as_reported(budget_to_end_page, Config.DATA_DIR_ME)
+    nh_as_reported_df = load_nh_budget_as_reported(budget_years, Config.DATA_DIR_NH)
+
+    # Standardized Dataframes
     category_mapping_df = load_category_mapping(Config.CATEGORY_MAPPING_FILE)
 
-    # Load Maine budget data
-    me_as_reported_df = load_me_budget_as_reported(budget_to_end_page, Config.DATA_DIR_ME)
-    st.write(f"Loaded Maine budget data: {me_as_reported_df.shape}")
-
-    # Load New Hampshire budget data
-    nh_as_reported_df = load_nh_budget_as_reported(budget_years, Config.DATA_DIR_NH)
-    st.write(f"Loaded NH budget data: {nh_as_reported_df.shape}")
-
-    st.write("Processing data...")
-
-    # # Standardize data
     me_standardized_df = standardize_budget(me_as_reported_df, category_mapping_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, category_mapping_df, 'New Hampshire')
 
-    # # Get department totals
-    # department_total_df = get_department_totals(me_as_reported_df)
-    # print(f"Top departments by 2025 spending:\n{department_total_df.sort_values(by='2025', ascending=False).head()}")
+    #######################################################################################################
+    # Visualizations
+    #######################################################################################################
 
-    # print("Generating visualizations...")
+    # Create total funding chart
 
-    # # Create funding source charts
-    # funding_sources = ['DEPARTMENT TOTAL'] + me_as_reported_df.xs('GRAND TOTALS - ALL DEPARTMENTS', level='Department').index.unique().tolist()
-    # number_of_sources = len(funding_sources)
-
-    # fig, axes = plt.subplots(number_of_sources, 1, figsize=(10, 6 * number_of_sources))
-
-    # for i, source in enumerate(funding_sources):
-    #     plot_funding_sources(axes[i] if number_of_sources > 1 else axes, source, me_as_reported_df, fred)
-
-    # plt.tight_layout()
-    # plt.savefig('../c_Exploration/funding_sources_analysis.png', dpi=300, bbox_inches='tight')
-    # print("Saved funding sources analysis chart")
-
-    # Create department breakdown chart
-    fig, ax = plt.subplots(figsize=(10, 6))
-    plot_department_breakdown(ax, 'DEPARTMENT OF TRANSPORTATION', me_as_reported_df, fred)
-    st.pyplot(fig)
-
+    indexed_growth_fig = plot_maine_total_spending_vs_gdp(me_as_reported_df, fred)
+    st.plotly_chart(indexed_growth_fig)
 
     # # Create state comparison
     year_current = Config.YEAR_CURRENT
     year_previous = Config.YEAR_PREVIOUS
-    departments_to_ignore = Config.DEPARTMENTS_TO_IGNORE
 
-    comparison_df_current = (create_state_comparison(year_current, me_standardized_df, nh_standardized_df, departments_to_ignore) / 1e6).round(0)
-    comparison_df_previous = (create_state_comparison(year_previous, me_standardized_df, nh_standardized_df, departments_to_ignore) / 1e6).round(0)
+    comparison_df_current = (create_state_comparison(year_current, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    comparison_df_previous = (create_state_comparison(year_previous, me_standardized_df, nh_standardized_df) / 1e6).round(0)
 
     fig = plot_state_comparison(comparison_df_current, comparison_df_previous, year_current, year_previous)
     st.plotly_chart(fig)
+
+    # Create department breakdown chart
+    fig, ax = plt.subplots(figsize=(10, 6))
+    plot_department_breakdown(ax, 'GRAND TOTALS - ALL DEPARTMENTS', me_as_reported_df, fred)
+    st.pyplot(fig)
 
     # # Create small departments summary
     # ex_big_df = filter_excluding_major_departments(me_as_reported_df)

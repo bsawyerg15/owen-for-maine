@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+from b_App.data_ingestion import get_indexed_fred_series
 
 plt.style.use('default')
 
@@ -161,7 +162,7 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
         x=x_range,
         y=x_range,
         mode='lines',
-        name='y=x',
+        name='ME = NH Spending',
         line=dict(color='gray', dash='dash')
     ))
 
@@ -177,6 +178,9 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
     fig.show()
 
     return fig
+
+
+
 
 def plot_small_departments_summary(ex_big_total_df):
     """Create summary plot for departments excluding major ones."""
@@ -194,3 +198,43 @@ def plot_small_departments_summary(ex_big_total_df):
     fig.legend(loc='right', fontsize=8)
 
     return fig, ax, ax2
+
+
+
+def plot_maine_total_spending_vs_gdp(input_df, fred_client, start_year='2016'):
+    """Create a plotly line graph comparing Maine total spending vs GDP index."""
+    # Extract total spending series
+    total_spending = input_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', 'DEPARTMENT TOTAL')] / 1e9
+
+    base_multiplier = total_spending[start_year]
+
+    # Fetch GDP index
+    gdp_index = get_indexed_fred_series(fred_client, 'MENQGSP', start_year, base_multiplier)
+
+    # Create plotly figure
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=total_spending.index,
+        y=total_spending.values,
+        mode='lines',
+        name='Total Spending (Billions $)',
+        line=dict(color='blue')
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=gdp_index.index,
+        y=gdp_index.values,
+        mode='lines',
+        name='GDP Index',
+        line=dict(color='red', dash='dash')
+    ))
+
+    fig.update_layout(
+        title='Maine Total Spending vs GDP Index',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Value',
+        legend_title='Legend'
+    )
+
+    return fig

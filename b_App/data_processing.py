@@ -24,7 +24,7 @@ def standardize_budget(as_reported_df, category_mapping_df, state):
 
     return standardized_df
 
-def create_state_comparison(year, me_standardized_df, nh_standardized_df, departments_to_ignore=[]):
+def create_state_comparison(year, me_standardized_df, nh_standardized_df):
     """Create comparison DataFrame between Maine and New Hampshire budgets for a given year."""
    
     me_totals = me_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[year]
@@ -34,7 +34,5 @@ def create_state_comparison(year, me_standardized_df, nh_standardized_df, depart
         'ME': me_totals,
         'NH': nh_totals
     }).fillna(0)
-
-    comparison_df = comparison_df.drop(departments_to_ignore)
 
     return comparison_df
