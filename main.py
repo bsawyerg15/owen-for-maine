@@ -79,11 +79,11 @@ def main():
     # plt.savefig('../c_Exploration/funding_sources_analysis.png', dpi=300, bbox_inches='tight')
     # print("Saved funding sources analysis chart")
 
-    # # Create department breakdown chart
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # plot_department_breakdown(ax, 'DEPARTMENT OF TRANSPORTATION', me_as_reported_df, fred)
-    # plt.savefig('../c_Exploration/transportation_department_breakdown.png', dpi=300, bbox_inches='tight')
-    # print("Saved transportation department breakdown chart")
+    # Create department breakdown chart
+    fig, ax = plt.subplots(figsize=(10, 6))
+    plot_department_breakdown(ax, 'DEPARTMENT OF TRANSPORTATION', me_as_reported_df, fred)
+    st.pyplot(fig)
+
 
     # # Create state comparison
     year_current = Config.YEAR_CURRENT
