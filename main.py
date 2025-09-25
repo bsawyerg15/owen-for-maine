@@ -13,24 +13,10 @@ import matplotlib.pyplot as plt
 from fredapi import Fred
 
 # Import our modules
-from b_App.data_ingestion import (
-    load_category_mapping,
-    load_me_budget_as_reported,
-    load_nh_budget_as_reported,
-    get_indexed_fred_series
-)
-from b_App.data_processing import (
-    standardize_budget,
-    create_state_comparison
-)
-from b_App.visualizations import (
-    plot_funding_sources,
-    plot_department_breakdown,
-    plot_state_comparison,
-    plot_small_departments_summary,
-    plot_maine_total_spending_vs_gdp
-)
-from a_Configs.config import Config
+from b_App.data_ingestion import  *
+from b_App.data_processing import *
+from b_App.visualizations import *
+from a_Configs.config import *
 
 def main():
     """Execute the streamlit app."""
@@ -62,25 +48,60 @@ def main():
     # Visualizations
     #######################################################################################################
 
-    # Create total funding chart
+    #######################################################################################################
+    # Title & Intro
+    #######################################################################################################
 
-    indexed_growth_fig = plot_maine_total_spending_vs_gdp(me_as_reported_df, fred)
-    st.plotly_chart(indexed_growth_fig)
+    st.title("Maine State Spending Analysis")
 
-    # # Create state comparison
-    year_current = Config.YEAR_CURRENT
-    year_previous = Config.YEAR_PREVIOUS
+    st.markdown("""
+        Context:
+            - Maine's budget has been growing rapidly in recent years
+            - Data concerning the budget is publicly available, but not easily digestible
+            - We wanted to bridge this gap by creating a dashboard to help understand the budget and its growth
+        Goals of this dashboard:    
+            1. Make it easier to understand where Maine's money is going
+            2. Try to give context on whether that spending makes sense
+    """)
+    
+    #######################################################################################################
+    # Headline Spending Section
+    #######################################################################################################
 
-    comparison_df_current = (create_state_comparison(year_current, me_standardized_df, nh_standardized_df) / 1e6).round(0)
-    comparison_df_previous = (create_state_comparison(year_previous, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    # TODO: Create total spending & budget chart
 
-    fig = plot_state_comparison(comparison_df_current, comparison_df_previous, year_current, year_previous)
-    st.plotly_chart(fig)
+    #######################################################################################################
+    # Why is it growing?
+    #######################################################################################################
+
+    st.header("Where is Maine Spending $?")
+
+    # TODO: Add in bar chart of biggest departments
+
+    # TODO: Add in chart describing rest of the departments
+
+    # TODO: Add in summary chart for small departments
+
+    # TODO: Add in deep dive section with way to display funding details for single department
+
+    # TODO: Add in chart of Maine vs New Hampshire
+
+    # TODO: Add in table for Maine vs New Hampshire
+
+    # indexed_growth_fig = plot_maine_total_spending_vs_gdp(me_as_reported_df, fred)
+    # st.plotly_chart(indexed_growth_fig)
+
+    # # # Create state comparison
+    # comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    # comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+
+    # fig = plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS)
+    # st.plotly_chart(fig)
 
     # Create department breakdown chart
-    fig, ax = plt.subplots(figsize=(10, 6))
-    plot_department_breakdown(ax, 'GRAND TOTALS - ALL DEPARTMENTS', me_as_reported_df, fred)
-    st.pyplot(fig)
+    # fig, ax = plt.subplots(figsize=(10, 6))
+    # plot_department_breakdown(ax, 'GRAND TOTALS - ALL DEPARTMENTS', me_as_reported_df, fred)
+    # st.pyplot(fig)
 
     # # Create small departments summary
     # ex_big_df = filter_excluding_major_departments(me_as_reported_df)
