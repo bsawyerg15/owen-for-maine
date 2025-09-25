@@ -89,7 +89,7 @@ def main():
     for department in departments_to_deep_dive:
         deep_dive_expander = st.expander(department, expanded=False)
         with deep_dive_expander:
-            fig, ax = plt.subplots(figsize=(6, 6))
+            fig, ax = plt.subplots(figsize=(10, 6))
             plot_department_breakdown(ax, department, me_processed_df, fred)
             st.pyplot(fig)
 

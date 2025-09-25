@@ -1,4 +1,5 @@
 import pandas as pd
+from .data_ingestion import get_economic_indicators_df
 
 def process_me_budget(me_budget_as_reported_df):
     """Augment Maine budget data with calculated fields. In particular it:
@@ -56,3 +57,19 @@ def create_state_comparison(year, me_standardized_df, nh_standardized_df):
     }).fillna(0)
 
     return comparison_df
+
+def produce_economic_index_df(fred_client, start_year='2016'):
+    """Produce DataFrame with economic indicators indexed to start_year."""
+    econ_df = get_economic_indicators_df(fred_client, start_year)
+    economic_index_df = econ_df.div(econ_df.iloc[:, 0], axis=0)
+    economic_index_df = add_cpi_times_pop_growth_index(economic_index_df)
+    
+    return economic_index_df
+
+def add_cpi_times_pop_growth_index(economic_index_df):
+    """Create DataFrame with just CPI and Population growth from economic index DataFrame."""
+    cpi_index = economic_index_df.loc['CPI']
+    pop_index = economic_index_df.loc['Maine_Population']
+    cpi_and_pop_growth = (cpi_index * pop_index).to_frame().T
+    cpi_and_pop_growth.index = ['CPI_times_Pop_Growth']
+    return pd.concat([economic_index_df, cpi_and_pop_growth])

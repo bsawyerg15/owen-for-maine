@@ -123,7 +123,7 @@ def load_nh_budget_as_reported(budget_years, data_dir='../z_Data/NH/'):
     return nh_as_reported_df
 
 
-def get_indexed_fred_series(fred_client, series_id, start_date, base_multiplier, freq='YE'):
+def get_fred_series(fred_client, series_id, start_date, freq='YE'):
     """
     Fetch FRED series data, downsample to specified frequency, filter by date,
     index relative to first value, convert index to year strings, and re-index with multiplier.
@@ -141,7 +141,31 @@ def get_indexed_fred_series(fred_client, series_id, start_date, base_multiplier,
     data = fred_client.get_series(series_id)
     resampled = data.resample(freq).mean()
     filtered = resampled[resampled.index >= start_date]
-    indexed = filtered / filtered.iloc[0]
-    indexed.index = indexed.index.year.astype(str)
-    reindexed = indexed * base_multiplier
-    return reindexed
+    filtered.index = filtered.index.year.astype(str)
+    return filtered
+
+
+def get_economic_indicators_df(fred_client, start_date='2016'):
+    """
+    Fetch CPI, Maine GDP, and Maine residential population data from FRED,
+    process them using get_indexed_fred_series, and combine into a single DataFrame.
+
+    Parameters:
+    - fred_client: Initialized Fred API object
+    - start_date: Start date for filtering (default '2016')
+    - base_multiplier: Multiplier for re-indexing (default 100)
+
+    Returns:
+    - pd.DataFrame: DataFrame with columns 'CPI', 'Maine_GDP', 'Maine_Population', indexed by year
+    """
+    cpi_series = get_fred_series(fred_client, 'CPIAUCSL', start_date)
+    gdp_series = get_fred_series(fred_client, 'MENQGSP', start_date)
+    pop_series = get_fred_series(fred_client, 'MEPOP', start_date)
+
+    df = pd.DataFrame({
+        'CPI': cpi_series,
+        'Maine_GDP': gdp_series,
+        'Maine_Population': pop_series
+    })
+
+    return df.transpose()

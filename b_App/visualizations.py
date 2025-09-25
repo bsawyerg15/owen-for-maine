@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-from b_App.data_ingestion import get_indexed_fred_series
+from b_App.data_ingestion import get_fred_series
 
 plt.style.use('default')
 
@@ -52,10 +52,10 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
         start_value = 8.2
 
     try:
-        from data_ingestion import get_indexed_fred_series
-        cpi_yearly_reindexed = get_indexed_fred_series(fred_client, 'CPIAUCSL', start_year, start_value)
-        maine_gdp_reindexed = get_indexed_fred_series(fred_client, 'MENQGSP', start_year, start_value)
-        population = get_indexed_fred_series(fred_client, 'MEPOP', start_year, start_value)
+        from data_ingestion import get_fred_series
+        cpi_yearly_reindexed = get_fred_series(fred_client, 'CPIAUCSL', start_year, start_value)
+        maine_gdp_reindexed = get_fred_series(fred_client, 'MENQGSP', start_year, start_value)
+        population = get_fred_series(fred_client, 'MEPOP', start_year, start_value)
         add_economic_indicators = True
     except Exception as e:
         print(f"Warning: Could not fetch FRED data: {e}")
@@ -98,7 +98,8 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
 def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, start_year='2016'):
     """Create department breakdown chart by funding source."""
     department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
-    df = department_df[department_df.index != 'DEPARTMENT TOTAL']
+    funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
+    df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
     df = df.sort_values(by=df.columns[-1], ascending=False) / 1e6
 
     # Get economic indicators
@@ -259,7 +260,7 @@ def plot_maine_total_spending_vs_gdp(input_df, fred_client, start_year='2016'):
     base_multiplier = total_spending[start_year]
 
     # Fetch GDP index
-    gdp_index = get_indexed_fred_series(fred_client, 'MENQGSP', start_year, base_multiplier)
+    gdp_index = get_fred_series(fred_client, 'MENQGSP', start_year, base_multiplier)
 
     # Create plotly figure
     fig = go.Figure()
