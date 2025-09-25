@@ -7,6 +7,35 @@ from b_App.data_ingestion import get_indexed_fred_series
 
 plt.style.use('default')
 
+def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
+    spending_name = 'DEPARTMENT TOTAL'
+    budget_name = 'DEPARTMENT TOTAL ex FEDERAL'
+
+    spending = df.loc[(department, spending_name)]
+    budget = df.loc[(department, budget_name)]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=spending.index,
+        y=spending.values / 1e9,
+        mode='lines',
+        name='Spending',
+        line=dict(color='blue')
+    ))
+    fig.add_trace(go.Scatter(
+        x=budget.index,
+        y=budget.values / 1e9,
+        mode='lines',
+        name='o.w. State Funded',
+        line=dict(color='red')
+    ))
+
+    fig.update_yaxes(title_text='$, Billions', rangemode='tozero')
+    fig.update_xaxes(tickangle=-45)
+    fig.update_layout(title='Maine State Budget and Spending')
+
+    return fig
+
 def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', start_year='2016'):
     """Create funding source chart with economic indicators."""
     # Prepare dataframes
@@ -73,38 +102,38 @@ def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, st
     df = df.sort_values(by=df.columns[-1], ascending=False) / 1e6
 
     # Get economic indicators
-    try:
-        grand_total_start = me_as_reported_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', 'DEPARTMENT TOTAL'), start_year] / 1e9
-        start_value = grand_total_start if grand_total_start > 0 else 8.2
-    except KeyError:
-        start_value = 8.2
+    # try:
+    #     grand_total_start = me_as_reported_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', 'DEPARTMENT TOTAL'), start_year] / 1e9
+    #     start_value = grand_total_start if grand_total_start > 0 else 8.2
+    # except KeyError:
+    #     start_value = 8.2
 
-    try:
-        from data_ingestion import get_indexed_fred_series
-        cpi_yearly_reindexed = get_indexed_fred_series(fred_client, 'CPIAUCSL', start_year, start_value)
-        maine_gdp_reindexed = get_indexed_fred_series(fred_client, 'MENQGSP', start_year, start_value)
-        population = get_indexed_fred_series(fred_client, 'MEPOP', start_year, start_value)
-        add_economic_indicators = True
-    except Exception as e:
-        print(f"Warning: Could not fetch FRED data: {e}")
-        # Create dummy series for plotting
-        years = df.columns
-        cpi_yearly_reindexed = pd.Series([start_value] * len(years), index=years)
-        maine_gdp_reindexed = pd.Series([start_value] * len(years), index=years)
-        population = pd.Series([start_value] * len(years), index=years)
-        add_economic_indicators = False
+    # try:
+    #     from data_ingestion import get_indexed_fred_series
+    #     cpi_yearly_reindexed = get_indexed_fred_series(fred_client, 'CPIAUCSL', start_year, start_value)
+    #     maine_gdp_reindexed = get_indexed_fred_series(fred_client, 'MENQGSP', start_year, start_value)
+    #     population = get_indexed_fred_series(fred_client, 'MEPOP', start_year, start_value)
+    #     add_economic_indicators = True
+    # except Exception as e:
+    #     print(f"Warning: Could not fetch FRED data: {e}")
+    #     # Create dummy series for plotting
+    #     years = df.columns
+    #     cpi_yearly_reindexed = pd.Series([start_value] * len(years), index=years)
+    #     maine_gdp_reindexed = pd.Series([start_value] * len(years), index=years)
+    #     population = pd.Series([start_value] * len(years), index=years)
+    #     add_economic_indicators = False
 
-    # Plotting
-    if df.empty or df.shape[0] == 0:
-        ax.text(0.5, 0.5, 'No data available', transform=ax.transAxes, ha='center', va='center')
-        return df
+    # # Plotting
+    # if df.empty or df.shape[0] == 0:
+    #     ax.text(0.5, 0.5, 'No data available', transform=ax.transAxes, ha='center', va='center')
+    #     return df
 
     top_5 = df.iloc[:5].index
     ax.stackplot(df.columns, df.values, labels=top_5)
 
-    ax.plot(cpi_yearly_reindexed.index, cpi_yearly_reindexed.values, color='black', linestyle='--', label='CPI (Re-Indexed)')
-    ax.plot(maine_gdp_reindexed.index, maine_gdp_reindexed.values, color='Blue', linestyle='--', label='Maine GDP (Re-Indexed)')
-    ax.plot(population.index, population.values, color='RED', linestyle='--', label='Maine Res. Population')
+    # ax.plot(cpi_yearly_reindexed.index, cpi_yearly_reindexed.values, color='black', linestyle='--', label='CPI (Re-Indexed)')
+    # ax.plot(maine_gdp_reindexed.index, maine_gdp_reindexed.values, color='Blue', linestyle='--', label='Maine GDP (Re-Indexed)')
+    # ax.plot(population.index, population.values, color='RED', linestyle='--', label='Maine Res. Population')
 
     # Chart features
     ax.grid(axis='y', alpha=0.5, linestyle='dotted')
@@ -179,27 +208,48 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
 
     return fig
 
-
-
-
-def plot_small_departments_summary(ex_big_total_df):
+def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']):
     """Create summary plot for departments excluding major ones."""
-    mean_small = ex_big_total_df.mean() / 1e6
+    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / 1e6
+    ex_big_total_df = total_df[~total_df.index.isin(big_departments)]
+    ex_big_total_df = ex_big_total_df.replace(0, np.nan)
+    mean_small = ex_big_total_df.mean()
     count_small = (ex_big_total_df > 0).sum()
 
-    fig, ax = plt.subplots(figsize=(8, 3))
-    ax2 = ax.twinx()
+    fig = go.Figure()
 
-    ax.plot(mean_small, label='Mean Size ($mm)')
-    ax2.plot(count_small, color='orange', label='Count (Right)')
+    fig.add_trace(go.Scatter(
+        x=mean_small.index,
+        y=mean_small.values,
+        mode='lines',
+        name='Average Size',
+        line=dict(color='blue')
+    ))
 
-    ax.set_title('Departments ex Health, Education, and Transportation')
+    fig.add_trace(go.Scatter(
+        x=count_small.index,
+        y=count_small.values,
+        mode='lines',
+        name='Count',
+        line=dict(color='black'),
+        yaxis='y2'
+    ))
 
-    fig.legend(loc='right', fontsize=8)
+    fig.update_layout(
+        title='Summary of Departments ex Health, Education, and Transportation',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Mean Size ($ Millions)',
+        yaxis2=dict(
+            title='Count',
+            overlaying='y',
+            side='right',
+            showgrid=False
+        ),
+        xaxis=dict(showgrid=False),
+        legend=dict(x=1.05, y=1)
+    )
 
-    return fig, ax, ax2
-
-
+    return fig
 
 def plot_maine_total_spending_vs_gdp(input_df, fred_client, start_year='2016'):
     """Create a plotly line graph comparing Maine total spending vs GDP index."""

@@ -38,10 +38,12 @@ def main():
     me_as_reported_df = load_me_budget_as_reported(budget_to_end_page, Config.DATA_DIR_ME)
     nh_as_reported_df = load_nh_budget_as_reported(budget_years, Config.DATA_DIR_NH)
 
+    me_processed_df = process_me_budget(me_as_reported_df)
+
     # Standardized Dataframes
     category_mapping_df = load_category_mapping(Config.CATEGORY_MAPPING_FILE)
 
-    me_standardized_df = standardize_budget(me_as_reported_df, category_mapping_df, 'Maine')
+    me_standardized_df = standardize_budget(me_processed_df, category_mapping_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, category_mapping_df, 'New Hampshire')
 
     #######################################################################################################
@@ -68,7 +70,7 @@ def main():
     # Headline Spending Section
     #######################################################################################################
 
-    # TODO: Create total spending & budget chart
+    st.plotly_chart(plot_budget_and_spending(me_processed_df))
 
     #######################################################################################################
     # Why is it growing?
@@ -78,9 +80,18 @@ def main():
 
     # TODO: Add in bar chart of biggest departments
 
-    # TODO: Add in chart describing rest of the departments
+    st.plotly_chart(plot_small_departments_summary(me_processed_df))
 
-    # TODO: Add in summary chart for small departments
+    st.subheader("Department Deep Dives")
+
+    departments_to_deep_dive = ['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
+
+    for department in departments_to_deep_dive:
+        deep_dive_expander = st.expander(department, expanded=False)
+        with deep_dive_expander:
+            fig, ax = plt.subplots(figsize=(6, 6))
+            plot_department_breakdown(ax, department, me_processed_df, fred)
+            st.pyplot(fig)
 
     # TODO: Add in deep dive section with way to display funding details for single department
 
@@ -91,12 +102,11 @@ def main():
     # indexed_growth_fig = plot_maine_total_spending_vs_gdp(me_as_reported_df, fred)
     # st.plotly_chart(indexed_growth_fig)
 
-    # # # Create state comparison
-    # comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
-    # comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    # # Create state comparison
+    comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
 
-    # fig = plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS)
-    # st.plotly_chart(fig)
+    st.plotly_chart(plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS))
 
     # Create department breakdown chart
     # fig, ax = plt.subplots(figsize=(10, 6))
@@ -107,8 +117,8 @@ def main():
     # ex_big_df = filter_excluding_major_departments(me_as_reported_df)
     # ex_big_total_df = ex_big_df.xs('DEPARTMENT TOTAL', level='Funding Source')
 
-    # fig, ax, ax2 = plot_small_departments_summary(ex_big_total_df)
-    # plt.savefig('../c_Exploration/small_departments_summary.png', dpi=300, bbox_inches='tight')
+    # fig = plot_small_departments_summary(ex_big_total_df)
+    # fig.write_image('../c_Exploration/small_departments_summary.png', scale=3)
     # print("Saved small departments summary chart")
 
     # print("Analysis complete! Check c_Exploration/ for generated charts.")
