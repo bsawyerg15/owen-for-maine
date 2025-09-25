@@ -46,9 +46,11 @@ def main():
     me_standardized_df = standardize_budget(me_processed_df, category_mapping_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, category_mapping_df, 'New Hampshire')
 
-    #######################################################################################################
-    # Visualizations
-    #######################################################################################################
+    economic_index_df = produce_economic_index_df(fred)
+
+    
+######## Visualizations ###################################################################################
+    
 
     #######################################################################################################
     # Title & Intro
@@ -72,15 +74,21 @@ def main():
 
     st.plotly_chart(plot_budget_and_spending(me_processed_df))
 
+    st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'DEPARTMENT TOTAL')], economic_index_df))
+
     #######################################################################################################
     # Why is it growing?
     #######################################################################################################
 
     st.header("Where is Maine Spending $?")
 
-    # TODO: Add in bar chart of biggest departments
+    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True))
 
     st.plotly_chart(plot_small_departments_summary(me_processed_df))
+
+    #######################################################################################################
+    # Deep Dives
+    #######################################################################################################
 
     st.subheader("Department Deep Dives")
 
@@ -93,35 +101,18 @@ def main():
             plot_department_breakdown(ax, department, me_processed_df, fred)
             st.pyplot(fig)
 
-    # TODO: Add in deep dive section with way to display funding details for single department
 
-    # TODO: Add in chart of Maine vs New Hampshire
-
-    # TODO: Add in table for Maine vs New Hampshire
-
-    # indexed_growth_fig = plot_maine_total_spending_vs_gdp(me_as_reported_df, fred)
-    # st.plotly_chart(indexed_growth_fig)
-
-    # # Create state comparison
+    #######################################################################################################
+    # Maine vs New Hampshire Comparison
+    #######################################################################################################
+    
+    # Scatter
     comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
     comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
 
     st.plotly_chart(plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS))
 
-    # Create department breakdown chart
-    # fig, ax = plt.subplots(figsize=(10, 6))
-    # plot_department_breakdown(ax, 'GRAND TOTALS - ALL DEPARTMENTS', me_as_reported_df, fred)
-    # st.pyplot(fig)
-
-    # # Create small departments summary
-    # ex_big_df = filter_excluding_major_departments(me_as_reported_df)
-    # ex_big_total_df = ex_big_df.xs('DEPARTMENT TOTAL', level='Funding Source')
-
-    # fig = plot_small_departments_summary(ex_big_total_df)
-    # fig.write_image('../c_Exploration/small_departments_summary.png', scale=3)
-    # print("Saved small departments summary chart")
-
-    # print("Analysis complete! Check c_Exploration/ for generated charts.")
+    # TODO: Add in table for Maine vs New Hampshire    
 
 if __name__ == "__main__":
     main()

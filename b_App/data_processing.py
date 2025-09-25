@@ -69,7 +69,7 @@ def produce_economic_index_df(fred_client, start_year='2016'):
 def add_cpi_times_pop_growth_index(economic_index_df):
     """Create DataFrame with just CPI and Population growth from economic index DataFrame."""
     cpi_index = economic_index_df.loc['CPI']
-    pop_index = economic_index_df.loc['Maine_Population']
+    pop_index = economic_index_df.loc['Maine Population']
     cpi_and_pop_growth = (cpi_index * pop_index).to_frame().T
-    cpi_and_pop_growth.index = ['CPI_times_Pop_Growth']
+    cpi_and_pop_growth.index = ['CPI & Population Growth']
     return pd.concat([economic_index_df, cpi_and_pop_growth])

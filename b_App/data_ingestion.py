@@ -164,8 +164,8 @@ def get_economic_indicators_df(fred_client, start_date='2016'):
 
     df = pd.DataFrame({
         'CPI': cpi_series,
-        'Maine_GDP': gdp_series,
-        'Maine_Population': pop_series
+        'Maine GDP': gdp_series,
+        'Maine Population': pop_series
     })
 
     return df.transpose()

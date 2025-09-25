@@ -36,6 +36,7 @@ def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
 
     return fig
 
+
 def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', start_year='2016'):
     """Create funding source chart with economic indicators."""
     # Prepare dataframes
@@ -95,6 +96,7 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
 
     return df
 
+
 def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, start_year='2016'):
     """Create department breakdown chart by funding source."""
     department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
@@ -145,6 +147,55 @@ def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, st
     ax.set_ylabel('Budget (Millions of $)')
 
     return df
+
+
+def plot_spending_vs_econ_index(spending_series, econ_index_df):
+    """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
+    # Determine the first year from the minimum of both series indices/columns
+    first_year = str(min([int(y) for y in spending_series.index]))
+
+    # Get base value from spending series at first year
+    base_value = spending_series.loc[first_year]
+
+    # Re-index economic indices to start at base_value
+    econ_reindexed = econ_index_df.div(econ_index_df[first_year], axis=0) * base_value
+
+    # Create plotly figure
+    fig = go.Figure()
+
+    # Add spending series trace
+    fig.add_trace(go.Scatter(
+        x=spending_series.index,
+        y=spending_series.values,
+        mode='lines',
+        name='Spending',
+        line=dict(color='blue')
+    ))
+
+    # Colors for economic indices
+    colors = ['red', 'green', 'black', 'orange', 'purple', 'brown']
+
+    # Add each economic index trace
+    for i, index_name in enumerate(econ_reindexed.index):
+        fig.add_trace(go.Scatter(
+            x=econ_reindexed.columns,
+            y=econ_reindexed.loc[index_name],
+            mode='lines',
+            name=index_name,
+            line=dict(color=colors[i % len(colors)], dash='dash')
+        ))
+
+    # Update layout
+    fig.update_layout(
+        title='Spending vs Economic Indices',
+        xaxis_title='Year',
+        yaxis_title='Value',
+        legend_title='Legend',
+    )
+    fig.update_yaxes(title_text='$, Billions')
+
+    return fig
+
 
 def plot_state_comparison(comparison_df_current, comparison_df_previous, year_current, year_previous):
     """Create scatter plot comparing ME and NH budgets with connecting lines."""
@@ -209,6 +260,7 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
 
     return fig
 
+
 def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']):
     """Create summary plot for departments excluding major ones."""
     total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / 1e6
@@ -252,40 +304,47 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
 
     return fig
 
-def plot_maine_total_spending_vs_gdp(input_df, fred_client, start_year='2016'):
-    """Create a plotly line graph comparing Maine total spending vs GDP index."""
-    # Extract total spending series
-    total_spending = input_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', 'DEPARTMENT TOTAL')] / 1e9
 
-    base_multiplier = total_spending[start_year]
+def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False):
+    """Produce bar chart of top N departments by spending for a given year."""
+    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / 1e9
+    total_for_year_df = total_df[year].sort_values(ascending=False)
+    total_with_exclusions = total_for_year_df[~total_for_year_df.index.isin(to_exclude)]
+    top_departments = total_with_exclusions.head(top_n)
+    if produce_all_others:
+        others_sum = total_with_exclusions.iloc[top_n:].sum()
+        top_departments = pd.concat([top_departments, pd.Series({'ALL OTHERS': others_sum})])
 
-    # Fetch GDP index
-    gdp_index = get_fred_series(fred_client, 'MENQGSP', start_year, base_multiplier)
-
-    # Create plotly figure
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(
-        x=total_spending.index,
-        y=total_spending.values,
-        mode='lines',
-        name='Total Spending (Billions $)',
-        line=dict(color='blue')
-    ))
-
-    fig.add_trace(go.Scatter(
-        x=gdp_index.index,
-        y=gdp_index.values,
-        mode='lines',
-        name='GDP Index',
-        line=dict(color='red', dash='dash')
-    ))
-
-    fig.update_layout(
-        title='Maine Total Spending vs GDP Index',
-        xaxis_title='Fiscal Year',
-        yaxis_title='Value',
-        legend_title='Legend'
+    fig = px.bar(
+        top_departments,
+        x=[clean_department_labels(department) for department in top_departments.index],
+        y=top_departments.values,
+        labels={'x': 'Department', 'y': 'Spending (Billions $)'},
+        title=f'Departments by Spending in {year}'
     )
 
+    fig.update_layout(xaxis_tickangle=-45)
+
     return fig
+
+
+def clean_department_labels(text, num_words_per_line=3):
+    """
+    Insert newline characters every n words in the given text.
+
+    Args:
+        text (str): The input string to process
+        n (int): Number of words per line
+
+    Returns:
+        str: The modified string with newlines inserted
+    """
+    if num_words_per_line <= 0:
+        return text
+    words = text.split()
+    if not words:
+        return text
+    lines = []
+    for i in range(0, len(words), num_words_per_line):
+        lines.append(' '.join(words[i:i+num_words_per_line]))
+    return '\n'.join(lines)
