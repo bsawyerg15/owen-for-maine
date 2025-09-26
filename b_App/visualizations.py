@@ -4,6 +4,20 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from b_App.data_ingestion import get_fred_series
+from a_Configs.config import Config
+
+# Cache for department mapping to avoid repeated file reads
+_DEPARTMENT_MAPPING = None
+
+def _load_department_mapping():
+    """Load and cache department mapping for Maine."""
+    global _DEPARTMENT_MAPPING
+    if _DEPARTMENT_MAPPING is None:
+        mapping_df = pd.read_csv('a_Configs/department_mapping.csv')
+        # Filter for Maine entries and create lookup dict
+        maine_mapping = mapping_df[mapping_df['State'] == 'Maine'][['As Reported', 'Shortened Name']]
+        _DEPARTMENT_MAPPING = dict(zip(maine_mapping['As Reported'], maine_mapping['Shortened Name']))
+    return _DEPARTMENT_MAPPING
 
 plt.style.use('default')
 
@@ -17,20 +31,20 @@ def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=spending.index,
-        y=spending.values / 1e9,
+        y=spending.values / Config.TOTAL_BUDGET_SCALE,
         mode='lines',
         name='Spending',
         line=dict(color='blue')
     ))
     fig.add_trace(go.Scatter(
         x=budget.index,
-        y=budget.values / 1e9,
+        y=budget.values / Config.TOTAL_BUDGET_SCALE,
         mode='lines',
         name='o.w. State Funded',
         line=dict(color='red')
     ))
 
-    fig.update_yaxes(title_text='$, Billions', rangemode='tozero')
+    fig.update_yaxes(title_text=Config.TOTAL_BUDGET_SCALE_LABEL, rangemode='tozero')
     fig.update_xaxes(tickangle=-45)
     fig.update_layout(
         title='Maine State Budget and Spending'
@@ -44,12 +58,12 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
     # Prepare dataframes
     fund_df = input_df.xs(funding_source, level='Funding Source').fillna(0)
     df = fund_df[fund_df.index != 'GRAND TOTALS - ALL DEPARTMENTS']
-    df = df.sort_values(by=df.columns[-1], ascending=False) / 1e9
+    df = df.sort_values(by=df.columns[-1], ascending=False) / Config.TOTAL_BUDGET_SCALE
 
     # Get economic indicators
     total_funding_name = 'GRAND TOTALS - ALL DEPARTMENTS' if funding_source == 'DEPARTMENT TOTAL' else funding_source
     try:
-        grand_total_start = input_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', total_funding_name), start_year] / 1e9
+        grand_total_start = input_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', total_funding_name), start_year] / Config.TOTAL_BUDGET_SCALE
         start_value = grand_total_start if grand_total_start > 0 else 8.2
     except KeyError:
         start_value = 8.2
@@ -94,7 +108,7 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
 
     ax.set_title(f'Maine {budget_name} by Department (in Billions)')
     ax.set_xlabel('Fiscal Year')
-    ax.set_ylabel('Budget (Billions of $)')
+    ax.set_ylabel(f'Budget ({Config.TOTAL_BUDGET_SCALE_LABEL})')
 
     return df
 
@@ -104,7 +118,7 @@ def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, st
     department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
     funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
     df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
-    df = df.sort_values(by=df.columns[-1], ascending=False) / 1e6
+    df = df.sort_values(by=df.columns[-1], ascending=False) / Config.DEPARTMENT_SCALE
 
     # Get economic indicators
     # try:
@@ -146,12 +160,12 @@ def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, st
 
     ax.set_title(f'{department} Spending by Funding Source (in Millions)')
     ax.set_xlabel('Fiscal Year')
-    ax.set_ylabel('Budget (Millions of $)')
+    ax.set_ylabel(f'Budget ({Config.DEPARTMENT_SCALE_LABEL})')
 
     return df
 
 
-def plot_spending_vs_econ_index(spending_series, econ_index_df):
+def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
     # Determine the first year from the minimum of both series indices/columns
     first_year = str(min([int(y) for y in spending_series.index]))
@@ -179,12 +193,14 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df):
 
     # Add each economic index trace
     for i, index_name in enumerate(econ_reindexed.index):
+        visibility = 'legendonly' if index_name in to_hide else True
         fig.add_trace(go.Scatter(
             x=econ_reindexed.columns,
             y=econ_reindexed.loc[index_name],
             mode='lines',
             name=index_name,
-            line=dict(color=colors[i % len(colors)], dash='dash')
+            line=dict(color=colors[i % len(colors)], dash='dash'),
+            visible=visibility
         ))
 
     # Update layout
@@ -194,7 +210,7 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df):
         yaxis_title='Value',
         legend_title='Legend',
     )
-    fig.update_yaxes(title_text='$, Billions')
+    fig.update_yaxes(title_text=Config.TOTAL_BUDGET_SCALE_LABEL)
 
     return fig
 
@@ -253,8 +269,8 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
         width=600,
         height=600,
         title=f'Maine vs New Hampshire State Budgets',
-        xaxis_title='Maine Budget (Million $)',
-        yaxis_title='New Hampshire Budget (Million $)'
+        xaxis_title=f'Maine Budget ({Config.DEPARTMENT_SCALE_LABEL})',
+        yaxis_title=f'New Hampshire Budget ({Config.DEPARTMENT_SCALE_LABEL})'
     )
 
     fig.update_yaxes(scaleanchor="x", scaleratio=1)
@@ -265,7 +281,7 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
 
 def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']):
     """Create summary plot for departments excluding major ones."""
-    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / 1e6
+    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
     ex_big_total_df = total_df[~total_df.index.isin(big_departments)]
     ex_big_total_df = ex_big_total_df.replace(0, np.nan)
     mean_small = ex_big_total_df.mean()
@@ -293,7 +309,7 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
     fig.update_layout(
         title='Summary of Departments ex Health, Education, and Transportation',
         xaxis_title='Fiscal Year',
-        yaxis_title='Mean Size ($ Millions)',
+        yaxis_title=f'Mean Size ({Config.DEPARTMENT_SCALE_LABEL})',
         yaxis2=dict(
             title='Count',
             overlaying='y',
@@ -307,9 +323,10 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
     return fig
 
 
-def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False):
+def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
-    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / 1e9
+    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
+    total_df = total_df.round(0).astype(int)
     total_for_year_df = total_df[year].sort_values(ascending=False)
     total_with_exclusions = total_for_year_df[~total_for_year_df.index.isin(to_exclude)]
     top_departments = total_with_exclusions.head(top_n)
@@ -317,13 +334,13 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         others_sum = total_with_exclusions.iloc[top_n:].sum()
         top_departments = pd.concat([top_departments, pd.Series({'ALL OTHERS': others_sum})])
 
-    # Create bar chart using plotly.graph_objects for better control over multiline labels
+    # Create vertical bar chart using plotly.graph_objects for better control over multiline labels
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
         x=list(range(len(top_departments))),
         y=top_departments.values,
-        text=[f'{val:.2f}' for val in top_departments.values],
+        text=[f'{val}' for val in top_departments.values],
         textposition='auto',
         hovertext=top_departments.index,
         marker_color='blue'
@@ -338,11 +355,15 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         tickangle=-45
     )
 
-    fig.update_yaxes(title_text='Spending (Billions $)')
+    if not title:
+        title = f'Departments by Spending in {year}'
+
+    fig.update_yaxes(title_text=f'Spending ({Config.DEPARTMENT_SCALE_LABEL})')
     fig.update_layout(
-        title=f'Departments by Spending in {year}',
+        title=title,
         xaxis_title='Department',
-        showlegend=False
+        showlegend=False,
+        height=500
     )
 
     return fig
@@ -350,21 +371,31 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
 
 def clean_department_labels(text, num_words_per_line=3):
     """
-    Insert newline characters every n words in the given text.
+    Clean department labels by using shortened names from mapping and inserting newlines.
 
     Args:
-        text (str): The input string to process
-        n (int): Number of words per line
+        text (str): The input department name
+        num_words_per_line (int): Number of words per line for formatting
 
     Returns:
-        str: The modified string with newlines inserted
+        str: The cleaned and formatted string
     """
-    text = text.replace('DEPARTMENT OF ', '')
+    # Load department mapping
+    mapping = _load_department_mapping()
+
+    # Use shortened name if available, otherwise use original text
+    display_text = mapping.get(text, text)
+
+    # Remove "DEPARTMENT OF " prefix if present
+    display_text = display_text.replace('DEPARTMENT OF ', '')
+
     if num_words_per_line <= 0:
-        return text
-    words = text.split()
+        return display_text
+
+    words = display_text.split()
     if not words:
-        return text
+        return display_text
+
     lines = []
     for i in range(0, len(words), num_words_per_line):
         lines.append(' '.join(words[i:i+num_words_per_line]))

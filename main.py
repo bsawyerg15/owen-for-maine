@@ -46,7 +46,7 @@ def main():
     me_standardized_df = standardize_budget(me_processed_df, category_mapping_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, category_mapping_df, 'New Hampshire')
 
-    economic_index_df = produce_economic_index_df(fred)
+    economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
     # Scatter
     comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
@@ -80,7 +80,7 @@ def main():
 
     st.plotly_chart(plot_budget_and_spending(me_processed_df))
 
-    st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'DEPARTMENT TOTAL')], economic_index_df))
+    st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'DEPARTMENT TOTAL')], economic_index_df, to_hide=['CPI', 'Maine Population']))
 
     #######################################################################################################
     # Why is it growing?
@@ -88,20 +88,21 @@ def main():
 
     st.header("Where is Maine Spending $?")
 
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1.5])
 
     with col1:
         # Top Departments
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True))
+        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Largest Departments (2027)'))
 
     with col2:
         # Rest of Departments
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=15,
+        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=10,
                                                      to_exclude=['TOTAL',
                                                                  'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)',
                                                                  'DEPARTMENT OF EDUCATION',
                                                                  'DEPARTMENT OF TRANSPORTATION'],
-                                                                 produce_all_others=True))
+                                                                 produce_all_others=True,
+                                                                 title='Other Departments (2027)'))
 
     st.plotly_chart(plot_small_departments_summary(me_processed_df))
 

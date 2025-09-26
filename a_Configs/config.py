@@ -34,3 +34,10 @@ class Config:
 
     # Output directories
     EXPLORATION_DIR = 'c_Exploration/'
+
+    # Scaling
+    DEPARTMENT_SCALE = 1e6  # Scale department budgets to millions
+    TOTAL_BUDGET_SCALE = 1e6  # Scale total budgets to billions
+
+    DEPARTMENT_SCALE_LABEL = '$, Millions'
+    TOTAL_BUDGET_SCALE_LABEL = '$, Millions'
