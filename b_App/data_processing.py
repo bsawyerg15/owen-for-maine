@@ -58,6 +58,60 @@ def create_state_comparison(year, me_standardized_df, nh_standardized_df):
 
     return comparison_df
 
+
+def create_state_comparison_through_time(me_standardized_df, nh_standardized_df, start_year, end_year):
+    """Create comparison DataFrame between Maine and New Hampshire budgets for a given year."""
+   
+    scale = 1e6
+    me_standardized_df = (me_standardized_df / scale).round(0)  # Scale Maine data to millions
+    nh_standardized_df = (nh_standardized_df / scale).round(0)  # Scale New Hampshire data to millions
+
+    me_end_totals = me_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[end_year]
+    nh_end_totals = nh_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[end_year]
+
+    me_start_totals = me_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[start_year]
+    nh_start_totals = nh_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[start_year]
+
+    me_diff_arith = me_end_totals - me_start_totals
+    nh_diff_arith = nh_end_totals - nh_start_totals
+
+    me_diff_perc = (me_end_totals - me_start_totals) / me_start_totals * 100
+    nh_diff_perc = (nh_end_totals - nh_start_totals) / nh_start_totals * 100
+
+    end_diff = me_end_totals - nh_end_totals
+    diff_diff_arith = me_diff_arith - nh_diff_arith
+    diff_diff_perc = me_diff_perc - nh_diff_perc
+
+    df_me = pd.DataFrame({
+        end_year: me_end_totals,
+        f'Change from {start_year}': me_diff_arith,
+        '% Change': me_diff_perc
+    })
+
+    df_nh = pd.DataFrame({
+        end_year: nh_end_totals,
+        f'Change from {start_year}': nh_diff_arith,
+        '% Change': nh_diff_perc
+    })
+
+    df_diff = pd.DataFrame({
+        end_year: end_diff,
+        f'Change from {start_year}': diff_diff_arith,
+        '% Change': diff_diff_perc
+    })
+
+    # Combine into MultiIndex DataFrame
+    comparison_df = pd.concat([df_me, df_nh, df_diff], keys=['ME', 'NH', 'Diff'], axis=1)
+    comparison_df[('ME', '% Change')] = comparison_df[('ME', '% Change')].map('{:.1f}%'.format)
+    comparison_df[('NH', '% Change')] = comparison_df[('NH', '% Change')].map('{:.1f}%'.format)
+    comparison_df[('Diff', '% Change')] = comparison_df[('Diff', '% Change')].map('{:.1f}%'.format)
+
+    comparison_df.sort_values(by=('ME', end_year), ascending=False, inplace=True
+                              )
+
+    return comparison_df
+
+
 def produce_economic_index_df(fred_client, start_year='2016'):
     """Produce DataFrame with economic indicators indexed to start_year."""
     econ_df = get_economic_indicators_df(fred_client, start_year)

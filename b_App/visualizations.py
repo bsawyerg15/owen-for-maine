@@ -32,7 +32,9 @@ def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
 
     fig.update_yaxes(title_text='$, Billions', rangemode='tozero')
     fig.update_xaxes(tickangle=-45)
-    fig.update_layout(title='Maine State Budget and Spending')
+    fig.update_layout(
+        title='Maine State Budget and Spending'
+    )
 
     return fig
 
@@ -315,15 +317,33 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         others_sum = total_with_exclusions.iloc[top_n:].sum()
         top_departments = pd.concat([top_departments, pd.Series({'ALL OTHERS': others_sum})])
 
-    fig = px.bar(
-        top_departments,
-        x=[clean_department_labels(department) for department in top_departments.index],
+    # Create bar chart using plotly.graph_objects for better control over multiline labels
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=list(range(len(top_departments))),
         y=top_departments.values,
-        labels={'x': 'Department', 'y': 'Spending (Billions $)'},
-        title=f'Departments by Spending in {year}'
+        text=[f'{val:.2f}' for val in top_departments.values],
+        textposition='auto',
+        hovertext=top_departments.index,
+        marker_color='blue'
+    ))
+
+    # Set x-axis labels with multiline text
+    multiline_labels = [clean_department_labels(department) for department in top_departments.index]
+    fig.update_xaxes(
+        tickmode='array',
+        tickvals=list(range(len(top_departments))),
+        ticktext=multiline_labels,
+        tickangle=-45
     )
 
-    fig.update_layout(xaxis_tickangle=-45)
+    fig.update_yaxes(title_text='Spending (Billions $)')
+    fig.update_layout(
+        title=f'Departments by Spending in {year}',
+        xaxis_title='Department',
+        showlegend=False
+    )
 
     return fig
 
@@ -339,6 +359,7 @@ def clean_department_labels(text, num_words_per_line=3):
     Returns:
         str: The modified string with newlines inserted
     """
+    text = text.replace('DEPARTMENT OF ', '')
     if num_words_per_line <= 0:
         return text
     words = text.split()

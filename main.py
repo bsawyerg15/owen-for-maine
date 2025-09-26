@@ -48,6 +48,12 @@ def main():
 
     economic_index_df = produce_economic_index_df(fred)
 
+    # Scatter
+    comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+
+    comparison_through_time_df = create_state_comparison_through_time(me_standardized_df, nh_standardized_df, Config.YEAR_PREVIOUS, Config.YEAR_CURRENT)
+
     
 ######## Visualizations ###################################################################################
     
@@ -82,7 +88,20 @@ def main():
 
     st.header("Where is Maine Spending $?")
 
-    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True))
+    col1, col2 = st.columns(2)
+
+    with col1:
+        # Top Departments
+        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True))
+
+    with col2:
+        # Rest of Departments
+        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=15,
+                                                     to_exclude=['TOTAL',
+                                                                 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)',
+                                                                 'DEPARTMENT OF EDUCATION',
+                                                                 'DEPARTMENT OF TRANSPORTATION'],
+                                                                 produce_all_others=True))
 
     st.plotly_chart(plot_small_departments_summary(me_processed_df))
 
@@ -105,14 +124,11 @@ def main():
     #######################################################################################################
     # Maine vs New Hampshire Comparison
     #######################################################################################################
-    
-    # Scatter
-    comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
-    comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+
 
     st.plotly_chart(plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS))
 
-    # TODO: Add in table for Maine vs New Hampshire    
-
+    st.dataframe(comparison_through_time_df, use_container_width=True)
+                
 if __name__ == "__main__":
     main()
