@@ -62,25 +62,24 @@ def main():
     # Title & Intro
     #######################################################################################################
 
-    st.title("Maine State Spending Analysis")
+    st.title("Maine State Budget Tool")
 
     st.markdown("""
-        Context:
-            - Maine's budget has been growing rapidly in recent years
-            - Data concerning the budget is publicly available, but not easily digestible
-            - We wanted to bridge this gap by creating a dashboard to help understand the budget and its growth
-        Goals of this dashboard:    
-            1. Make it easier to understand where Maine's money is going
-            2. Try to give context on whether that spending makes sense
+    Mainers - have you ever wondered how your government is spending your tax dollars? The state government publishes this information [here](https://legislature.maine.gov/ofpr/total-state-budget-information/9304), but as far as we can tell, the data is only in 1000 page pdfs that make it hard to understand where the money is going through time or draw conclusions on whether the spending makes sense. 
+    The Owen For Maine campaign is bridging this gap by producing the Maine State Budget Tool. The goals of this tool are:
+    1.	To make it easier to understand the factual picture of where funds are going and where growth in spending is occurring
+    2.	To help folks draw conclusions on whether the growth we’re seeing makes sense by putting the factual picture in context
+                
+    We want this tool to be as fair and transparent as possible. If you see any issues with how we’re presenting the data or have questions that the tool currently isn’t able to answer, please reach out to someemail@owenformaine.com.
     """)
     
     #######################################################################################################
     # Headline Spending Section
     #######################################################################################################
 
-    st.plotly_chart(plot_budget_and_spending(me_processed_df))
-
     st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'DEPARTMENT TOTAL')], economic_index_df, to_hide=['CPI', 'Maine Population']))
+
+    st.plotly_chart(plot_budget_and_spending(me_processed_df))
 
     #######################################################################################################
     # Why is it growing?
@@ -92,7 +91,7 @@ def main():
 
     with col1:
         # Top Departments
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Largest Departments (2027)'))
+        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Largest Departments (2027)', prior_year='2018'))
 
     with col2:
         # Rest of Departments
@@ -102,9 +101,19 @@ def main():
                                                                  'DEPARTMENT OF EDUCATION',
                                                                  'DEPARTMENT OF TRANSPORTATION'],
                                                                  produce_all_others=True,
-                                                                 title='Other Departments (2027)'))
+                                                                 title='Other Departments',
+                                                                 prior_year='2018'))
 
     st.plotly_chart(plot_small_departments_summary(me_processed_df))
+
+    #######################################################################################################
+    # Maine vs New Hampshire Comparison
+    #######################################################################################################
+
+
+    st.plotly_chart(plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS))
+
+    st.dataframe(comparison_through_time_df, use_container_width=True)
 
     #######################################################################################################
     # Deep Dives
@@ -122,14 +131,5 @@ def main():
             st.pyplot(fig)
 
 
-    #######################################################################################################
-    # Maine vs New Hampshire Comparison
-    #######################################################################################################
-
-
-    st.plotly_chart(plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS))
-
-    st.dataframe(comparison_through_time_df, use_container_width=True)
-                
 if __name__ == "__main__":
     main()

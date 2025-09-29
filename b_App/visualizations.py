@@ -167,6 +167,9 @@ def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, st
 
 def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
+    
+    spending_series = spending_series / Config.TOTAL_BUDGET_SCALE
+
     # Determine the first year from the minimum of both series indices/columns
     first_year = str(min([int(y) for y in spending_series.index]))
 
@@ -323,28 +326,39 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
     return fig
 
 
-def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False, title=None):
+def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
     total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
     total_df = total_df.round(0).astype(int)
-    total_for_year_df = total_df[year].sort_values(ascending=False)
+    years_to_use = [year, prior_year] if prior_year else [year]
+    total_for_year_df = total_df[years_to_use].sort_values(by=year, ascending=False)
     total_with_exclusions = total_for_year_df[~total_for_year_df.index.isin(to_exclude)]
     top_departments = total_with_exclusions.head(top_n)
     if produce_all_others:
         others_sum = total_with_exclusions.iloc[top_n:].sum()
-        top_departments = pd.concat([top_departments, pd.Series({'ALL OTHERS': others_sum})])
+        top_departments = pd.concat([top_departments, pd.DataFrame([others_sum.values], index=['ALL OTHERS'], columns=top_departments.columns)])
 
     # Create vertical bar chart using plotly.graph_objects for better control over multiline labels
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
         x=list(range(len(top_departments))),
-        y=top_departments.values,
-        text=[f'{val}' for val in top_departments.values],
+        y=top_departments[year].values,
+        text=[f'{val}' for val in top_departments[year].values],
         textposition='auto',
         hovertext=top_departments.index,
-        marker_color='blue'
+        marker_color='blue',
+        name=f'{year}'
     ))
+
+    if prior_year:
+        fig.add_trace(go.Scatter(
+            x=list(range(len(top_departments))),
+            y=top_departments[prior_year].values,
+            mode='markers',
+            marker=dict(color='red'),
+            name=f'{prior_year}'
+        ))
 
     # Set x-axis labels with multiline text
     multiline_labels = [clean_department_labels(department) for department in top_departments.index]
@@ -356,13 +370,13 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
     )
 
     if not title:
-        title = f'Departments by Spending in {year}'
+        title = f'Departments by Spending'
 
     fig.update_yaxes(title_text=f'Spending ({Config.DEPARTMENT_SCALE_LABEL})')
     fig.update_layout(
         title=title,
         xaxis_title='Department',
-        showlegend=False,
+        showlegend=True,
         height=500
     )
 
