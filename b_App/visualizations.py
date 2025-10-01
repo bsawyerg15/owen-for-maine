@@ -118,25 +118,44 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
     return df
 
 
-def plot_department_funding_sources(ax, department, me_as_reported_df, start_year='2016'):
+def plot_department_funding_sources(department, me_as_reported_df, start_year='2016'):
     """Create department breakdown chart by funding source."""
     department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
     funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
     df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
-    df = df.sort_values(by=df.columns[-1], ascending=False) / Config.DEPARTMENT_SCALE
+    df = df.sort_values(by=df.columns[-1], ascending=False)
+    df = (df / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
 
-    top_5 = df.iloc[:5].index
-    ax.stackplot(df.columns, df.values, labels=top_5)
+    top_sources = df.index[:5]  # Top 5 sources by latest year value
 
-    # Chart features
-    ax.grid(axis='y', alpha=0.5, linestyle='dotted')
-    ax.legend(loc='upper left', fontsize='8')
+    fig = go.Figure()
 
-    ax.set_title(f'{department} Spending by Funding Source (in Millions)')
-    ax.set_xlabel('Fiscal Year')
-    ax.set_ylabel(f'Budget ({Config.DEPARTMENT_SCALE_LABEL})')
+    # Create stacked area plot by adding traces from bottom to top (largest to smallest)
+    # Include all sources but only show legend for top 5
+    for i, source in enumerate(df.index):
+        y_values = df.loc[source].values
+        fill_type = 'tozeroy' if i == 0 else 'tonexty'
+        fig.add_trace(go.Scatter(
+            x=df.columns,
+            y=y_values,
+            mode='lines',
+            fill=fill_type,
+            name=source,
+            showlegend=(source in top_sources)
+        ))
 
-    return df
+    # Update layout
+    fig.update_layout(
+        title=f'{department} Spending by Funding Source (in Millions)',
+        xaxis_title='Fiscal Year',
+        yaxis_title=f'Budget ({Config.DEPARTMENT_SCALE_LABEL})'
+    )
+
+    # Add grid lines
+    fig.update_xaxes(showgrid=False)
+    fig.update_yaxes(showgrid=True, gridcolor='lightgray', gridwidth=1)
+
+    return fig
 
 
 def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):

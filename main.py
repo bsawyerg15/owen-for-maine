@@ -129,9 +129,7 @@ def main():
         deep_dive_expander = st.expander(clean_name, expanded=False)
         with deep_dive_expander:
             # Time series of department funding sources
-            fig, ax = plt.subplots(figsize=(10, 6))
-            plot_department_funding_sources(ax, department, me_processed_df, fred)
-            st.pyplot(fig)
+            st.plotly_chart(plot_department_funding_sources(department, me_processed_df))
 
             # Bar chart comparison to NH
             st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, department_name=standardized_name))
