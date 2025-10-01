@@ -24,6 +24,9 @@ plt.style.use('default')
 
 
 def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
+    
+    df = (df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
+    
     spending_name = 'DEPARTMENT TOTAL'
     budget_name = 'DEPARTMENT TOTAL ex FEDERAL'
 
@@ -33,14 +36,14 @@ def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=spending.index,
-        y=spending.values / Config.TOTAL_BUDGET_SCALE,
+        y=spending.values,
         mode='lines',
         name='Spending',
         line=dict(color='blue')
     ))
     fig.add_trace(go.Scatter(
         x=budget.index,
-        y=budget.values / Config.TOTAL_BUDGET_SCALE,
+        y=budget.values,
         mode='lines',
         name='o.w. State Funded',
         line=dict(color='red')
@@ -300,7 +303,7 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
 def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
     total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
-    total_df = total_df.round(0).astype(int)
+    total_df = total_df.round(Config.DEPARTMENT_SCALE_ROUNDING)
     years_to_use = [year, prior_year] if prior_year else [year]
     total_for_year_df = total_df[years_to_use].sort_values(by=year, ascending=False)
     total_with_exclusions = total_for_year_df[~total_for_year_df.index.isin(to_exclude)]

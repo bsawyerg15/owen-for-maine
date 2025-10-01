@@ -41,3 +41,6 @@ class Config:
 
     DEPARTMENT_SCALE_LABEL = '$, Millions'
     TOTAL_BUDGET_SCALE_LABEL = '$, Billions'
+
+    DEPARTMENT_SCALE_ROUNDING = 0  # Rounding for department budgets
+    TOTAL_BUDGET_SCALE_ROUNDING = 2 # Rounding for total budgets
