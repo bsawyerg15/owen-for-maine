@@ -130,18 +130,18 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year='2
 
     fig = go.Figure()
 
-    # Create stacked area plot by adding traces from bottom to top (largest to smallest)
+    # Create stacked area plot by adding traces from bottom to top (largest at bottom)
     # Include all sources but only show legend for top 5
     for i, source in enumerate(df.index):
         y_values = df.loc[source].values
-        fill_type = 'tozeroy' if i == 0 else 'tonexty'
         fig.add_trace(go.Scatter(
             x=df.columns,
             y=y_values,
             mode='lines',
-            fill=fill_type,
+            fill='tozeroy' if i == 0 else 'tonexty',
             name=source,
-            showlegend=(source in top_sources)
+            showlegend=(source in top_sources),
+            stackgroup='one'  # Ensures stacking
         ))
 
     # Update layout
