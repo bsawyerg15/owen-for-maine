@@ -256,23 +256,33 @@ def plot_state_comparison_scatter(comparison_df_current, comparison_df_previous,
     return fig
 
 
-def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, top_n=None, skip=None):
+def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, top_n=None, skip=None, department_name=None):
     """Create grouped bar chart comparing ME and NH budgets with prior year dots."""
+    # Validate that only one filtering method is used
+    if top_n is not None and department_name is not None:
+        raise ValueError("Cannot specify both 'top_n' and 'department_name'. Use one filtering method at a time.")
+
     fig = go.Figure()
 
     # Scale values to department scale
     df = comparison_df_current / Config.DEPARTMENT_SCALE
 
-    # Sort by ME budget descending (largest first)
-    df = df.sort_values(by='ME', ascending=False)
+    # Filter to specific department if provided, otherwise use top_n filtering
+    if department_name is not None:
+        if department_name not in df.index:
+            raise ValueError(f"Department '{department_name}' not found in current data")
+        df = df.loc[[department_name]]
+    else:
+        # Sort by ME budget descending (largest first)
+        df = df.sort_values(by='ME', ascending=False)
 
-    # Skip first 'skip' departments if specified
-    if skip is not None:
-        df = df.iloc[skip:]
+        # Skip first 'skip' departments if specified
+        if skip is not None:
+            df = df.iloc[skip:]
 
-    # Limit to 'top_n' departments after skipping if specified
-    if top_n is not None:
-        df = df.head(top_n)
+        # Limit to 'top_n' departments after skipping if specified
+        if top_n is not None:
+            df = df.head(top_n)
 
     # Scale and reindex prior year data to match sorted/limited current
     diff_df = comparison_df_current - comparison_df_prior
@@ -324,8 +334,14 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
         name=f'NH Change from {year_prior}'
     ))
 
+    # Adjust title based on filtering mode
+    if department_name is not None:
+        title = f'Maine vs New Hampshire State Budgets - {department_name}'
+    else:
+        title = f'Maine vs New Hampshire State Budgets - {year_current}'
+
     fig.update_layout(
-        title=f'Maine vs New Hampshire State Budgets - {year_current}',
+        title=title,
         xaxis_title='Department',
         yaxis_title=f'Budget ({Config.DEPARTMENT_SCALE_LABEL})',
         xaxis=dict(
