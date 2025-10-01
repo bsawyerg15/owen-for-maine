@@ -30,7 +30,7 @@ class Config:
     # File paths (relative to project root)
     DATA_DIR_ME = 'z_Data/ME/'
     DATA_DIR_NH = 'z_Data/NH/'
-    CATEGORY_MAPPING_FILE = 'a_Configs/department_mapping.csv'
+    DEPARTMENT_MAPPING_FILE = 'a_Configs/department_mapping.csv'
 
     # Output directories
     EXPLORATION_DIR = 'c_Exploration/'

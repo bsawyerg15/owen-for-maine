@@ -3,7 +3,7 @@ import pdfplumber
 import re
 from fredapi import Fred
 
-def load_category_mapping(filepath='../a_Configs/department_mapping.csv'):
+def load_department_mapping(filepath='../a_Configs/department_mapping.csv'):
     """Load department category mapping from CSV."""
     mapping_df = pd.read_csv(filepath)
     mapping_df['Standardized'] = mapping_df['Standardized'].str.upper()

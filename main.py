@@ -42,10 +42,10 @@ def main():
     me_processed_df = process_me_budget(me_as_reported_df)
 
     # Standardized Dataframes
-    category_mapping_df = load_category_mapping(Config.CATEGORY_MAPPING_FILE)
+    department_mapping_df = load_department_mapping(Config.DEPARTMENT_MAPPING_FILE)
 
-    me_standardized_df = standardize_budget(me_processed_df, category_mapping_df, 'Maine')
-    nh_standardized_df = standardize_budget(nh_as_reported_df, category_mapping_df, 'New Hampshire')
+    me_standardized_df = standardize_budget(me_processed_df, department_mapping_df, 'Maine')
+    nh_standardized_df = standardize_budget(nh_as_reported_df, department_mapping_df, 'New Hampshire')
 
     economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
@@ -122,11 +122,19 @@ def main():
     departments_to_deep_dive = ['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
 
     for department in departments_to_deep_dive:
-        deep_dive_expander = st.expander(department, expanded=False)
+        department_mapping_row = department_mapping_df[(department_mapping_df['As Reported'] == department) & (department_mapping_df['State'] == 'Maine')]
+        standardized_name = department_mapping_row['Standardized'].values[0]
+        clean_name = department_mapping_row['Shortened Name'].values[0]
+
+        deep_dive_expander = st.expander(clean_name, expanded=False)
         with deep_dive_expander:
+            # Time series of department funding sources
             fig, ax = plt.subplots(figsize=(10, 6))
             plot_department_funding_sources(ax, department, me_processed_df, fred)
             st.pyplot(fig)
+
+            # Bar chart comparison to NH
+            st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, department_name=standardized_name))
 
 
 if __name__ == "__main__":
