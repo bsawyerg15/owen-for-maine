@@ -19,6 +19,7 @@ from b_App.visualizations import *
 from a_Configs.config import *
 
 def main():
+    
     """Execute the streamlit app."""
 
     # Initialize FRED API client
@@ -49,14 +50,13 @@ def main():
     economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
     # Scatter
-    comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df) / 1e6).round(0)
-    comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df) / 1e6).round(0)
+    comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df))
+    comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df))
 
-    comparison_through_time_df = create_state_comparison_through_time(me_standardized_df, nh_standardized_df, Config.YEAR_PREVIOUS, Config.YEAR_CURRENT)
+    comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, Config.YEAR_PREVIOUS, Config.YEAR_CURRENT)
 
     
 ######## Visualizations ###################################################################################
-    
 
     #######################################################################################################
     # Title & Intro
@@ -89,13 +89,9 @@ def main():
 
     col1, col2 = st.columns([1, 1.5])
 
-    with col1:
-        # Top Departments
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Largest Departments (2027)', prior_year='2018'))
+    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Largest Departments (2027)', prior_year='2018'))
 
-    with col2:
-        # Rest of Departments
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=10,
+    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=10,
                                                      to_exclude=['TOTAL',
                                                                  'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)',
                                                                  'DEPARTMENT OF EDUCATION',
@@ -111,7 +107,9 @@ def main():
     #######################################################################################################
 
 
-    st.plotly_chart(plot_state_comparison(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS))
+    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, top_n=3))
+
+    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, 12, 3))
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
 

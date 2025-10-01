@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from b_App.data_ingestion import get_fred_series
+from b_App.data_processing import create_state_comparison_through_time
 from a_Configs.config import Config
 
 # Cache for department mapping to avoid repeated file reads
@@ -192,7 +192,7 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
     return fig
 
 
-def plot_state_comparison(comparison_df_current, comparison_df_previous, year_current, year_previous):
+def plot_state_comparison_scatter(comparison_df_current, comparison_df_previous, year_current, year_previous):
     """Create scatter plot comparing ME and NH budgets with connecting lines."""
     fig = go.Figure()
 
@@ -256,6 +256,89 @@ def plot_state_comparison(comparison_df_current, comparison_df_previous, year_cu
     return fig
 
 
+def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, top_n=None, skip=None):
+    """Create grouped bar chart comparing ME and NH budgets with prior year dots."""
+    fig = go.Figure()
+
+    # Scale values to department scale
+    df = comparison_df_current / Config.DEPARTMENT_SCALE
+
+    # Sort by ME budget descending (largest first)
+    df = df.sort_values(by='ME', ascending=False)
+
+    # Skip first 'skip' departments if specified
+    if skip is not None:
+        df = df.iloc[skip:]
+
+    # Limit to 'top_n' departments after skipping if specified
+    if top_n is not None:
+        df = df.head(top_n)
+
+    # Scale and reindex prior year data to match sorted/limited current
+    diff_df = comparison_df_current - comparison_df_prior
+    diff_df = (diff_df / Config.DEPARTMENT_SCALE).reindex(df.index)
+
+    # Clean department labels for x-axis
+    x_labels = [clean_department_labels(dept) for dept in df.index]
+
+    # Use numeric positions for precise alignment
+    n = len(df)
+    x_numeric = list(range(n))
+
+    fig.add_trace(go.Bar(
+        x=x_numeric,
+        y=df['ME'],
+        offset=-0.2,
+        width=0.4,
+        name=f'ME {year_current}',
+        marker_color='blue',
+        text=[f'{val:.0f}' for val in df['ME'].values],
+        textposition='auto'
+    ))
+
+    fig.add_trace(go.Bar(
+        x=x_numeric,
+        y=df['NH'],
+        offset=0.2,
+        width=0.4,
+        name=f'NH {year_current}',
+        marker_color='red',
+        text=[f'{val:.0f}' for val in df['NH'].values],
+        textposition='auto'
+    ))
+
+    # Add prior year dots centered on each bar
+    fig.add_trace(go.Scatter(
+        x=x_numeric,  # centered on ME bars
+        y=diff_df['ME'],
+        mode='markers',
+        marker=dict(symbol='diamond', color='lightblue', size=8),
+        name=f'ME Change from {year_prior}'
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=[i + 0.4 for i in x_numeric],  # centered on NH bars
+        y=diff_df['NH'],
+        mode='markers',
+        marker=dict(symbol='diamond', color='lightcoral', size=8),
+        name=f'NH Change from {year_prior}'
+    ))
+
+    fig.update_layout(
+        title=f'Maine vs New Hampshire State Budgets - {year_current}',
+        xaxis_title='Department',
+        yaxis_title=f'Budget ({Config.DEPARTMENT_SCALE_LABEL})',
+        xaxis=dict(
+            tickmode='array',
+            tickvals=[i + 0.2 for i in x_numeric],
+            ticktext=x_labels,
+            tickangle=-45
+        )
+    )
+
+    return fig
+
+
 def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']):
     """Create summary plot for departments excluding major ones."""
     total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
@@ -303,7 +386,7 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
 def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
     total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
-    total_df = total_df.round(Config.DEPARTMENT_SCALE_ROUNDING)
+    total_df = total_df.round(Config.DEPARTMENT_SCALE_ROUNDING).astype(int)
     years_to_use = [year, prior_year] if prior_year else [year]
     total_for_year_df = total_df[years_to_use].sort_values(by=year, ascending=False)
     total_with_exclusions = total_for_year_df[~total_for_year_df.index.isin(to_exclude)]
@@ -388,3 +471,39 @@ def clean_department_labels(text, num_words_per_line=3):
     for i in range(0, len(words), num_words_per_line):
         lines.append(' '.join(words[i:i+num_words_per_line]))
     return '\n'.join(lines)
+
+
+def create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, start_year, end_year):
+    """Create styled comparison DataFrame between Maine and New Hampshire budgets for a given year."""
+    comparison_df = create_state_comparison_through_time(me_standardized_df, nh_standardized_df, start_year, end_year)
+
+    # Apply styling
+    unique_levels = set(col[1] for col in comparison_df.columns)
+    absmax = {}
+    for level in unique_levels:
+        cols_in_group = [col for col in comparison_df.columns if col[1] == level]
+        all_values = comparison_df[cols_in_group].values.flatten()
+        max_abs = max(abs(np.nanmin(all_values)), abs(np.nanmax(all_values)))
+        for col in cols_in_group:
+            absmax[col] = max_abs
+
+    styler = comparison_df.style
+    for col in comparison_df.columns:
+        styler = styler.background_gradient(
+            subset=[col],
+            cmap='RdBu',
+            vmin=-absmax[col],
+            vmax=absmax[col]
+        )
+
+    styler = styler.applymap(lambda v: 'background-color: white' if pd.isna(v) else '')
+
+    formats = {}
+    for col in comparison_df.columns:
+        if col[1] == '% Change':
+            formats[col] = lambda x: '-' if pd.isna(x) else f'{x:.1f}%'
+        else:
+            formats[col] = lambda x: '-' if pd.isna(x) else f'{x:.0f}'
+    styler = styler.format(formats)
+
+    return styler

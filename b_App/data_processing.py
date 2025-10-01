@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from .data_ingestion import get_economic_indicators_df
 
 def process_me_budget(me_budget_as_reported_df):
@@ -61,7 +62,6 @@ def create_state_comparison(year, me_standardized_df, nh_standardized_df):
 
 def create_state_comparison_through_time(me_standardized_df, nh_standardized_df, start_year, end_year):
     """Create comparison DataFrame between Maine and New Hampshire budgets for a given year."""
-   
     scale = 1e6
     me_standardized_df = (me_standardized_df / scale).round(0)  # Scale Maine data to millions
     nh_standardized_df = (nh_standardized_df / scale).round(0)  # Scale New Hampshire data to millions
@@ -102,12 +102,10 @@ def create_state_comparison_through_time(me_standardized_df, nh_standardized_df,
 
     # Combine into MultiIndex DataFrame
     comparison_df = pd.concat([df_me, df_nh, df_diff], keys=['ME', 'NH', 'Diff'], axis=1)
-    comparison_df[('ME', '% Change')] = comparison_df[('ME', '% Change')].map('{:.1f}%'.format)
-    comparison_df[('NH', '% Change')] = comparison_df[('NH', '% Change')].map('{:.1f}%'.format)
-    comparison_df[('Diff', '% Change')] = comparison_df[('Diff', '% Change')].map('{:.1f}%'.format)
 
-    comparison_df.sort_values(by=('ME', end_year), ascending=False, inplace=True
-                              )
+    comparison_df.sort_values(by=('ME', end_year), ascending=False, inplace=True)
+
+    comparison_df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
     return comparison_df
 
