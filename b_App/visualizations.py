@@ -9,6 +9,7 @@ from a_Configs.config import Config
 # Cache for department mapping to avoid repeated file reads
 _DEPARTMENT_MAPPING = None
 
+
 def _load_department_mapping():
     """Load and cache department mapping for Maine."""
     global _DEPARTMENT_MAPPING
@@ -20,6 +21,7 @@ def _load_department_mapping():
     return _DEPARTMENT_MAPPING
 
 plt.style.use('default')
+
 
 def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
     spending_name = 'DEPARTMENT TOTAL'
@@ -113,46 +115,15 @@ def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', sta
     return df
 
 
-def plot_department_breakdown(ax, department, me_as_reported_df, fred_client, start_year='2016'):
+def plot_department_funding_sources(ax, department, me_as_reported_df, start_year='2016'):
     """Create department breakdown chart by funding source."""
     department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
     funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
     df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
     df = df.sort_values(by=df.columns[-1], ascending=False) / Config.DEPARTMENT_SCALE
 
-    # Get economic indicators
-    # try:
-    #     grand_total_start = me_as_reported_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', 'DEPARTMENT TOTAL'), start_year] / 1e9
-    #     start_value = grand_total_start if grand_total_start > 0 else 8.2
-    # except KeyError:
-    #     start_value = 8.2
-
-    # try:
-    #     from data_ingestion import get_indexed_fred_series
-    #     cpi_yearly_reindexed = get_indexed_fred_series(fred_client, 'CPIAUCSL', start_year, start_value)
-    #     maine_gdp_reindexed = get_indexed_fred_series(fred_client, 'MENQGSP', start_year, start_value)
-    #     population = get_indexed_fred_series(fred_client, 'MEPOP', start_year, start_value)
-    #     add_economic_indicators = True
-    # except Exception as e:
-    #     print(f"Warning: Could not fetch FRED data: {e}")
-    #     # Create dummy series for plotting
-    #     years = df.columns
-    #     cpi_yearly_reindexed = pd.Series([start_value] * len(years), index=years)
-    #     maine_gdp_reindexed = pd.Series([start_value] * len(years), index=years)
-    #     population = pd.Series([start_value] * len(years), index=years)
-    #     add_economic_indicators = False
-
-    # # Plotting
-    # if df.empty or df.shape[0] == 0:
-    #     ax.text(0.5, 0.5, 'No data available', transform=ax.transAxes, ha='center', va='center')
-    #     return df
-
     top_5 = df.iloc[:5].index
     ax.stackplot(df.columns, df.values, labels=top_5)
-
-    # ax.plot(cpi_yearly_reindexed.index, cpi_yearly_reindexed.values, color='black', linestyle='--', label='CPI (Re-Indexed)')
-    # ax.plot(maine_gdp_reindexed.index, maine_gdp_reindexed.values, color='Blue', linestyle='--', label='Maine GDP (Re-Indexed)')
-    # ax.plot(population.index, population.values, color='RED', linestyle='--', label='Maine Res. Population')
 
     # Chart features
     ax.grid(axis='y', alpha=0.5, linestyle='dotted')
@@ -341,6 +312,14 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
     # Create vertical bar chart using plotly.graph_objects for better control over multiline labels
     fig = go.Figure()
 
+    if prior_year:
+        fig.add_trace(go.Bar(
+            x=list(range(len(top_departments))),
+            y=top_departments[prior_year].values,
+            marker_color='lightblue',
+            name=f'{prior_year}'
+        ))
+
     fig.add_trace(go.Bar(
         x=list(range(len(top_departments))),
         y=top_departments[year].values,
@@ -350,15 +329,6 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         marker_color='blue',
         name=f'{year}'
     ))
-
-    if prior_year:
-        fig.add_trace(go.Scatter(
-            x=list(range(len(top_departments))),
-            y=top_departments[prior_year].values,
-            mode='markers',
-            marker=dict(color='red'),
-            name=f'{prior_year}'
-        ))
 
     # Set x-axis labels with multiline text
     multiline_labels = [clean_department_labels(department) for department in top_departments.index]
@@ -377,7 +347,8 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         title=title,
         xaxis_title='Department',
         showlegend=True,
-        height=500
+        height=500,
+        barmode='stack'
     )
 
     return fig

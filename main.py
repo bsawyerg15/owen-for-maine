@@ -127,7 +127,7 @@ def main():
         deep_dive_expander = st.expander(department, expanded=False)
         with deep_dive_expander:
             fig, ax = plt.subplots(figsize=(10, 6))
-            plot_department_breakdown(ax, department, me_processed_df, fred)
+            plot_department_funding_sources(ax, department, me_processed_df, fred)
             st.pyplot(fig)
 
 
