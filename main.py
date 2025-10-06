@@ -68,7 +68,7 @@ def main():
 
     st.markdown("""
     When I first sat down to create my plan for Maine, I found that while the state budget is public, the details are buried in [1000-page pdfs](https://legislature.maine.gov/ofpr/total-state-budget-information/9304).
-    I realized that if the information is this inaccessible to me, it must be the same for every voter in Maine.
+    I realized that if the information is this inaccessible to me, it must be the same for every voter in the state.
     That said, I decided to build a tool to better understand our state’s budget and am releasing it publicly to help voters make more informed decisions this upcoming election.  
                 
     I’d like this tool to be as useful and transparent as possible, so if you see any issues or have additional questions that the tool doesn’t answer, please email my team at someemail@owenformaine.com.
