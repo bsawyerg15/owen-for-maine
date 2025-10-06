@@ -23,99 +23,38 @@ def _load_department_mapping():
 plt.style.use('default')
 
 
-def plot_budget_and_spending(df, department='TOTAL', start_year='2016'):
+def plot_budget_and_spending(df, department='TOTAL', funding_source='DEPARTMENT TOTAL ex FEDERAL', title='Maine State Budget and Spending', start_year='2016'):
     
     df = (df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
     
     spending_name = 'DEPARTMENT TOTAL'
-    budget_name = 'DEPARTMENT TOTAL ex FEDERAL'
 
     spending = df.loc[(department, spending_name)]
-    budget = df.loc[(department, budget_name)]
+    budget = df.loc[(department, funding_source)]
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=spending.index,
         y=spending.values,
         mode='lines',
-        name='Spending',
+        name='Total Spending',
         line=dict(color='blue')
     ))
     fig.add_trace(go.Scatter(
         x=budget.index,
         y=budget.values,
         mode='lines',
-        name='o.w. State Funded',
+        name=f'o.w. {funding_source.title()}',
         line=dict(color='red')
     ))
 
     fig.update_yaxes(title_text=Config.TOTAL_BUDGET_SCALE_LABEL, rangemode='tozero')
     fig.update_xaxes(tickangle=-45)
     fig.update_layout(
-        title='Maine State Budget and Spending'
+        title=title
     )
 
     return fig
-
-
-def plot_funding_sources(ax, funding_source, input_df, fred_client, name='', start_year='2016'):
-    """Create funding source chart with economic indicators."""
-    # Prepare dataframes
-    fund_df = input_df.xs(funding_source, level='Funding Source').fillna(0)
-    df = fund_df[fund_df.index != 'GRAND TOTALS - ALL DEPARTMENTS']
-    df = df.sort_values(by=df.columns[-1], ascending=False) / Config.TOTAL_BUDGET_SCALE
-
-    # Get economic indicators
-    total_funding_name = 'GRAND TOTALS - ALL DEPARTMENTS' if funding_source == 'DEPARTMENT TOTAL' else funding_source
-    try:
-        grand_total_start = input_df.loc[('GRAND TOTALS - ALL DEPARTMENTS', total_funding_name), start_year] / Config.TOTAL_BUDGET_SCALE
-        start_value = grand_total_start if grand_total_start > 0 else 8.2
-    except KeyError:
-        start_value = 8.2
-
-    try:
-        from data_ingestion import get_fred_series
-        cpi_yearly_reindexed = get_fred_series(fred_client, 'CPIAUCSL', start_year, start_value)
-        maine_gdp_reindexed = get_fred_series(fred_client, 'MENQGSP', start_year, start_value)
-        population = get_fred_series(fred_client, 'MEPOP', start_year, start_value)
-        add_economic_indicators = True
-    except Exception as e:
-        print(f"Warning: Could not fetch FRED data: {e}")
-        # Create dummy series for plotting
-        years = df.columns
-        cpi_yearly_reindexed = pd.Series([start_value] * len(years), index=years)
-        maine_gdp_reindexed = pd.Series([start_value] * len(years), index=years)
-        population = pd.Series([start_value] * len(years), index=years)
-        add_economic_indicators = False
-
-    # Plotting
-    if df.empty or df.shape[0] == 0:
-        ax.text(0.5, 0.5, 'No data available', transform=ax.transAxes, ha='center', va='center')
-        return df
-
-    top_5 = df.iloc[:5].index
-    ax.stackplot(df.columns, df.values, labels=top_5)
-
-    ax.plot(cpi_yearly_reindexed.index, cpi_yearly_reindexed.values, color='black', linestyle='--', label='CPI (Re-Indexed)')
-    ax.plot(maine_gdp_reindexed.index, maine_gdp_reindexed.values, color='Blue', linestyle='--', label='Maine GDP (Re-Indexed)')
-    ax.plot(population.index, population.values, color='RED', linestyle='--', label='Maine Res. Population')
-
-    # Chart features
-    ax.grid(axis='y', alpha=0.5, linestyle='dotted')
-    ax.legend(loc='upper left', fontsize='8')
-
-    if name:
-        budget_name = name
-    elif funding_source == "DEPARTMENT TOTAL":
-        budget_name = 'State Budget'
-    else:
-        budget_name = funding_source
-
-    ax.set_title(f'Maine {budget_name} by Department (in Billions)')
-    ax.set_xlabel('Fiscal Year')
-    ax.set_ylabel(f'Budget ({Config.TOTAL_BUDGET_SCALE_LABEL})')
-
-    return df
 
 
 def plot_department_funding_sources(department, me_as_reported_df, start_year='2016'):
@@ -124,7 +63,12 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year='2
     funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
     df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
     df = df.sort_values(by=df.columns[-1], ascending=False)
-    df = (df / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+
+    department_scale = Config.DEPARTMENT_SCALE if department != 'TOTAL' else Config.TOTAL_BUDGET_SCALE
+    department_scale_rounding = Config.DEPARTMENT_SCALE_ROUNDING if department != 'TOTAL' else Config.TOTAL_BUDGET_SCALE_ROUNDING
+    department_scale_label = Config.DEPARTMENT_SCALE_LABEL if department != 'TOTAL' else Config.TOTAL_BUDGET_SCALE_LABEL
+
+    df = (df / department_scale).round(department_scale_rounding)
 
     top_sources = df.index[:5]  # Top 5 sources by latest year value
 
@@ -139,16 +83,18 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year='2
             y=y_values,
             mode='lines',
             fill='tozeroy' if i == 0 else 'tonexty',
-            name=source,
+            name=source.title(),
             showlegend=(source in top_sources),
             stackgroup='one'  # Ensures stacking
         ))
 
+    department_name = '' if department == 'TOTAL' else f'{department.title()}'
+
     # Update layout
     fig.update_layout(
-        title=f'{department} Spending by Funding Source (in Millions)',
+        title=f'{department_name} Spending by Funding Source'.strip(),
         xaxis_title='Fiscal Year',
-        yaxis_title=f'Budget ({Config.DEPARTMENT_SCALE_LABEL})'
+        yaxis_title=f'Budget ({department_scale_label})'
     )
 
     # Add grid lines
@@ -158,10 +104,10 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year='2
     return fig
 
 
-def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
+def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], funding_source='TOTAL', title=None):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
     
-    spending_series = spending_series / Config.TOTAL_BUDGET_SCALE
+    spending_series = (spending_series / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     # Determine the first year from the minimum of both series indices/columns
     first_year = str(min([int(y) for y in spending_series.index]))
@@ -170,7 +116,7 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
     base_value = spending_series.loc[first_year]
 
     # Re-index economic indices to start at base_value
-    econ_reindexed = econ_index_df.div(econ_index_df[first_year], axis=0) * base_value
+    econ_reindexed = (econ_index_df.div(econ_index_df[first_year], axis=0) * base_value).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     # Create plotly figure
     fig = go.Figure()
@@ -180,7 +126,7 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
         x=spending_series.index,
         y=spending_series.values,
         mode='lines',
-        name='Spending',
+        name='Spending' if funding_source == 'TOTAL' else f'{funding_source.title()}',
         line=dict(color='blue')
     ))
 
@@ -199,10 +145,13 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[]):
             visible=visibility
         ))
 
+    if not title:
+        title = f'{funding_source.title()} Spending vs Economic Indices'
+
     # Update layout
     fig.update_layout(
-        title='Spending vs Economic Indices',
-        xaxis_title='Year',
+        title=title,
+        xaxis_title='Fiscal Year',
         yaxis_title='Value',
         legend_title='Legend',
     )
@@ -275,37 +224,22 @@ def plot_state_comparison_scatter(comparison_df_current, comparison_df_previous,
     return fig
 
 
-def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, top_n=None, skip=None, department_name=None):
-    """Create grouped bar chart comparing ME and NH budgets with prior year dots."""
-    # Validate that only one filtering method is used
-    if top_n is not None and department_name is not None:
-        raise ValueError("Cannot specify both 'top_n' and 'department_name'. Use one filtering method at a time.")
-
+def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, departments_to_show=None, title=None):
+    """Create grouped bar chart comparing ME and NH budgets with prior year dots. If departments_to_show is provided, only those departments are shown in the specified order."""
     fig = go.Figure()
 
     # Scale values to department scale
-    df = comparison_df_current / Config.DEPARTMENT_SCALE
+    df = (comparison_df_current / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
 
-    # Filter to specific department if provided, otherwise use top_n filtering
-    if department_name is not None:
-        if department_name not in df.index:
-            raise ValueError(f"Department '{department_name}' not found in current data")
-        df = df.loc[[department_name]]
-    else:
-        # Sort by ME budget descending (largest first)
-        df = df.sort_values(by='ME', ascending=False)
-
-        # Skip first 'skip' departments if specified
-        if skip is not None:
-            df = df.iloc[skip:]
-
-        # Limit to 'top_n' departments after skipping if specified
-        if top_n is not None:
-            df = df.head(top_n)
+    # Sort by ME budget descending (largest first)
+    df = df.sort_values(by='ME', ascending=False)
+    # Filter to specified departments if provided
+    if departments_to_show is not None:
+        df = df.loc[departments_to_show]
 
     # Scale and reindex prior year data to match sorted/limited current
     diff_df = comparison_df_current - comparison_df_prior
-    diff_df = (diff_df / Config.DEPARTMENT_SCALE).reindex(df.index)
+    diff_df = (diff_df / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING).reindex(df.index)
 
     # Clean department labels for x-axis
     x_labels = [clean_department_labels(dept) for dept in df.index]
@@ -354,32 +288,93 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
     ))
 
     # Adjust title based on filtering mode
-    if department_name is not None:
-        title = f'Maine vs New Hampshire State Budgets - {department_name}'
-    else:
-        title = f'Maine vs New Hampshire State Budgets - {year_current}'
+    if not title:
+        title = f'Maine vs New Hampshire State Budgets'
 
     fig.update_layout(
         title=title,
-        xaxis_title='Department',
         yaxis_title=f'Budget ({Config.DEPARTMENT_SCALE_LABEL})',
         xaxis=dict(
             tickmode='array',
             tickvals=[i + 0.2 for i in x_numeric],
             ticktext=x_labels,
-            tickangle=-45
+            tickangle=-45 if len(departments_to_show) > 3 else 0
         )
     )
 
     return fig
 
 
-def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']):
+def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, department_name):
+    """Create bar chart comparing ME and NH budgets for a single department with prior year dots."""
+    if department_name not in comparison_df_current.index:
+        raise ValueError(f"Department '{department_name}' not found in current data")
+
+    fig = go.Figure()
+
+    # Scale current and prior values
+    current_me = (comparison_df_current.loc[department_name, 'ME'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+    current_nh = (comparison_df_current.loc[department_name, 'NH'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+    prior_me = (comparison_df_prior.loc[department_name, 'ME'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+    prior_nh = (comparison_df_prior.loc[department_name, 'NH'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+
+    # Calculate differences for prior year dots
+    diff_me = current_me - prior_me
+    diff_nh = current_nh - prior_nh
+
+    # Add ME and NH current year bars
+    fig.add_trace(go.Bar(
+        x=['ME'],
+        y=[current_me],
+        name=f'ME {year_current}',
+        marker_color='blue',
+        text=[f'{current_me:.0f}'],
+        textposition='auto'
+    ))
+
+    fig.add_trace(go.Bar(
+        x=['NH'],
+        y=[current_nh],
+        name=f'NH {year_current}',
+        marker_color='red',
+        text=[f'{current_nh:.0f}'],
+        textposition='auto'
+    ))
+
+    # Add prior year change dots
+    fig.add_trace(go.Scatter(
+        x=['ME'],
+        y=[diff_me],
+        mode='markers',
+        marker=dict(symbol='diamond', color='lightblue', size=8),
+        name=f'ME Change from {year_prior}'
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=['NH'],
+        y=[diff_nh],
+        mode='markers',
+        marker=dict(symbol='diamond', color='lightcoral', size=8),
+        name=f'NH Change from {year_prior}'
+    ))
+
+    title = f'Maine vs New Hampshire State Budgets - {department_name}'
+
+    fig.update_layout(
+        title=title,
+        yaxis_title=f'Budget ({Config.DEPARTMENT_SCALE_LABEL})'
+    )
+
+    return fig
+
+
+def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION'], title='Summary of Departments ex Health, Education, and Transportation'):
     """Create summary plot for departments excluding major ones."""
-    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
+    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0)
+    total_df = (total_df / Config.DEPARTMENT_SCALE)
     ex_big_total_df = total_df[~total_df.index.isin(big_departments)]
     ex_big_total_df = ex_big_total_df.replace(0, np.nan)
-    mean_small = ex_big_total_df.mean()
+    mean_small = ex_big_total_df.mean().round(Config.DEPARTMENT_SCALE_ROUNDING)
     count_small = (ex_big_total_df > 0).sum()
 
     fig = go.Figure()
@@ -402,7 +397,7 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
     ))
 
     fig.update_layout(
-        title='Summary of Departments ex Health, Education, and Transportation',
+        title=title,
         xaxis_title='Fiscal Year',
         yaxis_title=f'Mean Size ({Config.DEPARTMENT_SCALE_LABEL})',
         yaxis2=dict(
@@ -437,8 +432,11 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         fig.add_trace(go.Bar(
             x=list(range(len(top_departments))),
             y=top_departments[prior_year].values,
+            text=[f'{val}' for val in top_departments[prior_year].values],
+            textposition='auto',
+            hovertext=top_departments.index,
             marker_color='lightblue',
-            name=f'{prior_year}'
+            name=f'FY {prior_year}'
         ))
 
     fig.add_trace(go.Bar(
@@ -448,7 +446,7 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         textposition='auto',
         hovertext=top_departments.index,
         marker_color='blue',
-        name=f'{year}'
+        name=f'FY {year}'
     ))
 
     # Set x-axis labels with multiline text
@@ -457,7 +455,7 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
         tickmode='array',
         tickvals=list(range(len(top_departments))),
         ticktext=multiline_labels,
-        tickangle=-45
+        tickangle=-45 if top_n > 4 else 0
     )
 
     if not title:
@@ -466,10 +464,9 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
     fig.update_yaxes(title_text=f'Spending ({Config.DEPARTMENT_SCALE_LABEL})')
     fig.update_layout(
         title=title,
-        xaxis_title='Department',
         showlegend=True,
         height=500,
-        barmode='stack'
+        barmode='group'
     )
 
     return fig

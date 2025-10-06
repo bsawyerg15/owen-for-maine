@@ -64,61 +64,41 @@ def main():
 
     st.title("Maine State Budget Tool")
 
+    st.subheader("By: [Owen For Maine](https://owenformaine.com)")
+
     st.markdown("""
-    Mainers - have you ever wondered how your government is spending your tax dollars? The state government publishes this information [here](https://legislature.maine.gov/ofpr/total-state-budget-information/9304), but as far as we can tell, the data is only in 1000 page pdfs that make it hard to understand where the money is going through time or draw conclusions on whether the spending makes sense. 
-    The Owen For Maine campaign is bridging this gap by producing the Maine State Budget Tool. The goals of this tool are:
-    1.	To make it easier to understand the factual picture of where funds are going and where growth in spending is occurring
-    2.	To help folks draw conclusions on whether the growth we’re seeing makes sense by putting the factual picture in context
+    When I first sat down to create my plan for Maine, I found that while the state budget is public, the details are buried in [1000-page pdfs](https://legislature.maine.gov/ofpr/total-state-budget-information/9304).
+    I realized that if the information is this inaccessible to me, it must be the same for every voter in Maine.
+    That said, I decided to build a tool to better understand our state’s budget and am releasing it publicly to help voters make more informed decisions this upcoming election.  
                 
-    We want this tool to be as fair and transparent as possible. If you see any issues with how we’re presenting the data or have questions that the tool currently isn’t able to answer, please reach out to someemail@owenformaine.com.
-    """)
+    I’d like this tool to be as useful and transparent as possible, so if you see any issues or have additional questions that the tool doesn’t answer, please email my team at someemail@owenformaine.com.
     
+    Best,
+                
+    Owen
+    """)
+
     #######################################################################################################
     # Headline Spending Section
     #######################################################################################################
 
-    st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'DEPARTMENT TOTAL')], economic_index_df, to_hide=['CPI', 'Maine Population']))
+    st.header("Bird's Eye View")
 
-    st.plotly_chart(plot_budget_and_spending(me_processed_df))
+    st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'GENERAL FUND')], economic_index_df, to_hide=['CPI', 'Maine Population'], funding_source='GENERAL FUND'))
+
+    st.plotly_chart(plot_department_funding_sources('TOTAL', me_processed_df))
+
+    # st.plotly_chart(plot_budget_and_spending(me_processed_df, funding_source='GENERAL FUND', title='General Fund vs Overall Spending'))
 
     #######################################################################################################
     # Why is it growing?
     #######################################################################################################
 
-    st.header("Where is Maine Spending $?")
+    st.header("Spending Footprint")
 
-    col1, col2 = st.columns([1, 1.5])
+    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Spending is Dominated by 3 Departments', prior_year='2018'))
 
-    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, produce_all_others=True, title='Largest Departments (2027)', prior_year='2018'))
-
-    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=10,
-                                                     to_exclude=['TOTAL',
-                                                                 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)',
-                                                                 'DEPARTMENT OF EDUCATION',
-                                                                 'DEPARTMENT OF TRANSPORTATION'],
-                                                                 produce_all_others=True,
-                                                                 title='Other Departments',
-                                                                 prior_year='2018'))
-
-    st.plotly_chart(plot_small_departments_summary(me_processed_df))
-
-    #######################################################################################################
-    # Maine vs New Hampshire Comparison
-    #######################################################################################################
-
-
-    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, top_n=3))
-
-    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, 12, 3))
-
-    st.dataframe(comparison_through_time_df, use_container_width=True)
-
-    #######################################################################################################
-    # Deep Dives
-    #######################################################################################################
-
-    st.subheader("Department Deep Dives")
-
+    ### Deep Dives into Key Departments
     departments_to_deep_dive = ['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
 
     for department in departments_to_deep_dive:
@@ -132,7 +112,33 @@ def main():
             st.plotly_chart(plot_department_funding_sources(department, me_processed_df))
 
             # Bar chart comparison to NH
-            st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, department_name=standardized_name))
+            st.plotly_chart(plot_state_single_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, department_name=standardized_name))
+
+    # Small Departments Summary
+    st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=10,
+                                                     to_exclude=['TOTAL',
+                                                                 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)',
+                                                                 'DEPARTMENT OF EDUCATION',
+                                                                 'DEPARTMENT OF TRANSPORTATION'],
+                                                                 produce_all_others=True,
+                                                                 title='Other Departments',
+                                                                 prior_year='2018'))
+
+    st.plotly_chart(plot_small_departments_summary(me_processed_df, title='\"Smaler\" Departments are Growing in Number and Size'))
+
+    #######################################################################################################
+    # Maine vs New Hampshire Comparison
+    #######################################################################################################
+
+    st.header("Comparison to New Hampshire")
+
+    top_3_departments = comparison_df_current.sort_values(by='ME', ascending=False).iloc[0:3].index.values
+    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, top_3_departments, title='ME vs NH: Top Departments & Growth'))
+
+    biggest_underinvestment = ['MILITARY & VETERANS', 'ENERGY', 'ECONOMIC DEVELOPMENT']
+    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, biggest_underinvestment, 'ME vs NH: Areas of Largest Underinvestment'))
+
+    st.dataframe(comparison_through_time_df, use_container_width=True)
 
 
 if __name__ == "__main__":
