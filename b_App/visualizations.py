@@ -358,7 +358,7 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
         name=f'NH Change from {year_prior}'
     ))
 
-    title = f'Maine vs New Hampshire State Budgets - {department_name}'
+    title = f'{department_name.title()}: Maine vs New Hampshire'
 
     fig.update_layout(
         title=title,
