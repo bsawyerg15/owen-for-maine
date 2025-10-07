@@ -17,6 +17,7 @@ from b_App.data_ingestion import  *
 from b_App.data_processing import *
 from b_App.visualizations import *
 from a_Configs.config import *
+from b_App.streamlit_viz_helper import *
 
 def main():
     
@@ -100,53 +101,10 @@ def main():
     tab1, tab2 = st.tabs(["Total Spending", "General Fund"])
 
     with tab1:
-        funding_source = 'DEPARTMENT TOTAL'
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=3, funding_source=funding_source, produce_all_others=True, title='Spending is Dominated by 3 Departments', prior_year='2018'))
+        render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, "_tab1")
 
-        ### Deep Dives into Key Departments
-        departments_to_deep_dive = ['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
-
-        for department in departments_to_deep_dive:
-            department_mapping_row = department_mapping_df[(department_mapping_df['As Reported'] == department) & (department_mapping_df['State'] == 'Maine')]
-            standardized_name = department_mapping_row['Standardized'].values[0]
-            clean_name = department_mapping_row['Shortened Name'].values[0]
-
-            deep_dive_expander = st.expander(clean_name, expanded=False)
-            with deep_dive_expander:
-                # Time series of department funding sources
-                st.plotly_chart(plot_department_funding_sources(department, me_processed_df))
-
-                # Bar chart comparison to NH
-                st.plotly_chart(plot_state_single_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, department_name=standardized_name))
-
-        # Small Departments Summary
-        st.plotly_chart(produce_department_bar_chart(me_processed_df, '2027', top_n=10,
-                                                         to_exclude=Config.LARGE_MAINE_DEPARTMENTS,
-                                                         funding_source=funding_source,
-                                                                     produce_all_others=True,
-                                                                     title=f'Other Departments - {funding_source}',
-                                                                     prior_year='2018'))
-
-        st.plotly_chart(plot_small_departments_summary(me_processed_df, title='\"Smaler\" Departments are Growing in Number and Size'))
-
-         # Get list of smaller departments (excluding top 3 and TOTAL)
-        all_departments_sorted = me_processed_df.xs('DEPARTMENT TOTAL', level='Funding Source').sort_values(by='2027', ascending=False).index.tolist()
-        smaller_departments = [dept for dept in all_departments_sorted if dept not in Config.LARGE_MAINE_DEPARTMENTS]
-
-        deep_dive_expander = st.expander("Deep Dive into Smaller Departments", expanded=False)
-        with deep_dive_expander:
-            selected_department = st.selectbox("Select a Department:", smaller_departments)
-
-            if selected_department:
-                department_mapping_row = department_mapping_df[(department_mapping_df['As Reported'] == selected_department) & (department_mapping_df['State'] == 'Maine')]
-                standardized_name = department_mapping_row['Standardized'].values[0]
-                clean_name = department_mapping_row['Shortened Name'].values[0]
-
-                # Time series of department funding sources
-                st.plotly_chart(plot_department_funding_sources(selected_department, me_processed_df))
-
-                # Bar chart comparison to NH
-                st.plotly_chart(plot_state_single_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, department_name=standardized_name))
+    with tab2:
+        render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, "_tab2")
 
 
     #######################################################################################################

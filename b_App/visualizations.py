@@ -413,8 +413,10 @@ def plot_small_departments_summary(df, funding_source='DEPARTMENT TOTAL', big_de
     return fig
 
 
-def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT TOTAL', to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
+def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT TOTAL', to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, econ_index_df=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
+   
+    # Select the departments and funding for the chart
     total_df = df.xs(funding_source, level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
     total_df = total_df.round(Config.DEPARTMENT_SCALE_ROUNDING).astype(int)
     years_to_use = [year, prior_year] if prior_year else [year]
@@ -424,6 +426,23 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
     if produce_all_others:
         others_sum = total_with_exclusions.iloc[top_n:].sum()
         top_departments = pd.concat([top_departments, pd.DataFrame([others_sum.values], index=['ALL OTHERS'], columns=top_departments.columns)])
+
+    # Generate CPI + inflation
+    if prior_year and econ_index_df is not None:
+        cpi_n_pop_growth_series = econ_index_df.loc['CPI & Population Growth']
+        cpi_n_pop_growth = (cpi_n_pop_growth_series / cpi_n_pop_growth_series[prior_year])
+        
+        # extend with growth rate if missing data
+        if year in cpi_n_pop_growth.index:
+            growth_over_period = cpi_n_pop_growth[year]
+        else:
+            latest_growth = cpi_n_pop_growth.dropna().tail(1)
+            num_periods_avail = int(latest_growth.index[0]) - int(prior_year)
+            num_periods = int(year) - int(prior_year)
+            growth_over_period = (latest_growth.values[0] ** (num_periods / num_periods_avail))
+
+        department_cpi_n_pop_growth = (top_departments[prior_year] * growth_over_period).round(Config.DEPARTMENT_SCALE_ROUNDING)
+
 
     # Create vertical bar chart using plotly.graph_objects for better control over multiline labels
     fig = go.Figure()
@@ -448,6 +467,16 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
         marker_color='blue',
         name=f'FY {year}'
     ))
+
+    if prior_year and econ_index_df is not None:
+        fig.add_trace(go.Scatter(
+            x=list(range(len(top_departments))),
+            y=department_cpi_n_pop_growth.values,
+            mode='markers',
+            marker=dict(symbol='circle', color='lightblue', size=8),
+            name=f'{prior_year} + CPI & Pop. Growth',
+            hovertext=top_departments.index
+        ))
 
     # Set x-axis labels with multiline text
     multiline_labels = [clean_department_labels(department) for department in top_departments.index]
