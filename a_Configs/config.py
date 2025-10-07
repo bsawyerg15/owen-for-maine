@@ -26,7 +26,7 @@ class Config:
 
     # Analysis parameters
     YEAR_CURRENT = '2025'
-    YEAR_PREVIOUS = '2018'
+    YEAR_PREVIOUS = '2016'
     LATEST_MAINE_BUDGET = '2025'
     DEPARTMENTS_TO_IGNORE = []  # Add any departments to ignore in comparisons
 

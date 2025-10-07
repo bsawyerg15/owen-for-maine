@@ -44,7 +44,7 @@ def render_spending_footprint_tab(me_processed_df, econ_index_df, funding_source
 
     deep_dive_expander = st.expander("Deep Dive into Smaller Departments", expanded=False)
     with deep_dive_expander:
-        selected_department = st.selectbox(f"Select a Department:", smaller_departments, key=f"selectbox{suffix}")
+        selected_department = st.selectbox(f"Select a Department:", smaller_departments, format_func=lambda x: x.title(), key=f"selectbox{suffix}")
 
         if selected_department:
             department_mapping_row = department_mapping_df[(department_mapping_df['As Reported'] == selected_department) & (department_mapping_df['State'] == 'Maine')]
