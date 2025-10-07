@@ -368,9 +368,9 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
     return fig
 
 
-def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION'], title='Summary of Departments ex Health, Education, and Transportation'):
+def plot_small_departments_summary(df, funding_source='DEPARTMENT TOTAL', big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION'], title='Summary of Departments ex Health, Education, and Transportation'):
     """Create summary plot for departments excluding major ones."""
-    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0)
+    total_df = df.xs(funding_source, level='Funding Source').fillna(0)
     total_df = (total_df / Config.DEPARTMENT_SCALE)
     ex_big_total_df = total_df[~total_df.index.isin(big_departments)]
     ex_big_total_df = ex_big_total_df.replace(0, np.nan)
@@ -413,9 +413,9 @@ def plot_small_departments_summary(df, big_departments=['DEPARTMENT OF HEALTH AN
     return fig
 
 
-def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
+def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT TOTAL', to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
-    total_df = df.xs('DEPARTMENT TOTAL', level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
+    total_df = df.xs(funding_source, level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
     total_df = total_df.round(Config.DEPARTMENT_SCALE_ROUNDING).astype(int)
     years_to_use = [year, prior_year] if prior_year else [year]
     total_for_year_df = total_df[years_to_use].sort_values(by=year, ascending=False)
@@ -459,7 +459,7 @@ def produce_department_bar_chart(df, year, top_n=10, to_exclude=['TOTAL'], produ
     )
 
     if not title:
-        title = f'Departments by Spending'
+        title = f'{funding_source.title()} Departments by Spending'
 
     fig.update_yaxes(title_text=f'Spending ({Config.DEPARTMENT_SCALE_LABEL})')
     fig.update_layout(

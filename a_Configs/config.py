@@ -19,6 +19,8 @@ class Config:
         "2016-2017": 8
     }
 
+    LARGE_MAINE_DEPARTMENTS = ['TOTAL', 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
+
     # New Hampshire budget years
     NH_BUDGET_YEARS = [str(year) for year in range(2016, 2026)]
 
