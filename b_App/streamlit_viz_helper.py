@@ -36,7 +36,7 @@ def render_spending_footprint_tab(me_processed_df, econ_index_df, funding_source
                                                  econ_index_df=econ_index_df)
                                                  )
 
-    st.plotly_chart(plot_small_departments_summary(me_processed_df, funding_source=funding_source, title='\"Smaler\" Departments are Growing in Number and Size'))
+    st.plotly_chart(plot_small_departments_summary(me_processed_df, funding_source=funding_source, title='\"Smaller\" Departments are Growing in Number and Size'))
 
      # Get list of smaller departments (excluding top 3 and TOTAL)
     all_departments_sorted = me_processed_df.xs(funding_source, level='Funding Source').sort_values(by=Config.LATEST_MAINE_BUDGET, ascending=False).index.tolist()

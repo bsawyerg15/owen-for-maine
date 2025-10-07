@@ -430,13 +430,13 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
     # Generate CPI + inflation
     if prior_year and econ_index_df is not None:
         cpi_n_pop_growth_series = econ_index_df.loc['CPI & Population Growth']
-        cpi_n_pop_growth = (cpi_n_pop_growth_series / cpi_n_pop_growth_series[prior_year])
+        cpi_n_pop_growth = (cpi_n_pop_growth_series / cpi_n_pop_growth_series[prior_year]).dropna()
         
         # extend with growth rate if missing data
         if year in cpi_n_pop_growth.index:
             growth_over_period = cpi_n_pop_growth[year]
         else:
-            latest_growth = cpi_n_pop_growth.dropna().tail(1)
+            latest_growth = cpi_n_pop_growth.tail(1)
             num_periods_avail = int(latest_growth.index[0]) - int(prior_year)
             num_periods = int(year) - int(prior_year)
             growth_over_period = (latest_growth.values[0] ** (num_periods / num_periods_avail))
