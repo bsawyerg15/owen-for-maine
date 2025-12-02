@@ -19,9 +19,25 @@ from b_App.visualizations import *
 from a_Configs.config import *
 from b_App.streamlit_viz_helper import *
 
+st.set_page_config(layout="wide")
+
 def main():
-    
+
     """Execute the streamlit app."""
+
+    # Year selection widgets
+    st.sidebar.header("Parameters")
+    year_options = [str(year) for year in range(2016, 2026)]
+    selected_year_current = st.sidebar.selectbox(
+        "Current Year",
+        options=year_options,
+        index=year_options.index(Config.YEAR_CURRENT) if Config.YEAR_CURRENT in year_options else 0
+    )
+    selected_year_previous = st.sidebar.selectbox(
+        "Previous Year",
+        options=year_options,
+        index=year_options.index(Config.YEAR_PREVIOUS) if Config.YEAR_PREVIOUS in year_options else 0
+    )
 
     # Initialize FRED API client
     fred = Fred(api_key=Config.FRED_API_KEY)
@@ -51,10 +67,10 @@ def main():
     economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
     # Scatter
-    comparison_df_current = (create_state_comparison(Config.YEAR_CURRENT, me_standardized_df, nh_standardized_df))
-    comparison_df_previous = (create_state_comparison(Config.YEAR_PREVIOUS, me_standardized_df, nh_standardized_df))
+    comparison_df_current = (create_state_comparison(selected_year_current, me_standardized_df, nh_standardized_df))
+    comparison_df_previous = (create_state_comparison(selected_year_previous, me_standardized_df, nh_standardized_df))
 
-    comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, Config.YEAR_PREVIOUS, Config.YEAR_CURRENT)
+    comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, selected_year_previous, selected_year_current)
 
     
 ######## Visualizations ###################################################################################
@@ -84,6 +100,7 @@ def main():
     #######################################################################################################
 
     st.header("Bird's Eye View")
+    
 
     st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'GENERAL FUND')], economic_index_df, to_hide=['CPI', 'Maine Population'], funding_source='GENERAL FUND'))
 
@@ -101,7 +118,7 @@ def main():
     tab1, tab2 = st.tabs(["Total Spending", "General Fund"])
 
     with tab1:
-        render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, "_tab1")
+        render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, "_tab1")
 
     with tab2:
         render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, "_tab2")
@@ -115,10 +132,10 @@ def main():
     st.header("Comparison to New Hampshire")
 
     top_3_departments = comparison_df_current.sort_values(by='ME', ascending=False).iloc[0:3].index.values
-    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, top_3_departments, title='ME vs NH: Top Departments & Growth'))
+    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, top_3_departments, title='ME vs NH: Top Departments & Growth'))
 
     biggest_underinvestment = ['MILITARY & VETERANS', 'ENERGY', 'ECONOMIC DEVELOPMENT']
-    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, Config.YEAR_CURRENT, Config.YEAR_PREVIOUS, biggest_underinvestment, 'ME vs NH: Areas of Largest Underinvestment'))
+    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, biggest_underinvestment, 'ME vs NH: Areas of Largest Underinvestment'))
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
 
