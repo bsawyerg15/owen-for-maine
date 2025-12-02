@@ -121,7 +121,8 @@ def main():
         render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, "_tab1")
 
     with tab2:
-        render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, "_tab2")
+        render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, 
+                                      "_tab2")
 
 
     #######################################################################################################

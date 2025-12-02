@@ -79,23 +79,27 @@ def create_state_comparison_through_time(me_standardized_df, nh_standardized_df,
     nh_diff_perc = (nh_end_totals - nh_start_totals) / nh_start_totals * 100
 
     end_diff = me_end_totals - nh_end_totals
+    start_diff = me_start_totals - nh_start_totals
     diff_diff_arith = me_diff_arith - nh_diff_arith
     diff_diff_perc = me_diff_perc - nh_diff_perc
 
     df_me = pd.DataFrame({
         end_year: me_end_totals,
+        start_year: me_start_totals,
         f'Change from {start_year}': me_diff_arith,
         '% Change': me_diff_perc
     })
 
     df_nh = pd.DataFrame({
         end_year: nh_end_totals,
+        start_year: nh_start_totals,
         f'Change from {start_year}': nh_diff_arith,
         '% Change': nh_diff_perc
     })
 
     df_diff = pd.DataFrame({
         end_year: end_diff,
+        start_year: start_diff,
         f'Change from {start_year}': diff_diff_arith,
         '% Change': diff_diff_perc
     })
