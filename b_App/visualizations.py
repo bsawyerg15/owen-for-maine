@@ -57,12 +57,12 @@ def plot_budget_and_spending(df, department='TOTAL', funding_source='DEPARTMENT 
     return fig
 
 
-def plot_department_funding_sources(department, me_as_reported_df, start_year='2016'):
+def plot_department_funding_sources(department, me_as_reported_df, start_year, end_year):
     """Create department breakdown chart by funding source."""
     department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
     funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
     df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
-    df = df.sort_values(by=df.columns[-1], ascending=False)
+    df = df.sort_values(by=end_year, ascending=False)
 
     department_scale = Config.DEPARTMENT_SCALE if department != 'TOTAL' else Config.TOTAL_BUDGET_SCALE
     department_scale_rounding = Config.DEPARTMENT_SCALE_ROUNDING if department != 'TOTAL' else Config.TOTAL_BUDGET_SCALE_ROUNDING
@@ -93,6 +93,10 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year='2
     # Update layout
     fig.update_layout(
         title=f'{department_name} Spending by Funding Source'.strip(),
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False
+        ),
         xaxis_title='Fiscal Year',
         yaxis_title=f'Budget ({department_scale_label})'
     )
@@ -104,19 +108,20 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year='2
     return fig
 
 
-def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], funding_source='TOTAL', title=None):
+def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], funding_source='TOTAL', title=None, start_year=None):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
     
     spending_series = (spending_series / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     # Determine the first year from the minimum of both series indices/columns
-    first_year = str(min([int(y) for y in spending_series.index]))
+    if not start_year:
+        start_year = str(min([int(y) for y in spending_series.index]))
 
     # Get base value from spending series at first year
-    base_value = spending_series.loc[first_year]
+    base_value = spending_series.loc[start_year]
 
     # Re-index economic indices to start at base_value
-    econ_reindexed = (econ_index_df.div(econ_index_df[first_year], axis=0) * base_value).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
+    econ_reindexed = (econ_index_df.div(econ_index_df[start_year], axis=0) * base_value).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     # Create plotly figure
     fig = go.Figure()
@@ -146,11 +151,15 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], fund
         ))
 
     if not title:
-        title = f'{funding_source.title()} Spending vs Economic Indices'
+        title = f'{funding_source.title()} Spending vs Economic Indices<br>(Reindexed to FY {start_year} Spending)'
 
     # Update layout
     fig.update_layout(
         title=title,
+        xaxis=dict(
+            range=[start_year, spending_series.index[-1]],
+            autorange=False
+        ),
         xaxis_title='Fiscal Year',
         yaxis_title='Value',
         legend_title='Legend',

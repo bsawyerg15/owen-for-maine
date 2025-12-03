@@ -21,7 +21,7 @@ def render_spending_footprint_tab(me_processed_df, econ_index_df, funding_source
         deep_dive_expander = st.expander(clean_name, expanded=False)
         with deep_dive_expander:
             # Time series of department funding sources
-            st.plotly_chart(plot_department_funding_sources(department, me_processed_df), key=f"{department}_funding_{suffix}")
+            st.plotly_chart(plot_department_funding_sources(department, me_processed_df, prev_year, current_year), key=f"{department}_funding_{suffix}")
 
             # Bar chart comparison to NH
             st.plotly_chart(plot_state_single_comparison_bars(comparison_df_current, comparison_df_previous, current_year, prev_year, department_name=standardized_name), key=f"{department}_state_comp_{suffix}")
@@ -52,7 +52,7 @@ def render_spending_footprint_tab(me_processed_df, econ_index_df, funding_source
             clean_name = department_mapping_row['Shortened Name'].values[0]
 
             # Time series of department funding sources
-            st.plotly_chart(plot_department_funding_sources(selected_department, me_processed_df), key=f"{selected_department}_funding_{suffix}")
+            st.plotly_chart(plot_department_funding_sources(selected_department, me_processed_df, prev_year, current_year), key=f"{selected_department}_funding_{suffix}")
 
             # Bar chart comparison to NH
             st.plotly_chart(plot_state_single_comparison_bars(comparison_df_current, comparison_df_previous, current_year, prev_year, department_name=standardized_name), key=f"{selected_department}_state_comp_{suffix}")

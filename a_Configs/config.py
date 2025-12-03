@@ -34,6 +34,7 @@ class Config:
     DATA_DIR_ME = 'z_Data/ME/'
     DATA_DIR_NH = 'z_Data/NH/'
     DEPARTMENT_MAPPING_FILE = 'a_Configs/department_mapping.csv'
+    SUB_DEPARTMENT_MAPPING_FILE = 'a_Configs/sub_department_breakout.csv'
 
     # Output directories
     EXPLORATION_DIR = 'c_Exploration/'

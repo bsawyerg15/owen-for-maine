@@ -34,14 +34,68 @@ def add_department_total_ex_federal(df):
     return pd.concat([df, ex_federal_df]).sort_index()
 
 
-def standardize_budget(as_reported_df, category_mapping_df, full_state_name):
+def standardize_budget_from_sub_departments(as_reported_df, sub_category_map_df, full_state_name):
+    """Standardize budget data using sub-department mapping for comparison across States."""
+    state_mapping_df = sub_category_map_df[sub_category_map_df['State'] == full_state_name][['As Reported', 'Funding Source', 'Standardized']]
+
+    # Map as reported to standardized names
+    standardized_df = as_reported_df.reset_index().merge(state_mapping_df, left_on=['Department', 'Funding Source'], right_on=['As Reported', 'Funding Source'], how='inner')
+    standardized_df['Standardized'] = standardized_df['Standardized'].str.upper()
+    standardized_df.drop(columns=['Department', 'As Reported', 'Funding Source'], inplace=True)
+    standardized_df.rename(columns={'Standardized': 'Department'}, inplace=True)
+    standardized_df['Funding Source'] = 'DEPARTMENT TOTAL'
+    
+    # Sum over any departments that mapped to the same standardized name
+    standardized_df = standardized_df.groupby(['Department', 'Funding Source']).sum()
+
+    return standardized_df
+
+
+def standardize_budget_from_direct_mapping(as_reported_df, category_mapping_df, full_state_name):
     """Standardize budget data using department mapping for comparison across States."""
     state_mapping_df = category_mapping_df[category_mapping_df['State'] == full_state_name][['As Reported', 'Standardized']]
 
+    # Map as reported to standardized names
     standardized_df = as_reported_df.reset_index().merge(state_mapping_df, left_on='Department', right_on='As Reported', how='left')
     standardized_df['Standardized'] = standardized_df['Standardized'].str.upper()
     standardized_df.drop(columns=['Department', 'As Reported'], inplace=True)
     standardized_df.rename(columns={'Standardized': 'Department'}, inplace=True)
+
+    # Sum over any departments that mapped to the same standardized name
+    standardized_df = standardized_df.groupby(['Department', 'Funding Source']).sum()
+
+    return standardized_df    
+
+
+def identify_double_counted_departments(as_reported_df, sub_category_map_df, full_state_name):
+    """ Subtract out the sub-departments that were mapped from totals to avoid double counting """
+    state_sub_category_map_df = sub_category_map_df[sub_category_map_df['State'] == full_state_name]
+   
+    # Identify line items already mapped via sub-departments
+    as_reported_df_used = as_reported_df.reset_index().merge(state_sub_category_map_df[['As Reported', 'Funding Source']], left_on=['Department', 'Funding Source'], right_on=['As Reported', 'Funding Source'], how='inner')
+    as_reported_df_used.drop(columns=['As Reported'], inplace=True)
+    
+    # Create total already mapped per department
+    totals_already_mapped = as_reported_df_used.drop(columns='Funding Source').set_index('Department').groupby(level=['Department']).sum()
+    totals_already_mapped['Funding Source'] = 'DEPARTMENT TOTAL'
+    totals_already_mapped = totals_already_mapped.reset_index().set_index(['Department', 'Funding Source'])
+    return pd.concat([totals_already_mapped, as_reported_df_used.set_index(['Department', 'Funding Source'])])
+
+
+def standardize_budget(as_reported_df, category_mapping_df, sub_category_map_df, full_state_name):
+    """Standardize budget data using department mapping for comparison across States."""
+    
+    # Map the exception cases first via sub-departments
+    standardized_df_from_sub_departments = standardize_budget_from_sub_departments(as_reported_df, sub_category_map_df, full_state_name)
+    
+    # Subtract out the sub-departments that were mapped from totals to avoid double counting
+    totals_already_mapped = identify_double_counted_departments(as_reported_df, sub_category_map_df, full_state_name)
+    remaining_funds_df = as_reported_df.subtract(totals_already_mapped, fill_value=0)
+
+    # Use the unallocated funds to determine the rest of the direct mapping
+    standardized_df_from_direct_mapping = standardize_budget_from_direct_mapping(remaining_funds_df, category_mapping_df, full_state_name)
+
+    standardized_df = pd.concat([standardized_df_from_direct_mapping, standardized_df_from_sub_departments])
     standardized_df = standardized_df.groupby(['Department', 'Funding Source']).sum()
 
     return standardized_df
