@@ -2,6 +2,7 @@ import pdfplumber
 import pandas as pd
 import re
 import numpy as np
+from a_Configs.config import *
 
 """Ingest functions for Maine General Fund Revenue Sources from PDF reports. Ie. how much from Sales Tax vs Corporate, etc."""
 
@@ -15,7 +16,7 @@ def find_exhibit_page(pdf, exhibit_name):
 
 
 def load_me_general_fund_source_table(year):
-    revenue_path = f'../z_Data/ME_Revenue/FY {year} Revenue ME.pdf'
+    revenue_path = f'{Config.DATA_DIR_GEN_FUND_SOURCES}FY {year} Revenue ME.pdf'
 
     # Open PDF and extract text from the relevant page
     with pdfplumber.open(revenue_path) as pdf:
@@ -65,8 +66,11 @@ def create_through_time_general_fund_sources(start_year=2016, end_year=2025):
 
     for year in range(start_year, end_year + 1):
         year_df = load_me_general_fund_source_table(year)
-        year_df = year_df.set_index('Source')
+        if year_df.empty:
+            continue
+        year_df.set_index('Source', inplace=True)
         year_df = year_df[[general_fund_source_data_column]].rename(columns={general_fund_source_data_column: str(year)})
+        year_df = year_df.astype(float)
         if all_years_df.empty:
             all_years_df = year_df
         else:

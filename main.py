@@ -18,6 +18,7 @@ from b_App.data_processing import *
 from b_App.visualizations import *
 from a_Configs.config import *
 from b_App.streamlit_viz_helper import *
+from b_App.b_1_Ingest.ingest_me_general_fund_sources import create_through_time_general_fund_sources
 
 st.set_page_config(layout="wide")
 
@@ -71,6 +72,8 @@ def main():
 
     economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
+    general_fund_sources_df = create_through_time_general_fund_sources()
+
     # Scatter
     comparison_df_current = (create_state_comparison(selected_year_current, me_standardized_df, nh_standardized_df))
     comparison_df_previous = (create_state_comparison(selected_year_previous, me_standardized_df, nh_standardized_df))
@@ -110,6 +113,8 @@ def main():
     st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'GENERAL FUND')], economic_index_df, to_hide=['CPI', 'Maine Population'], funding_source='GENERAL FUND', start_year=selected_year_previous))
 
     st.plotly_chart(plot_department_funding_sources('TOTAL', me_processed_df, start_year=selected_year_previous, end_year=selected_year_current))
+
+    st.plotly_chart(plot_general_fund_sources(general_fund_sources_df, start_year=selected_year_previous, end_year=selected_year_current))
 
     # st.plotly_chart(plot_budget_and_spending(me_processed_df, funding_source='GENERAL FUND', title='General Fund vs Overall Spending'))
 

@@ -108,6 +108,48 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year, e
     return fig
 
 
+def plot_general_fund_sources(general_fund_sources_df, start_year, end_year):
+    general_fund_sources_df = (general_fund_sources_df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
+    general_fund_sources_df = general_fund_sources_df.sort_values(by=str(end_year), ascending=False)
+
+    sources_to_plot_df = general_fund_sources_df.drop('Total Collected')
+
+    top_sources = sources_to_plot_df.index[:5]  # Top 5 sources by end_year value
+
+    fig = go.Figure()
+
+    # Create stacked area plot by adding traces from bottom to top (largest at bottom)
+    # Include all sources but only show legend for top 5
+    for i, source in enumerate(sources_to_plot_df.index):
+        y_values = sources_to_plot_df.loc[source].values
+        fig.add_trace(go.Scatter(
+            x=sources_to_plot_df.columns,
+            y=y_values,
+            mode='lines',
+            fill='tozeroy' if i == 0 else 'tonexty',
+            name=source.title(),
+            showlegend=(source in top_sources),
+            stackgroup='one'  # Ensures stacking
+        ))
+
+    # Update layout
+    fig.update_layout(
+        title='General Fund Sources',
+        xaxis=dict(
+            range=[str(start_year), str(end_year)],
+            autorange=False
+        ),
+        xaxis_title='Fiscal Year',
+        yaxis_title=f'Budget ({Config.TOTAL_BUDGET_SCALE_LABEL})'
+    )
+
+    # Add grid lines
+    fig.update_xaxes(showgrid=False)
+    fig.update_yaxes(showgrid=True, gridcolor='lightgray', gridwidth=1)
+
+    return fig
+
+
 def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], funding_source='TOTAL', title=None, start_year=None):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
     

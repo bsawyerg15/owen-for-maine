@@ -33,6 +33,7 @@ class Config:
     # File paths (relative to project root)
     DATA_DIR_ME = 'z_Data/ME/'
     DATA_DIR_NH = 'z_Data/NH/'
+    DATA_DIR_GEN_FUND_SOURCES = 'z_Data/ME General Fund Sources/'
     DEPARTMENT_MAPPING_FILE = 'a_Configs/department_mapping.csv'
     SUB_DEPARTMENT_MAPPING_FILE = 'a_Configs/sub_department_breakout.csv'
 
