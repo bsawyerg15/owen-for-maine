@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import numpy as np
 
+"""Ingest functions for Maine General Fund Revenue Sources from PDF reports. Ie. how much from Sales Tax vs Corporate, etc."""
 
 def find_exhibit_page(pdf, exhibit_name):
     for i, page in enumerate(pdf.pages):
@@ -13,14 +14,14 @@ def find_exhibit_page(pdf, exhibit_name):
     return -1
 
 
-def extract_revenue_source_table(year):
+def load_me_general_fund_source_table(year):
     revenue_path = f'../z_Data/ME_Revenue/FY {year} Revenue ME.pdf'
 
     # Open PDF and extract text from the relevant page
     with pdfplumber.open(revenue_path) as pdf:
         exhibit_i_page = find_exhibit_page(pdf, 'Exhibit I')
-        if( exhibit_i_page == -1):
-            raise ValueError("Exhibit I page not found.")
+        if(exhibit_i_page == -1):
+            return pd.DataFrame()  # Return empty DataFrame if Exhibit I not found
         exhibit_i_text = pdf.pages[exhibit_i_page].extract_text()  # Page 6 is index 5
 
     # Find table boundaries. The first item is always "Sales and Use Tax" and there is always a NOTES: section after the table
@@ -55,3 +56,20 @@ def extract_revenue_source_table(year):
 
     columns = ['Source', 'Month Actual', 'Month Budget', 'Month Variance', 'Month % Variance', 'FYTD Actual', 'FYTD Budget', 'FYTD Variance', 'FYTD % Variance', 'Total Budgeted FY']
     return pd.DataFrame(data, columns=columns)
+
+
+def create_through_time_general_fund_sources(start_year=2016, end_year=2025):
+    """Create a DataFrame of Maine General Fund Revenue Sources through time."""
+    all_years_df = pd.DataFrame()
+    general_fund_source_data_column = 'FYTD Actual'
+
+    for year in range(start_year, end_year + 1):
+        year_df = load_me_general_fund_source_table(year)
+        year_df = year_df.set_index('Source')
+        year_df = year_df[[general_fund_source_data_column]].rename(columns={general_fund_source_data_column: str(year)})
+        if all_years_df.empty:
+            all_years_df = year_df
+        else:
+            all_years_df = all_years_df.join(year_df, how='outer')
+
+    return all_years_df
