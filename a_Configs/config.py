@@ -22,10 +22,10 @@ class Config:
     LARGE_MAINE_DEPARTMENTS = ['TOTAL', 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
 
     # New Hampshire budget years
-    NH_BUDGET_YEARS = [str(year) for year in range(2016, 2026)]
+    NH_BUDGET_YEARS = [str(year) for year in range(2016, 2028)]
 
     # Analysis parameters
-    YEAR_CURRENT = '2025'
+    YEAR_CURRENT = '2026'
     YEAR_PREVIOUS = '2016'
     LATEST_MAINE_BUDGET = '2025'
     DEPARTMENTS_TO_IGNORE = []  # Add any departments to ignore in comparisons

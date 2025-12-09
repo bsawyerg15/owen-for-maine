@@ -54,6 +54,8 @@ def main():
         index=year_options.index(Config.YEAR_PREVIOUS) if Config.YEAR_PREVIOUS in year_options else 0
     )
 
+    single_chart_ratio = 4
+
     #######################################################################################################
     # Input Dataframes
     #######################################################################################################
@@ -107,14 +109,20 @@ def main():
     # Headline Spending Section
     #######################################################################################################
 
+    st.markdown("---")
     st.header("Bird's Eye View")
     
+    _, col, _ = st.columns([1, single_chart_ratio, 1])
+    with col:
+        st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'GENERAL FUND')], economic_index_df, to_hide=['CPI', 'Maine Population'], funding_source='GENERAL FUND', start_year=selected_year_previous))
 
-    st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'GENERAL FUND')], economic_index_df, to_hide=['CPI', 'Maine Population'], funding_source='GENERAL FUND', start_year=selected_year_previous))
 
-    st.plotly_chart(plot_department_funding_sources('TOTAL', me_processed_df, start_year=selected_year_previous, end_year=selected_year_current))
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(plot_department_funding_sources('TOTAL', me_processed_df, start_year=selected_year_previous, end_year=selected_year_current))
 
-    st.plotly_chart(plot_general_fund_sources(general_fund_sources_df, start_year=selected_year_previous, end_year=selected_year_current))
+    with col2:
+        st.plotly_chart(plot_general_fund_sources(general_fund_sources_df, start_year=selected_year_previous, end_year=selected_year_current))
 
     # st.plotly_chart(plot_budget_and_spending(me_processed_df, funding_source='GENERAL FUND', title='General Fund vs Overall Spending'))
 
@@ -128,11 +136,10 @@ def main():
     tab1, tab2 = st.tabs(["Total Spending", "General Fund"])
 
     with tab1:
-        render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, "_tab1")
+        render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, single_chart_ratio, "_tab1")
 
     with tab2:
-        render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, 
-                                      "_tab2")
+        render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, single_chart_ratio, "_tab2")
 
 
     #######################################################################################################

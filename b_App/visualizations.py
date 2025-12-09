@@ -110,7 +110,11 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year, e
 
 def plot_general_fund_sources(general_fund_sources_df, start_year, end_year):
     general_fund_sources_df = (general_fund_sources_df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
-    general_fund_sources_df = general_fund_sources_df.sort_values(by=str(end_year), ascending=False)
+
+    lastest_year = max(general_fund_sources_df.columns)
+    last_display_year = min([lastest_year, end_year])
+
+    general_fund_sources_df = general_fund_sources_df.sort_values(by=str(last_display_year), ascending=False)
 
     sources_to_plot_df = general_fund_sources_df.drop('Total Collected')
 
@@ -136,7 +140,7 @@ def plot_general_fund_sources(general_fund_sources_df, start_year, end_year):
     fig.update_layout(
         title='General Fund Sources',
         xaxis=dict(
-            range=[str(start_year), str(end_year)],
+            range=[str(start_year), str(last_display_year)],
             autorange=False
         ),
         xaxis_title='Fiscal Year',
@@ -464,6 +468,44 @@ def plot_small_departments_summary(df, funding_source='DEPARTMENT TOTAL', big_de
     return fig
 
 
+def geo_growth_index_helper(series, start, end):
+    """Helper to compute growth rate between two years."""
+    if start not in series.index or end not in series.index:
+        return np.nan
+    start_value = series.loc[start]
+    end_value = series.loc[end]
+    if start_value == 0:
+        return np.nan
+    return end_value / start_value
+
+
+def calc_geo_growth_index_w_extension(series, start_year, end_year, lookback_years):
+    """Calculates a geometric growth index (ratio) between a start year and end year for a given time series, 
+    with the ability to extend the calculation forward when the end year data is missing 
+    by using an average growth rate over a specified lookback period."""
+
+    latest_series_value = series.tail(1)
+    latest_series_year = latest_series_value.index[0]
+
+    start_year_is_defined = start_year in series.index
+    target_year_is_defined = end_year in series.index
+
+    if not target_year_is_defined:
+        avg_5_year_growth_index = (geo_growth_index_helper(series, str(int(latest_series_year) - lookback_years), latest_series_year)) ** (1 / lookback_years)
+
+        if start_year_is_defined:
+            defined_growth_index = geo_growth_index_helper(series, start_year, latest_series_year)
+            num_defined_years = int(latest_series_year) - int(start_year)
+            num_undefined_years = int(end_year) - int(latest_series_year)
+
+            return defined_growth_index * (avg_5_year_growth_index ** num_undefined_years)
+        else:
+            return avg_5_year_growth_index ** (int(end_year) - int(start_year))
+    else:
+        return geo_growth_index_helper(series, start_year, end_year)
+    
+
+
 def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT TOTAL', to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, econ_index_df=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
    
@@ -478,21 +520,13 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
         others_sum = total_with_exclusions.iloc[top_n:].sum()
         top_departments = pd.concat([top_departments, pd.DataFrame([others_sum.values], index=['ALL OTHERS'], columns=top_departments.columns)])
 
-    # Generate CPI + inflation
+    # Generate CPI + inflation multiplier
     if prior_year and econ_index_df is not None:
-        cpi_n_pop_growth_series = econ_index_df.loc['CPI & Population Growth']
-        cpi_n_pop_growth = (cpi_n_pop_growth_series / cpi_n_pop_growth_series[prior_year]).dropna()
+        cpi_n_pop_growth_series = econ_index_df.loc['CPI & Population Growth'].dropna()
         
-        # extend with growth rate if missing data
-        if year in cpi_n_pop_growth.index:
-            growth_over_period = cpi_n_pop_growth[year]
-        else:
-            latest_growth = cpi_n_pop_growth.tail(1)
-            num_periods_avail = int(latest_growth.index[0]) - int(prior_year)
-            num_periods = int(year) - int(prior_year)
-            growth_over_period = (latest_growth.values[0] ** (num_periods / num_periods_avail))
+        growth_index = calc_geo_growth_index_w_extension(cpi_n_pop_growth_series, prior_year, year, lookback_years=5)
 
-        department_cpi_n_pop_growth = (top_departments[prior_year] * growth_over_period).round(Config.DEPARTMENT_SCALE_ROUNDING)
+        department_spending_at_cpi_n_pop_growth = (top_departments[prior_year] * growth_index).round(Config.DEPARTMENT_SCALE_ROUNDING)
 
 
     # Create vertical bar chart using plotly.graph_objects for better control over multiline labels
@@ -522,7 +556,7 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
     if prior_year and econ_index_df is not None:
         fig.add_trace(go.Scatter(
             x=list(range(len(top_departments))),
-            y=department_cpi_n_pop_growth.values,
+            y=department_spending_at_cpi_n_pop_growth.values,
             mode='markers',
             marker=dict(symbol='circle', color='lightblue', size=8),
             name=f'{prior_year} + CPI & Pop. Growth',
@@ -547,6 +581,13 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
         showlegend=True,
         height=500,
         barmode='group'
+    )
+    fig.add_annotation(
+        text="Note: Department growth at CPI + population rate uses actual data where available but will extend using\n5 year averagegrowth rate where missing.",
+        xref="paper", yref="paper",
+        showarrow=False,
+        x=0, y=-0.2 if top_n <= 4 else -0.5,  # Position below chart
+        font=dict(size=10)
     )
 
     return fig
