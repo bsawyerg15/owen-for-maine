@@ -108,8 +108,14 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year, e
     return fig
 
 
-def plot_general_fund_sources(general_fund_sources_df, start_year, end_year):
-    general_fund_sources_df = (general_fund_sources_df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
+def plot_general_fund_sources(general_fund_sources_df, start_year, end_year, make_percent=False):
+    """Create general fund sources breakdown chart."""
+
+    if make_percent:
+        total_collected = general_fund_sources_df.drop('Total Collected').sum(axis=0)
+        general_fund_sources_df = general_fund_sources_df.div(total_collected, axis=1)
+    else:
+        general_fund_sources_df = (general_fund_sources_df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     lastest_year = max(general_fund_sources_df.columns)
     last_display_year = min([lastest_year, end_year])
@@ -144,12 +150,13 @@ def plot_general_fund_sources(general_fund_sources_df, start_year, end_year):
             autorange=False
         ),
         xaxis_title='Fiscal Year',
-        yaxis_title=f'Budget ({Config.TOTAL_BUDGET_SCALE_LABEL})'
+        yaxis_title=f'Budget ({Config.TOTAL_BUDGET_SCALE_LABEL})' if not make_percent else f'% of General Fund Collected'
     )
 
     # Add grid lines
     fig.update_xaxes(showgrid=False)
-    fig.update_yaxes(showgrid=True, gridcolor='lightgray', gridwidth=1)
+    tickformat = ',.1%' if make_percent else None
+    fig.update_yaxes(showgrid=True, gridcolor='lightgray', gridwidth=1, tickformat=tickformat)
 
     return fig
 

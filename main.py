@@ -122,7 +122,7 @@ def main():
         st.plotly_chart(plot_department_funding_sources('TOTAL', me_processed_df, start_year=selected_year_previous, end_year=selected_year_current))
 
     with col2:
-        st.plotly_chart(plot_general_fund_sources(general_fund_sources_df, start_year=selected_year_previous, end_year=selected_year_current))
+        st.plotly_chart(plot_general_fund_sources(general_fund_sources_df, start_year=selected_year_previous, end_year=selected_year_current, make_percent=True))
 
     # st.plotly_chart(plot_budget_and_spending(me_processed_df, funding_source='GENERAL FUND', title='General Fund vs Overall Spending'))
 
