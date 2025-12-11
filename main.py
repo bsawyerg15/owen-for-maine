@@ -80,8 +80,8 @@ def main():
     comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, selected_year_previous, selected_year_current)
 
     # Department - specific data
-    maine_care_enrollment_series = load_maine_care_enrollment()
-    public_school_enrollment_series = load_public_school_enrollment()
+    medicaid_enrollment_df = load_medicaid_enrollment()
+    public_school_enrollment_df = load_public_school_enrollment()
 
     # Create the data container
     data = BudgetAnalysisData(
@@ -91,8 +91,8 @@ def main():
         economic_index_df=economic_index_df,
         general_fund_sources_df=general_fund_sources_df,
         department_mapping_df=department_mapping_df,
-        maine_care_enrollment_series=maine_care_enrollment_series,
-        public_school_enrollment_series=public_school_enrollment_series,
+        medicaid_enrollment_df=medicaid_enrollment_df,
+        public_school_enrollment_df=public_school_enrollment_df,
         selected_year_current=selected_year_current,
         selected_year_previous=selected_year_previous
     )

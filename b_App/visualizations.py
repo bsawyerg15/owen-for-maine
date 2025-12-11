@@ -57,12 +57,144 @@ def plot_budget_and_spending(df, department='TOTAL', funding_source='DEPARTMENT 
     return fig
 
 
+def plot_public_school_enrollment_comparison(data):
+    """
+    Create a line chart comparing Maine and New Hampshire public school enrollment over time.
+
+    Parameters:
+    - data: BudgetAnalysisData object containing public_school_enrollment_df
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+
+    # Extract data to local variables
+    enrollment_df = data.public_school_enrollment_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    # Set start and end years based on data selection
+    start_year = selected_year_previous
+    end_year = selected_year_current
+
+    # Pivot data to have Year as index and State as columns
+    enrollment_pivot = enrollment_df.pivot(index='Year', columns='State', values='Enrollment')
+
+    fig = go.Figure()
+
+    # Maine enrollment trace
+    fig.add_trace(go.Scatter(
+        x=enrollment_pivot.index,
+        y=enrollment_pivot['Maine'],
+        mode='lines',
+        name='Maine',
+        line=dict(color='blue')
+    ))
+
+    # New Hampshire enrollment trace
+    fig.add_trace(go.Scatter(
+        x=enrollment_pivot.index,
+        y=enrollment_pivot['New Hampshire'],
+        mode='lines',
+        name='New Hampshire',
+        line=dict(color='red')
+    ))
+
+    fig.update_layout(
+        title='Public School Enrollment Comparison: Maine vs New Hampshire',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Enrollment',
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False,
+            tickangle=-45
+        ),
+        yaxis=dict(rangemode='tozero')
+    )
+
+    return fig
+
+
+def plot_public_school_budget_per_student_comparison(data):
+    """
+    Create a line chart comparing Maine and New Hampshire education budget per student over time.
+
+    Parameters:
+    - data: BudgetAnalysisData object containing public_school_enrollment_df, me_standardized_df, and nh_standardized_df
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+
+    # Extract data to local variables
+    enrollment_df = data.public_school_enrollment_df
+    me_standardized_df = data.me_standardized_df
+    nh_standardized_df = data.nh_standardized_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+    funding_source = 'DEPARTMENT TOTAL'  # Do not have NH budget broken out
+
+    # Set start and end years based on data selection
+    start_year = selected_year_previous
+    end_year = selected_year_current
+
+    # Get Maine enrollment data
+    maine_enrollment = enrollment_df[enrollment_df['State'] == 'Maine'].set_index('Year')['Enrollment']
+    nh_enrollment = enrollment_df[enrollment_df['State'] == 'New Hampshire'].set_index('Year')['Enrollment']
+
+    # Get Maine education budget data
+    education_dept = 'EDUCATION'
+    me_education_budget = me_standardized_df.loc[(education_dept, funding_source)]
+
+    # Get New Hampshire equivalent department budget data
+    # Use standardized department name for NH
+    nh_education_budget = nh_standardized_df.loc[(education_dept, funding_source)]
+
+    # Calculate budget per student for both states
+    me_budget_per_student = (me_education_budget / maine_enrollment).round(0)
+    nh_budget_per_student = (nh_education_budget / nh_enrollment).round(0)
+
+    fig = go.Figure()
+
+    # Maine budget per student trace
+    fig.add_trace(go.Scatter(
+        x=me_budget_per_student.index,
+        y=me_budget_per_student.values,
+        mode='lines',
+        name='Maine',
+        line=dict(color='blue')
+    ))
+
+    # New Hampshire budget per student trace
+    fig.add_trace(go.Scatter(
+        x=nh_budget_per_student.index,
+        y=nh_budget_per_student.values,
+        mode='lines',
+        name='New Hampshire',
+        line=dict(color='red')
+    ))
+
+    fig.update_layout(
+        title=f'Education Budget per Student Comparison - {funding_source.title()}',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Budget per Student ($)',
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False,
+            tickangle=-45
+        ),
+        yaxis=dict(rangemode='tozero')
+    )
+
+    return fig
+
+
 def plot_public_school_enrollment(data, funding_source='DEPARTMENT TOTAL'):
     """
     Create a line chart for public school enrollment data and education department budget per student.
 
     Parameters:
-    - data: BudgetAnalysisData object containing public_school_enrollment_series and me_processed_df
+    - data: BudgetAnalysisData object containing public_school_enrollment_df and me_processed_df
     - funding_source: The funding source to use for education department budget calculation (default: 'DEPARTMENT TOTAL')
 
     Returns:
@@ -70,7 +202,7 @@ def plot_public_school_enrollment(data, funding_source='DEPARTMENT TOTAL'):
     """
 
     # Extract data to local variables
-    series = data.public_school_enrollment_series
+    maine_enrollment = data.public_school_enrollment_df[data.public_school_enrollment_df['State'] == 'Maine'].set_index('Year')['Enrollment']
     selected_year_current = data.selected_year_current
     selected_year_previous = data.selected_year_previous
 
@@ -83,14 +215,14 @@ def plot_public_school_enrollment(data, funding_source='DEPARTMENT TOTAL'):
     education_budget = data.me_processed_df.loc[(education_dept, funding_source)]
 
     # Calculate budget per student
-    budget_per_student = (education_budget / series).round(0)
+    budget_per_student = (education_budget / maine_enrollment).round(0)
 
     fig = go.Figure()
 
     # Enrollment trace (primary y-axis)
     fig.add_trace(go.Scatter(
-        x=series.index,
-        y=series.values,
+        x=maine_enrollment.index,
+        y=maine_enrollment.values,
         mode='lines',
         name='Public School Enrollment',
         line=dict(color='blue')
@@ -800,7 +932,7 @@ def plot_maine_care_enrollment(data, funding_source='DEPARTMENT TOTAL'):
     Create a line chart for MaineCare enrollment data and DHHS budget per enrollee.
 
     Parameters:
-    - data: BudgetAnalysisData object containing maine_care_enrollment_series and me_processed_df
+    - data: BudgetAnalysisData object containing medicaid_enrollment_df and me_processed_df
     - funding_source: The funding source to use for DHHS budget calculation (default: 'DEPARTMENT TOTAL')
 
     Returns:
@@ -808,7 +940,8 @@ def plot_maine_care_enrollment(data, funding_source='DEPARTMENT TOTAL'):
     """
 
     # Extract data to local variables
-    series = data.maine_care_enrollment_series
+    mainecare_df = data.medicaid_enrollment_df[data.medicaid_enrollment_df['State'] == 'Maine']
+    series = mainecare_df.set_index('Year')['Enrollment']
     selected_year_current = data.selected_year_current
     selected_year_previous = data.selected_year_previous
 
@@ -858,6 +991,139 @@ def plot_maine_care_enrollment(data, funding_source='DEPARTMENT TOTAL'):
         xaxis=dict(
             range=[start_year, end_year],
             autorange=False),
+        yaxis=dict(rangemode='tozero')
+    )
+
+    return fig
+
+
+def plot_medicaid_enrollment_comparison(data):
+    """
+    Create a line chart comparing Maine and New Hampshire Medicaid enrollment over time.
+
+    Parameters:
+    - data: BudgetAnalysisData object containing medicaid_enrollment_df
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+
+    # Extract data to local variables
+    enrollment_df = data.medicaid_enrollment_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    # Set start and end years based on data selection
+    start_year = selected_year_previous
+    end_year = selected_year_current
+
+    # Pivot data to have Year as index and State as columns
+    enrollment_pivot = enrollment_df.pivot(index='Year', columns='State', values='Enrollment')
+
+    fig = go.Figure()
+
+    # Maine enrollment trace
+    fig.add_trace(go.Scatter(
+        x=enrollment_pivot.index,
+        y=enrollment_pivot['Maine'],
+        mode='lines',
+        name='Maine',
+        line=dict(color='blue')
+    ))
+
+    # New Hampshire enrollment trace
+    fig.add_trace(go.Scatter(
+        x=enrollment_pivot.index,
+        y=enrollment_pivot['New Hampshire'],
+        mode='lines',
+        name='New Hampshire',
+        line=dict(color='red')
+    ))
+
+    fig.update_layout(
+        title='Medicaid Enrollment Comparison: Maine vs New Hampshire',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Enrollment',
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False,
+            tickangle=-45
+        ),
+        yaxis=dict(rangemode='tozero')
+    )
+
+    return fig
+
+
+def plot_medicaid_budget_per_enrollee_comparison(data):
+    """
+    Create a line chart comparing Maine and New Hampshire Medicaid budget per enrollee over time.
+
+    Parameters:
+    - data: BudgetAnalysisData object containing medicaid_enrollment_df, me_processed_df, and nh_standardized_df
+    - funding_source: The funding source to use for budget calculation (default: 'DEPARTMENT TOTAL')
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+
+    # Extract data to local variables
+    enrollment_df = data.medicaid_enrollment_df
+    me_standardized_df = data.me_standardized_df
+    nh_standardized_df = data.nh_standardized_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+    funding_source = 'DEPARTMENT TOTAL' # Do not have NH budget broken out
+
+    # Set start and end years based on data selection
+    start_year = selected_year_previous
+    end_year = selected_year_current
+
+    # Get Maine enrollment data
+    maine_enrollment = enrollment_df[enrollment_df['State'] == 'Maine'].set_index('Year')['Enrollment']
+    nh_enrollment = enrollment_df[enrollment_df['State'] == 'New Hampshire'].set_index('Year')['Enrollment']
+
+    # Get Maine DHHS budget data
+    dhhs_dept = 'HEALTH & HUMAN SERVICES'
+    me_dhhs_budget = me_standardized_df.loc[(dhhs_dept, funding_source)]
+
+    # Get New Hampshire equivalent department budget data
+    # Use standardized department name for NH
+    nh_dhhs_budget = nh_standardized_df.loc[(dhhs_dept, funding_source)]
+
+    # Calculate budget per enrollee for both states
+    me_budget_per_enrollee = (me_dhhs_budget / maine_enrollment).round(0)
+    nh_budget_per_enrollee = (nh_dhhs_budget / nh_enrollment).round(0)
+
+    fig = go.Figure()
+
+    # Maine budget per enrollee trace
+    fig.add_trace(go.Scatter(
+        x=me_budget_per_enrollee.index,
+        y=me_budget_per_enrollee.values,
+        mode='lines',
+        name='Maine',
+        line=dict(color='blue')
+    ))
+
+    # New Hampshire budget per enrollee trace
+    fig.add_trace(go.Scatter(
+        x=nh_budget_per_enrollee.index,
+        y=nh_budget_per_enrollee.values,
+        mode='lines',
+        name='New Hampshire',
+        line=dict(color='red')
+    ))
+
+    fig.update_layout(
+        title=f'HHS Budget per Medicaid Enrollee Comparison - {funding_source.title()}',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Budget per Enrollee ($)',
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False,
+            tickangle=-45
+        ),
         yaxis=dict(rangemode='tozero')
     )
 

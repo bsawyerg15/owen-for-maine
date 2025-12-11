@@ -171,35 +171,34 @@ def get_economic_indicators_df(fred_client, start_date='2016'):
     return df.transpose()
 
 
-def load_maine_care_enrollment(filepath='z_Data/Department Statistics/HHS/MaineCare Enrollment.csv'):
+def load_medicaid_enrollment(filepath='z_Data/Department Statistics/HHS/MaineCare Enrollment.csv'):
     """
-    Load MaineCare enrollment data from CSV into a pandas Series.
+    Load Medicaid enrollment data from CSV into a pandas DataFrame.
 
     Parameters:
     - filepath (str): Path to the CSV file (default: 'z_Data/Department Statistics/HHS/MaineCare Enrollment.csv')
 
     Returns:
-    - pd.Series: Series with years as index and enrollment numbers as values
+    - pd.DataFrame: DataFrame with columns ['Fiscal Year', 'State', 'Enrollment']
     """
-    df = pd.read_csv(filepath, usecols=[0, 1], names=['Year', 'Enrollment'], header=None)
-    df['Year'] = df['Year'].astype(str)
-    df['Enrollment'] = df['Enrollment'].str.replace(',', '').astype(float)
-    series = df.set_index('Year')['Enrollment']
-    return series
+    df = pd.read_csv(filepath)
+    df['Year'] = df['Year'].astype(int).astype(str)
+    df['Enrollment'] = df['Enrollment'].astype(float)
+    return df
 
 
 def load_public_school_enrollment(filepath='z_Data/Department Statistics/Education/Public School Enrollment.csv'):
     """
-    Load public school enrollment data from CSV into a pandas Series.
+    Load public school enrollment data from CSV into a pandas DataFrame.
 
     Parameters:
     - filepath (str): Path to the CSV file (default: 'z_Data/Department Statistics/Education/Public School Enrollment.csv')
 
     Returns:
-    - pd.Series: Series with years as index and student enrollment numbers as values
+    - pd.DataFrame: DataFrame with columns ['Year', 'State', 'Enrollment']
     """
     df = pd.read_csv(filepath)
-    df['School Year'] = df['School Year'].astype(str)
-    df['Student Count'] = df['Student Count'].astype(float)
-    series = df.set_index('School Year')['Student Count']
-    return series
+    df = df.rename(columns={'School Year': 'Year', 'Student Count': 'Enrollment'})
+    df['Year'] = df['Year'].astype(str)
+    df['Enrollment'] = df['Enrollment'].astype(float)
+    return df
