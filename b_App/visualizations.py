@@ -645,7 +645,7 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
         barmode='group'
     )
     fig.add_annotation(
-        text="Note: Department growth at CPI + population rate uses actual data where available but will extend using\n5 year averagegrowth rate where missing.",
+        text="Note: Department growth at CPI + population rate uses actual data where available but will extend using\n5 year average growth rate for missing years.",
         xref="paper", yref="paper",
         showarrow=False,
         x=0, y=-0.2 if top_n <= 4 else -0.5,  # Position below chart
@@ -724,12 +724,13 @@ def create_styled_comparison_through_time(me_standardized_df, nh_standardized_df
     return styler
 
 
-def plot_maine_care_enrollment(data):
+def plot_maine_care_enrollment(data, funding_source='DEPARTMENT TOTAL'):
     """
-    Create a line chart for MaineCare enrollment data.
+    Create a line chart for MaineCare enrollment data and DHHS budget per enrollee.
 
     Parameters:
-    - data: BudgetAnalysisData object containing maine_care_enrollment_series
+    - data: BudgetAnalysisData object containing maine_care_enrollment_series and me_processed_df
+    - funding_source: The funding source to use for DHHS budget calculation (default: 'DEPARTMENT TOTAL')
 
     Returns:
     - plotly.graph_objects.Figure: The plotly figure
@@ -737,9 +738,23 @@ def plot_maine_care_enrollment(data):
 
     # Extract data to local variables
     series = data.maine_care_enrollment_series
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    # Set start and end years based on data selection
+    start_year = selected_year_previous
+    end_year = selected_year_current
+
+    # Get DHHS budget data
+    dhhs_dept = 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)'
+    dhhs_budget = data.me_processed_df.loc[(dhhs_dept, funding_source)]
+
+    # Calculate budget per enrollee
+    budget_per_enrollee = (dhhs_budget / series).round(0)
 
     fig = go.Figure()
 
+    # Enrollment trace (primary y-axis)
     fig.add_trace(go.Scatter(
         x=series.index,
         y=series.values,
@@ -748,11 +763,30 @@ def plot_maine_care_enrollment(data):
         line=dict(color='blue')
     ))
 
+    # Budget per enrollee trace (secondary y-axis)
+    fig.add_trace(go.Scatter(
+        x=budget_per_enrollee.index,
+        y=budget_per_enrollee.values,
+        mode='lines',
+        name='DHHS Budget per Enrollee',
+        line=dict(color='red'),
+        yaxis='y2'
+    ))
+
     fig.update_layout(
-        title='MaineCare Enrollment Over Time',
-        xaxis_title='Year',
+        title=f'MaineCare Enrollment and DHHS Budget per Enrollee - {funding_source.title()}',
+        xaxis_title='Fiscal Year',
         yaxis_title='Enrollment',
-        xaxis=dict(tickangle=-45),
+        yaxis2=dict(
+            title='Budget per Enrollee ($)',
+            overlaying='y',
+            side='right',
+            showgrid=False,
+            rangemode='tozero'
+        ),
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False),
         yaxis=dict(rangemode='tozero')
     )
 
