@@ -138,7 +138,7 @@ def plot_general_fund_sources(data, start_year=None, end_year=None, make_percent
     else:
         general_fund_sources_df = (general_fund_sources_df / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
-    lastest_year = max(general_fund_sources_df.columns)
+    lastest_year = int(max(general_fund_sources_df.columns))
     last_display_year = min([lastest_year, end_year])
 
     general_fund_sources_df = general_fund_sources_df.sort_values(by=str(last_display_year), ascending=False)
@@ -312,7 +312,7 @@ def plot_state_comparison_scatter(comparison_df_current, comparison_df_previous,
     return fig
 
 
-def plot_state_comparison_bars(data, departments_to_show=None, title=None):
+def plot_state_comparison_bars(data, departments_to_show=[], title=None):
     """Create grouped bar chart comparing ME and NH budgets with prior year dots. If departments_to_show is provided, only those departments are shown in the specified order."""
 
     # Extract data to local variables
@@ -329,7 +329,7 @@ def plot_state_comparison_bars(data, departments_to_show=None, title=None):
     # Sort by ME budget descending (largest first)
     df = df.sort_values(by='ME', ascending=False)
     # Filter to specified departments if provided
-    if departments_to_show is not None:
+    if len(departments_to_show) > 0:
         df = df.loc[departments_to_show]
 
     # Scale and reindex prior year data to match sorted/limited current
@@ -393,7 +393,7 @@ def plot_state_comparison_bars(data, departments_to_show=None, title=None):
             tickmode='array',
             tickvals=[i + 0.2 for i in x_numeric],
             ticktext=x_labels,
-            tickangle=-45 if len(departments_to_show or []) > 3 else 0
+            tickangle=-45 if len(departments_to_show) > 3 else 0
         )
     )
 

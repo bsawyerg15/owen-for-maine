@@ -77,10 +77,6 @@ def main():
 
     general_fund_sources_df = create_through_time_general_fund_sources()
 
-    # Scatter
-    comparison_df_current = (create_state_comparison(selected_year_current, me_standardized_df, nh_standardized_df))
-    comparison_df_previous = (create_state_comparison(selected_year_previous, me_standardized_df, nh_standardized_df))
-
     comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, selected_year_previous, selected_year_current)
 
     # Department - specific data
