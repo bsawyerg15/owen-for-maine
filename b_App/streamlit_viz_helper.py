@@ -24,6 +24,8 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
             with deep_dive_expander:
                 if department == 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)':
                     st.plotly_chart(plot_maine_care_enrollment(data, funding_source), key=f"{department}_mainecare_{suffix}")
+                elif department == 'DEPARTMENT OF EDUCATION':
+                    st.plotly_chart(plot_public_school_enrollment(data, funding_source), key=f"{department}_school_{suffix}")
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(data, department), key=f"{department}_funding_{suffix}")
 

@@ -18,6 +18,7 @@ class BudgetAnalysisData:
     general_fund_sources_df: pd.DataFrame
     department_mapping_df: pd.DataFrame
     maine_care_enrollment_series: pd.Series
+    public_school_enrollment_series: pd.Series
 
     # Dynamic parameters (change with user selections)
     selected_year_current: str

@@ -186,3 +186,20 @@ def load_maine_care_enrollment(filepath='z_Data/Department Statistics/HHS/MaineC
     df['Enrollment'] = df['Enrollment'].str.replace(',', '').astype(float)
     series = df.set_index('Year')['Enrollment']
     return series
+
+
+def load_public_school_enrollment(filepath='z_Data/Department Statistics/Education/Public School Enrollment.csv'):
+    """
+    Load public school enrollment data from CSV into a pandas Series.
+
+    Parameters:
+    - filepath (str): Path to the CSV file (default: 'z_Data/Department Statistics/Education/Public School Enrollment.csv')
+
+    Returns:
+    - pd.Series: Series with years as index and student enrollment numbers as values
+    """
+    df = pd.read_csv(filepath)
+    df['School Year'] = df['School Year'].astype(str)
+    df['Student Count'] = df['Student Count'].astype(float)
+    series = df.set_index('School Year')['Student Count']
+    return series

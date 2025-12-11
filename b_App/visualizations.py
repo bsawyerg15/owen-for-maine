@@ -57,6 +57,77 @@ def plot_budget_and_spending(df, department='TOTAL', funding_source='DEPARTMENT 
     return fig
 
 
+def plot_public_school_enrollment(data, funding_source='DEPARTMENT TOTAL'):
+    """
+    Create a line chart for public school enrollment data and education department budget per student.
+
+    Parameters:
+    - data: BudgetAnalysisData object containing public_school_enrollment_series and me_processed_df
+    - funding_source: The funding source to use for education department budget calculation (default: 'DEPARTMENT TOTAL')
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+
+    # Extract data to local variables
+    series = data.public_school_enrollment_series
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    # Set start and end years based on data selection
+    start_year = selected_year_previous
+    end_year = selected_year_current
+
+    # Get education department budget data
+    education_dept = 'DEPARTMENT OF EDUCATION'
+    education_budget = data.me_processed_df.loc[(education_dept, funding_source)]
+
+    # Calculate budget per student
+    budget_per_student = (education_budget / series).round(0)
+
+    fig = go.Figure()
+
+    # Enrollment trace (primary y-axis)
+    fig.add_trace(go.Scatter(
+        x=series.index,
+        y=series.values,
+        mode='lines',
+        name='Public School Enrollment',
+        line=dict(color='blue')
+    ))
+
+    # Budget per student trace (secondary y-axis)
+    fig.add_trace(go.Scatter(
+        x=budget_per_student.index,
+        y=budget_per_student.values,
+        mode='lines',
+        name='Education Budget per Student',
+        line=dict(color='red'),
+        yaxis='y2'
+    ))
+
+    fig.update_layout(
+        title=f'Public School Enrollment and Education Budget per Student - {funding_source.title()}',
+        xaxis_title='Fiscal Year',
+        yaxis_title='Enrollment',
+        yaxis2=dict(
+            title=f'Budget per Student ($)',
+            overlaying='y',
+            side='right',
+            showgrid=False,
+            rangemode='tozero'
+        ),
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False,
+            tickangle=-45
+        ),
+        yaxis=dict(rangemode='tozero')
+    )
+
+    return fig
+
+
 def plot_department_funding_sources(data, department, start_year=None, end_year=None):
     """Create department breakdown chart by funding source."""
 
@@ -778,7 +849,7 @@ def plot_maine_care_enrollment(data, funding_source='DEPARTMENT TOTAL'):
         xaxis_title='Fiscal Year',
         yaxis_title='Enrollment',
         yaxis2=dict(
-            title='Budget per Enrollee ($)',
+            title=f'Budget per Enrollee ($)',
             overlaying='y',
             side='right',
             showgrid=False,
