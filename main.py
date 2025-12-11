@@ -15,6 +15,7 @@ from fredapi import Fred
 # Import our modules
 from b_App.data_ingestion import  *
 from b_App.data_processing import *
+from b_App.data_container import BudgetAnalysisData
 from b_App.visualizations import *
 from a_Configs.config import *
 from b_App.streamlit_viz_helper import *
@@ -85,7 +86,19 @@ def main():
     # Department - specific data
     maine_care_enrollment_series = load_maine_care_enrollment()
 
-    
+    # Create the data container
+    data = BudgetAnalysisData(
+        me_processed_df=me_processed_df,
+        nh_standardized_df=nh_standardized_df,
+        me_standardized_df=me_standardized_df,
+        economic_index_df=economic_index_df,
+        general_fund_sources_df=general_fund_sources_df,
+        department_mapping_df=department_mapping_df,
+        maine_care_enrollment_series=maine_care_enrollment_series,
+        selected_year_current=selected_year_current,
+        selected_year_previous=selected_year_previous
+    )
+
 ######## Visualizations ###################################################################################
 
     #######################################################################################################
@@ -117,15 +130,15 @@ def main():
     
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:
-        st.plotly_chart(plot_spending_vs_econ_index(me_processed_df.loc[('TOTAL', 'GENERAL FUND')], economic_index_df, to_hide=['CPI', 'Maine Population'], funding_source='GENERAL FUND', start_year=selected_year_previous))
+        st.plotly_chart(plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=['CPI', 'Maine Population'], start_year=selected_year_previous))
 
 
     col1, col2 = st.columns(2)
     with col1:
-        st.plotly_chart(plot_department_funding_sources('TOTAL', me_processed_df, start_year=selected_year_previous, end_year=selected_year_current))
+        st.plotly_chart(plot_department_funding_sources(data, 'TOTAL'))
 
     with col2:
-        st.plotly_chart(plot_general_fund_sources(general_fund_sources_df, start_year=selected_year_previous, end_year=selected_year_current, make_percent=True))
+        st.plotly_chart(plot_general_fund_sources(data, make_percent=True))
 
     # st.plotly_chart(plot_budget_and_spending(me_processed_df, funding_source='GENERAL FUND', title='General Fund vs Overall Spending'))
 
@@ -139,10 +152,10 @@ def main():
     tab1, tab2 = st.tabs(["Total Spending", "General Fund"])
 
     with tab1:
-        render_spending_footprint_tab(me_processed_df, economic_index_df, 'DEPARTMENT TOTAL', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, single_chart_ratio, "_tab1")
+        render_spending_footprint_tab(data, 'DEPARTMENT TOTAL', single_chart_ratio, "_tab1")
 
     with tab2:
-        render_spending_footprint_tab(me_processed_df, economic_index_df, 'GENERAL FUND', department_mapping_df, comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, single_chart_ratio, "_tab2")
+        render_spending_footprint_tab(data, 'GENERAL FUND', single_chart_ratio, "_tab2")
 
 
     #######################################################################################################
@@ -152,11 +165,11 @@ def main():
     st.markdown("---")
     st.header("Comparison to New Hampshire")
 
-    top_3_departments = comparison_df_current.sort_values(by='ME', ascending=False).iloc[0:3].index.values
-    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, top_3_departments, title='ME vs NH: Top Departments & Growth'))
+    top_3_departments = data.comparison_df_current.sort_values(by='ME', ascending=False).iloc[0:3].index.values
+    st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
 
     biggest_underinvestment = ['MILITARY & VETERANS', 'ENERGY', 'ECONOMIC DEVELOPMENT']
-    st.plotly_chart(plot_state_comparison_bars(comparison_df_current, comparison_df_previous, selected_year_current, selected_year_previous, biggest_underinvestment, 'ME vs NH: Areas of Largest Underinvestment'))
+    st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Underinvestment'))
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
 

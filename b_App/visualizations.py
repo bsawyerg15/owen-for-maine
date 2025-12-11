@@ -57,9 +57,20 @@ def plot_budget_and_spending(df, department='TOTAL', funding_source='DEPARTMENT 
     return fig
 
 
-def plot_department_funding_sources(department, me_as_reported_df, start_year, end_year):
+def plot_department_funding_sources(data, department, start_year=None, end_year=None):
     """Create department breakdown chart by funding source."""
-    department_df = me_as_reported_df.xs(department, level='Department').fillna(0)
+
+    # Extract data to local variables
+    me_processed_df = data.me_processed_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    if start_year is None:
+        start_year = selected_year_previous
+    if end_year is None:
+        end_year = selected_year_current
+
+    department_df = me_processed_df.xs(department, level='Department').fillna(0)
     funding_sources_to_exclude = ['DEPARTMENT TOTAL ex FEDERAL', 'DEPARTMENT TOTAL', 'GRAND TOTALS - ALL DEPARTMENTS']
     df = department_df[~department_df.index.isin(funding_sources_to_exclude)]
     df = df.sort_values(by=end_year, ascending=False)
@@ -108,8 +119,18 @@ def plot_department_funding_sources(department, me_as_reported_df, start_year, e
     return fig
 
 
-def plot_general_fund_sources(general_fund_sources_df, start_year, end_year, make_percent=False):
+def plot_general_fund_sources(data, start_year=None, end_year=None, make_percent=False):
     """Create general fund sources breakdown chart."""
+
+    # Extract data to local variables
+    general_fund_sources_df = data.general_fund_sources_df.copy()
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    if start_year is None:
+        start_year = int(selected_year_previous)
+    if end_year is None:
+        end_year = int(selected_year_current)
 
     if make_percent:
         total_collected = general_fund_sources_df.drop('Total Collected').sum(axis=0)
@@ -161,9 +182,14 @@ def plot_general_fund_sources(general_fund_sources_df, start_year, end_year, mak
     return fig
 
 
-def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], funding_source='TOTAL', title=None, start_year=None):
+def plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=[], title=None, start_year=None):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
-    
+
+    # Extract data to local variables
+    me_processed_df = data.me_processed_df
+    economic_index_df = data.economic_index_df
+
+    spending_series = me_processed_df.loc[(department, funding_source)]
     spending_series = (spending_series / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     # Determine the first year from the minimum of both series indices/columns
@@ -174,7 +200,7 @@ def plot_spending_vs_econ_index(spending_series, econ_index_df, to_hide=[], fund
     base_value = spending_series.loc[start_year]
 
     # Re-index economic indices to start at base_value
-    econ_reindexed = (econ_index_df.div(econ_index_df[start_year], axis=0) * base_value).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
+    econ_reindexed = (economic_index_df.div(economic_index_df[start_year], axis=0) * base_value).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
     # Create plotly figure
     fig = go.Figure()
@@ -286,8 +312,15 @@ def plot_state_comparison_scatter(comparison_df_current, comparison_df_previous,
     return fig
 
 
-def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, departments_to_show=None, title=None):
+def plot_state_comparison_bars(data, departments_to_show=None, title=None):
     """Create grouped bar chart comparing ME and NH budgets with prior year dots. If departments_to_show is provided, only those departments are shown in the specified order."""
+
+    # Extract data to local variables
+    comparison_df_current = data.comparison_df_current
+    comparison_df_previous = data.comparison_df_previous
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
     fig = go.Figure()
 
     # Scale values to department scale
@@ -300,7 +333,7 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
         df = df.loc[departments_to_show]
 
     # Scale and reindex prior year data to match sorted/limited current
-    diff_df = comparison_df_current - comparison_df_prior
+    diff_df = comparison_df_current - comparison_df_previous
     diff_df = (diff_df / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING).reindex(df.index)
 
     # Clean department labels for x-axis
@@ -315,7 +348,7 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
         y=df['ME'],
         offset=-0.2,
         width=0.4,
-        name=f'ME {year_current}',
+        name=f'ME {selected_year_current}',
         marker_color='blue',
         text=[f'{val:.0f}' for val in df['ME'].values],
         textposition='auto'
@@ -326,7 +359,7 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
         y=df['NH'],
         offset=0.2,
         width=0.4,
-        name=f'NH {year_current}',
+        name=f'NH {selected_year_current}',
         marker_color='red',
         text=[f'{val:.0f}' for val in df['NH'].values],
         textposition='auto'
@@ -338,7 +371,7 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
         y=diff_df['ME'],
         mode='markers',
         marker=dict(symbol='diamond', color='lightblue', size=8),
-        name=f'ME Change from {year_prior}'
+        name=f'ME Change from {selected_year_previous}'
     ))
 
     fig.add_trace(go.Scatter(
@@ -346,7 +379,7 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
         y=diff_df['NH'],
         mode='markers',
         marker=dict(symbol='diamond', color='lightcoral', size=8),
-        name=f'NH Change from {year_prior}'
+        name=f'NH Change from {selected_year_previous}'
     ))
 
     # Adjust title based on filtering mode
@@ -360,15 +393,22 @@ def plot_state_comparison_bars(comparison_df_current, comparison_df_prior, year_
             tickmode='array',
             tickvals=[i + 0.2 for i in x_numeric],
             ticktext=x_labels,
-            tickangle=-45 if len(departments_to_show) > 3 else 0
+            tickangle=-45 if len(departments_to_show or []) > 3 else 0
         )
     )
 
     return fig
 
 
-def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior, year_current, year_prior, department_name):
+def plot_state_single_comparison_bars(data, department_name):
     """Create bar chart comparing ME and NH budgets for a single department with prior year dots."""
+
+    # Extract data to local variables
+    comparison_df_current = data.comparison_df_current
+    comparison_df_previous = data.comparison_df_previous
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
     if department_name not in comparison_df_current.index:
         raise ValueError(f"Department '{department_name}' not found in current data")
 
@@ -377,8 +417,8 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
     # Scale current and prior values
     current_me = (comparison_df_current.loc[department_name, 'ME'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
     current_nh = (comparison_df_current.loc[department_name, 'NH'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
-    prior_me = (comparison_df_prior.loc[department_name, 'ME'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
-    prior_nh = (comparison_df_prior.loc[department_name, 'NH'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+    prior_me = (comparison_df_previous.loc[department_name, 'ME'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
+    prior_nh = (comparison_df_previous.loc[department_name, 'NH'] / Config.DEPARTMENT_SCALE).round(Config.DEPARTMENT_SCALE_ROUNDING)
 
     # Calculate differences for prior year dots
     diff_me = current_me - prior_me
@@ -388,7 +428,7 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
     fig.add_trace(go.Bar(
         x=['ME'],
         y=[current_me],
-        name=f'ME {year_current}',
+        name=f'ME {selected_year_current}',
         marker_color='blue',
         text=[f'{current_me:.0f}'],
         textposition='auto'
@@ -397,7 +437,7 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
     fig.add_trace(go.Bar(
         x=['NH'],
         y=[current_nh],
-        name=f'NH {year_current}',
+        name=f'NH {selected_year_current}',
         marker_color='red',
         text=[f'{current_nh:.0f}'],
         textposition='auto'
@@ -409,7 +449,7 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
         y=[diff_me],
         mode='markers',
         marker=dict(symbol='diamond', color='lightblue', size=8),
-        name=f'ME Change from {year_prior}'
+        name=f'ME Change from {selected_year_previous}'
     ))
 
     fig.add_trace(go.Scatter(
@@ -417,7 +457,7 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
         y=[diff_nh],
         mode='markers',
         marker=dict(symbol='diamond', color='lightcoral', size=8),
-        name=f'NH Change from {year_prior}'
+        name=f'NH Change from {selected_year_previous}'
     ))
 
     title = f'{department_name.title()}: Maine vs New Hampshire'
@@ -430,9 +470,13 @@ def plot_state_single_comparison_bars(comparison_df_current, comparison_df_prior
     return fig
 
 
-def plot_small_departments_summary(df, funding_source='DEPARTMENT TOTAL', big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION'], title='Summary of Departments ex Health, Education, and Transportation'):
+def plot_small_departments_summary(data, funding_source='DEPARTMENT TOTAL', big_departments=['DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION'], title='Summary of Departments ex Health, Education, and Transportation'):
     """Create summary plot for departments excluding major ones."""
-    total_df = df.xs(funding_source, level='Funding Source').fillna(0)
+
+    # Extract data to local variables
+    me_processed_df = data.me_processed_df
+
+    total_df = me_processed_df.xs(funding_source, level='Funding Source').fillna(0)
     total_df = (total_df / Config.DEPARTMENT_SCALE)
     ex_big_total_df = total_df[~total_df.index.isin(big_departments)]
     ex_big_total_df = ex_big_total_df.replace(0, np.nan)
@@ -513,11 +557,22 @@ def calc_geo_growth_index_w_extension(series, start_year, end_year, lookback_yea
     
 
 
-def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT TOTAL', to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, econ_index_df=None, title=None):
+def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPARTMENT TOTAL', to_exclude=['TOTAL'], produce_all_others=False, prior_year=None, title=None):
     """Produce bar chart of top N departments by spending for a given year."""
-   
+
+    # Extract data to local variables
+    me_processed_df = data.me_processed_df
+    economic_index_df = data.economic_index_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    if year is None:
+        year = selected_year_current
+    if prior_year is None:
+        prior_year = selected_year_previous
+
     # Select the departments and funding for the chart
-    total_df = df.xs(funding_source, level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
+    total_df = me_processed_df.xs(funding_source, level='Funding Source').fillna(0) / Config.DEPARTMENT_SCALE
     total_df = total_df.round(Config.DEPARTMENT_SCALE_ROUNDING).astype(int)
     years_to_use = [year, prior_year] if prior_year else [year]
     total_for_year_df = total_df[years_to_use].sort_values(by=year, ascending=False)
@@ -528,9 +583,9 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
         top_departments = pd.concat([top_departments, pd.DataFrame([others_sum.values], index=['ALL OTHERS'], columns=top_departments.columns)])
 
     # Generate CPI + inflation multiplier
-    if prior_year and econ_index_df is not None:
-        cpi_n_pop_growth_series = econ_index_df.loc['CPI & Population Growth'].dropna()
-        
+    if prior_year:
+        cpi_n_pop_growth_series = economic_index_df.loc['CPI & Population Growth'].dropna()
+
         growth_index = calc_geo_growth_index_w_extension(cpi_n_pop_growth_series, prior_year, year, lookback_years=5)
 
         department_spending_at_cpi_n_pop_growth = (top_departments[prior_year] * growth_index).round(Config.DEPARTMENT_SCALE_ROUNDING)
@@ -560,7 +615,7 @@ def produce_department_bar_chart(df, year, top_n=10, funding_source='DEPARTMENT 
         name=f'FY {year}'
     ))
 
-    if prior_year and econ_index_df is not None:
+    if prior_year:
         fig.add_trace(go.Scatter(
             x=list(range(len(top_departments))),
             y=department_spending_at_cpi_n_pop_growth.values,
@@ -669,16 +724,20 @@ def create_styled_comparison_through_time(me_standardized_df, nh_standardized_df
     return styler
 
 
-def plot_maine_care_enrollment(series):
+def plot_maine_care_enrollment(data):
     """
     Create a line chart for MaineCare enrollment data.
 
     Parameters:
-    - series (pd.Series): Series with years as index and enrollment numbers as values
+    - data: BudgetAnalysisData object containing maine_care_enrollment_series
 
     Returns:
     - plotly.graph_objects.Figure: The plotly figure
     """
+
+    # Extract data to local variables
+    series = data.maine_care_enrollment_series
+
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
