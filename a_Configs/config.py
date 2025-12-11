@@ -49,3 +49,6 @@ class Config:
 
     DEPARTMENT_SCALE_ROUNDING = 0  # Rounding for department budgets
     TOTAL_BUDGET_SCALE_ROUNDING = 2 # Rounding for total budgets
+
+    MAINECARE_ENROLLMENT_SOURCE = "https://legislature.maine.gov/doc/11901"
+    PUBLIC_SCHOOL_ENROLLMENT_SOURCE = "https://www.maine.gov/doe/data-warehouse/reporting/enrollment"

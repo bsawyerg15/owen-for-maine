@@ -169,3 +169,20 @@ def get_economic_indicators_df(fred_client, start_date='2016'):
     })
 
     return df.transpose()
+
+
+def load_maine_care_enrollment(filepath='z_Data/Department Statistics/HHS/MaineCare Enrollment.csv'):
+    """
+    Load MaineCare enrollment data from CSV into a pandas Series.
+
+    Parameters:
+    - filepath (str): Path to the CSV file (default: 'z_Data/Department Statistics/HHS/MaineCare Enrollment.csv')
+
+    Returns:
+    - pd.Series: Series with years as index and enrollment numbers as values
+    """
+    df = pd.read_csv(filepath, usecols=[0, 1], names=['Year', 'Enrollment'], header=None)
+    df['Year'] = df['Year'].astype(str)
+    df['Enrollment'] = df['Enrollment'].str.replace(',', '').astype(float)
+    series = df.set_index('Year')['Enrollment']
+    return series

@@ -667,3 +667,34 @@ def create_styled_comparison_through_time(me_standardized_df, nh_standardized_df
     styler = styler.format(formats)
 
     return styler
+
+
+def plot_maine_care_enrollment(series):
+    """
+    Create a line chart for MaineCare enrollment data.
+
+    Parameters:
+    - series (pd.Series): Series with years as index and enrollment numbers as values
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=series.index,
+        y=series.values,
+        mode='lines',
+        name='MaineCare Enrollment',
+        line=dict(color='blue')
+    ))
+
+    fig.update_layout(
+        title='MaineCare Enrollment Over Time',
+        xaxis_title='Year',
+        yaxis_title='Enrollment',
+        xaxis=dict(tickangle=-45),
+        yaxis=dict(rangemode='tozero')
+    )
+
+    return fig

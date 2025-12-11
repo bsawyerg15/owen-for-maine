@@ -82,6 +82,9 @@ def main():
 
     comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, selected_year_previous, selected_year_current)
 
+    # Department - specific data
+    maine_care_enrollment_series = load_maine_care_enrollment()
+
     
 ######## Visualizations ###################################################################################
 

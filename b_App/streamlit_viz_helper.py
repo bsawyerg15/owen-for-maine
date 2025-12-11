@@ -22,6 +22,8 @@ def render_spending_footprint_tab(me_processed_df, econ_index_df, funding_source
 
             deep_dive_expander = st.expander(clean_name, expanded=False)
             with deep_dive_expander:
+                if department == 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)':
+                    plot_maine_care_enrollment()
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(department, me_processed_df, prev_year, current_year), key=f"{department}_funding_{suffix}")
 
