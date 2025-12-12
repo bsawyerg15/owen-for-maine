@@ -58,6 +58,13 @@ def standardize_budget_from_direct_mapping(as_reported_df, category_mapping_df, 
     # Map as reported to standardized names
     standardized_df = as_reported_df.reset_index().merge(state_mapping_df, left_on='Department', right_on='As Reported', how='left')
     standardized_df['Standardized'] = standardized_df['Standardized'].str.upper()
+
+    # Testing for unmapped departments
+    if standardized_df['Standardized'].isna().any():
+        unmapped_depts = standardized_df[standardized_df['Standardized'].isna()]['Department'].unique()
+        print(f"⚠️  Unmapped {full_state_name} departments:")
+        [print(f"{dept}") for dept in unmapped_depts]
+
     standardized_df.drop(columns=['Department', 'As Reported'], inplace=True)
     standardized_df.rename(columns={'Standardized': 'Department'}, inplace=True)
 
