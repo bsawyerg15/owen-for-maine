@@ -38,11 +38,6 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 # Bar chart comparison to NH
                 st.plotly_chart(plot_state_single_comparison_bars(data, department_name=standardized_name), key=f"{department}_state_comp_{suffix}")
 
-                if enrollment_dept:
-                    st.plotly_chart(plot_enrollment_comparison(data, enrollment_dept), key=f"{department}_enrollment_comp_{suffix}")
-                    st.plotly_chart(plot_budget_per_enrollee_comparison(data, enrollment_dept), key=f"{department}_budget_per_enrollee_comp_{suffix}")
-
-
     bar_col, line_col = st.columns(2)
     with bar_col:
         # Small Departments Summary

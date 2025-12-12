@@ -161,11 +161,26 @@ def main():
     st.markdown("---")
     st.header("Comparison to New Hampshire")
 
-    top_3_departments = data.comparison_df_current.sort_values(by='ME', ascending=False).iloc[0:3].index.values
-    st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
+    st.markdown("_**Why compare to New Hampshire?**_ The main question I had when starting to understand Maine's budget was: _Does our spending make sense?_ " \
+    "In addition to understanding the changes through time, another way to answer this question is to compare our spending to a similar state. " \
+    "New Hampshire is a useful choice because it has similar demographics (including an almost identical populaton) and geographic proximity. " \
+    "However, despite these similarities, New Hampshire has better outcomes than us in economic growth and education while keeping cost of living low by imposing no income or sales tax. " \
+    "Knowing how our states differ in spending our tax dollars is a useful clue for how we can achieve these outcomes for Maine.")
 
-    biggest_underinvestment = ['MILITARY & VETERANS', 'ENERGY', 'ECONOMIC DEVELOPMENT']
-    st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Underinvestment'))
+    _, col, _ = st.columns([1, single_chart_ratio, 1])
+    with col:
+        departments_sorted = data.comparison_df_current.sort_values(by='ME', ascending=False).index.values
+        top_3_departments = [dept for dept in departments_sorted if dept != 'TOTAL'][:3]
+        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
+
+        departments_to_deep_dive = ['HEALTH & HUMAN SERVICES', 'EDUCATION']
+        for department in departments_to_deep_dive: 
+            with st.expander(department, expanded=False):
+                st.plotly_chart(plot_enrollment_comparison(data, department))
+                st.plotly_chart(plot_budget_per_enrollee_comparison(data, department))
+
+        biggest_underinvestment = ['MILITARY & VETERANS', 'ENERGY', 'ECONOMIC DEVELOPMENT']
+        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Underinvestment'))
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
 
