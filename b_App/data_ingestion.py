@@ -179,11 +179,12 @@ def load_medicaid_enrollment(filepath='z_Data/Department Statistics/HHS/MaineCar
     - filepath (str): Path to the CSV file (default: 'z_Data/Department Statistics/HHS/MaineCare Enrollment.csv')
 
     Returns:
-    - pd.DataFrame: DataFrame with columns ['Fiscal Year', 'State', 'Enrollment']
+    - pd.DataFrame: DataFrame with columns ['Year', 'State', 'Department', 'Enrollment']
     """
     df = pd.read_csv(filepath)
     df['Year'] = df['Year'].astype(int).astype(str)
     df['Enrollment'] = df['Enrollment'].astype(float)
+    df['Department'] = 'HEALTH & HUMAN SERVICES'
     return df
 
 
@@ -195,10 +196,24 @@ def load_public_school_enrollment(filepath='z_Data/Department Statistics/Educati
     - filepath (str): Path to the CSV file (default: 'z_Data/Department Statistics/Education/Public School Enrollment.csv')
 
     Returns:
-    - pd.DataFrame: DataFrame with columns ['Year', 'State', 'Enrollment']
+    - pd.DataFrame: DataFrame with columns ['Year', 'State', 'Department', 'Enrollment']
     """
     df = pd.read_csv(filepath)
     df = df.rename(columns={'School Year': 'Year', 'Student Count': 'Enrollment'})
     df['Year'] = df['Year'].astype(str)
     df['Enrollment'] = df['Enrollment'].astype(float)
+    df['Department'] = 'EDUCATION'
     return df
+
+
+def load_enrollment_data():
+    """
+    Load and combine all enrollment data (Medicaid and Public School) into a single DataFrame.
+
+    Returns:
+    - pd.DataFrame: DataFrame with columns ['Year', 'State', 'Department', 'Enrollment']
+    """
+    medicaid_df = load_medicaid_enrollment()
+    public_school_df = load_public_school_enrollment()
+    combined_df = pd.concat([medicaid_df, public_school_df], ignore_index=True)
+    return combined_df

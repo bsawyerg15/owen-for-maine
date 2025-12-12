@@ -17,8 +17,7 @@ class BudgetAnalysisData:
     economic_index_df: pd.DataFrame
     general_fund_sources_df: pd.DataFrame
     department_mapping_df: pd.DataFrame
-    medicaid_enrollment_df: pd.DataFrame
-    public_school_enrollment_df: pd.DataFrame
+    enrollment_df: pd.DataFrame
 
     # Dynamic parameters (change with user selections)
     selected_year_current: str

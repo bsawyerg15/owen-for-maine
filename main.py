@@ -80,8 +80,7 @@ def main():
     comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, selected_year_previous, selected_year_current)
 
     # Department - specific data
-    medicaid_enrollment_df = load_medicaid_enrollment()
-    public_school_enrollment_df = load_public_school_enrollment()
+    enrollment_df = load_enrollment_data()
 
     # Create the data container
     data = BudgetAnalysisData(
@@ -91,8 +90,7 @@ def main():
         economic_index_df=economic_index_df,
         general_fund_sources_df=general_fund_sources_df,
         department_mapping_df=department_mapping_df,
-        medicaid_enrollment_df=medicaid_enrollment_df,
-        public_school_enrollment_df=public_school_enrollment_df,
+        enrollment_df=enrollment_df,
         selected_year_current=selected_year_current,
         selected_year_previous=selected_year_previous
     )

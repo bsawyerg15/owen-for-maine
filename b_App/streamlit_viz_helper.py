@@ -23,22 +23,24 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
             deep_dive_expander = st.expander(clean_name, expanded=False)
             with deep_dive_expander:
                 if department == 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)':
-                    st.plotly_chart(plot_maine_care_enrollment(data, funding_source), key=f"{department}_mainecare_{suffix}")
+                    enrollment_dept = 'HEALTH & HUMAN SERVICES'
                 elif department == 'DEPARTMENT OF EDUCATION':
-                    st.plotly_chart(plot_public_school_enrollment(data, funding_source), key=f"{department}_school_{suffix}")
-                
+                    enrollment_dept = 'EDUCATION'
+                else:
+                    enrollment_dept = None
+
+                if enrollment_dept:
+                    st.plotly_chart(plot_enrollment(data, enrollment_dept, funding_source), key=f"{department}_enrollment_{suffix}")
+
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(data, department), key=f"{department}_funding_{suffix}")
 
                 # Bar chart comparison to NH
                 st.plotly_chart(plot_state_single_comparison_bars(data, department_name=standardized_name), key=f"{department}_state_comp_{suffix}")
-              
-                if department == 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)':
-                    st.plotly_chart(plot_medicaid_enrollment_comparison(data), key=f"{department}_enrollment_comp_{suffix}")
-                    st.plotly_chart(plot_medicaid_budget_per_enrollee_comparison(data), key=f"{department}_budget_per_enrollee_comp_{suffix}")
-                elif department == 'DEPARTMENT OF EDUCATION':
-                    st.plotly_chart(plot_public_school_enrollment_comparison(data), key=f"{department}_enrollment_comp_{suffix}")
-                    st.plotly_chart(plot_public_school_budget_per_student_comparison(data), key=f"{department}_budget_per_student_comp_{suffix}")
+
+                if enrollment_dept:
+                    st.plotly_chart(plot_enrollment_comparison(data, enrollment_dept), key=f"{department}_enrollment_comp_{suffix}")
+                    st.plotly_chart(plot_budget_per_enrollee_comparison(data, enrollment_dept), key=f"{department}_budget_per_enrollee_comp_{suffix}")
 
 
     bar_col, line_col = st.columns(2)
