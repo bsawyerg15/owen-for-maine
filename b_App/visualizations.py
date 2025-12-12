@@ -716,7 +716,7 @@ def create_styled_comparison_through_time(me_standardized_df, nh_standardized_df
 
     formats = {}
     for col in comparison_df.columns:
-        if col[1] == '% Change':
+        if '%' in col[1]:
             formats[col] = lambda x: '-' if pd.isna(x) else f'{x:.1f}%'
         else:
             formats[col] = lambda x: '-' if pd.isna(x) else f'{x:.0f}'

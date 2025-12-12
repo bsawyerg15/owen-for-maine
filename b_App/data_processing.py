@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from .data_ingestion import get_economic_indicators_df
+from a_Configs.config import *
 
 def process_me_budget(me_budget_as_reported_df):
     """Augment Maine budget data with calculated fields. In particular it:
@@ -123,9 +124,9 @@ def create_state_comparison(year, me_standardized_df, nh_standardized_df):
 
 def create_state_comparison_through_time(me_standardized_df, nh_standardized_df, start_year, end_year):
     """Create comparison DataFrame between Maine and New Hampshire budgets for a given year."""
-    scale = 1e6
-    me_standardized_df = (me_standardized_df / scale).round(0)  # Scale Maine data to millions
-    nh_standardized_df = (nh_standardized_df / scale).round(0)  # Scale New Hampshire data to millions
+    
+    me_standardized_df = (me_standardized_df / Config.DEPARTMENT_SCALE).round(0)  # Scale Maine data to millions
+    nh_standardized_df = (nh_standardized_df / Config.DEPARTMENT_SCALE).round(0)  # Scale New Hampshire data to millions
 
     me_end_totals = me_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[end_year]
     nh_end_totals = nh_standardized_df.xs('DEPARTMENT TOTAL', level='Funding Source')[end_year]
@@ -142,7 +143,8 @@ def create_state_comparison_through_time(me_standardized_df, nh_standardized_df,
     end_diff = me_end_totals - nh_end_totals
     start_diff = me_start_totals - nh_start_totals
     diff_diff_arith = me_diff_arith - nh_diff_arith
-    diff_diff_perc = me_diff_perc - nh_diff_perc
+
+    me_vs_nh_end_perc_diff = (me_end_totals - nh_end_totals) / (nh_end_totals) * 100
 
     df_me = pd.DataFrame({
         end_year: me_end_totals,
@@ -160,13 +162,13 @@ def create_state_comparison_through_time(me_standardized_df, nh_standardized_df,
 
     df_diff = pd.DataFrame({
         end_year: end_diff,
+        f'{end_year} (%)': me_vs_nh_end_perc_diff,
         start_year: start_diff,
-        f'Change from {start_year}': diff_diff_arith,
-        '% Change': diff_diff_perc
+        f'Growth in Diff': diff_diff_arith
     })
 
     # Combine into MultiIndex DataFrame
-    comparison_df = pd.concat([df_me, df_nh, df_diff], keys=['ME', 'NH', 'Diff'], axis=1)
+    comparison_df = pd.concat([df_me, df_nh, df_diff], keys=['ME', 'NH', 'ME vs NH'], axis=1)
 
     comparison_df.sort_values(by=('ME', end_year), ascending=False, inplace=True)
 
