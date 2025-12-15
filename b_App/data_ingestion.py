@@ -9,6 +9,13 @@ def load_department_mapping(filepath='../a_Configs/department_mapping.csv'):
     mapping_df['Standardized'] = mapping_df['Standardized'].str.upper()
     return mapping_df
 
+
+def load_revenue_sources_mapping(filepath='../a_Configs/Revenue Sources Map.csv'):
+    """Load revenue sources mapping from CSV."""
+    mapping_df = pd.read_csv(filepath)
+    mapping_df['Standardized'] = mapping_df['Standardized'].str.upper()
+    return mapping_df
+
 def parse_me_headline_table(headline_table, first_year, second_year):
     """
     Parse the headline_table from Maine budget text into a DataFrame with columns:
@@ -217,3 +224,22 @@ def load_enrollment_data():
     public_school_df = load_public_school_enrollment()
     combined_df = pd.concat([medicaid_df, public_school_df], ignore_index=True)
     return combined_df
+
+
+def load_nh_general_fund_sources():
+    """
+    Load New Hampshire General Fund Revenue Sources for 2026 from CSV.
+
+    Returns:
+    - pd.DataFrame: DataFrame with 'Source' as index and '2026' as column.
+    """
+    path = 'z_Data/NH General Fund Sources/NH 2026 Revenue Sources.csv'
+    df = pd.read_csv(path)
+    df = df[['General and Education Fund Grouping', 'Estimate FY 2026']]
+    df = df.rename(columns={'General and Education Fund Grouping': 'Source', 'Estimate FY 2026': '2026'})
+    df = df.dropna(subset=['Source'])
+    df['Source'] = df['Source'].str.strip()
+    df = df[df['Source'] != '']
+    df['2026'] = df['2026'].str.replace('$', '').str.replace(',', '').astype(float)
+    df = df.set_index('Source')
+    return df

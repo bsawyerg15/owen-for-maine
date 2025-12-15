@@ -192,3 +192,26 @@ def add_cpi_times_pop_growth_index(economic_index_df):
     cpi_and_pop_growth = (cpi_index * pop_index).to_frame().T
     cpi_and_pop_growth.index = ['CPI & Population Growth']
     return pd.concat([economic_index_df, cpi_and_pop_growth])
+
+
+def standardize_revenue_sources(df, mapping_df, state):
+    """Standardize revenue sources using mapping for comparison across States."""
+    state_mapping_df = mapping_df[mapping_df['State'] == state][['As Reported', 'Standardized']]
+
+    # Map as reported to standardized names
+    standardized_df = df.reset_index().merge(state_mapping_df, left_on='Source', right_on='As Reported', how='left')
+    standardized_df['Standardized'] = standardized_df['Standardized'].str.upper()
+
+    # Check for unmapped sources
+    if standardized_df['Standardized'].isna().any():
+        unmapped_sources = standardized_df[standardized_df['Standardized'].isna()]['Source'].unique()
+        print(f"⚠️  Unmapped {state} revenue sources:")
+        [print(f"{source}") for source in unmapped_sources]
+
+    standardized_df.drop(columns=['Source', 'As Reported'], inplace=True)
+    standardized_df.rename(columns={'Standardized': 'Source'}, inplace=True)
+
+    # Sum over any sources that mapped to the same standardized name
+    standardized_df = standardized_df.groupby('Source').sum()
+
+    return standardized_df

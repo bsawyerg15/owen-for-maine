@@ -69,6 +69,7 @@ def main():
     # Standardized Dataframes
     department_mapping_df = load_department_mapping(Config.DEPARTMENT_MAPPING_FILE)
     sub_category_map_df = load_department_mapping(Config.SUB_DEPARTMENT_MAPPING_FILE)
+    revenue_sources_mapping_df = load_revenue_sources_mapping(Config.REVENUE_SOURCES_MAPPING_FILE)
 
     me_standardized_df = standardize_budget(me_processed_df, department_mapping_df, sub_category_map_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, department_mapping_df, sub_category_map_df, 'New Hampshire')
@@ -76,6 +77,10 @@ def main():
     economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
     general_fund_sources_df = create_through_time_general_fund_sources()
+
+    nh_general_fund_sources_df = load_nh_general_fund_sources()
+    me_standardized_general_fund_sources_df = standardize_revenue_sources(general_fund_sources_df.reset_index(), revenue_sources_mapping_df, 'Maine')
+    nh_standardized_general_fund_sources_df = standardize_revenue_sources(nh_general_fund_sources_df.reset_index(), revenue_sources_mapping_df, 'New Hampshire')
 
     comparison_through_time_df = create_styled_comparison_through_time(me_standardized_df, nh_standardized_df, selected_year_previous, selected_year_current)
 
@@ -89,7 +94,10 @@ def main():
         me_standardized_df=me_standardized_df,
         economic_index_df=economic_index_df,
         general_fund_sources_df=general_fund_sources_df,
+        me_standardized_general_fund_sources_df=me_standardized_general_fund_sources_df,
+        nh_standardized_general_fund_sources_df=nh_standardized_general_fund_sources_df,
         department_mapping_df=department_mapping_df,
+        revenue_sources_mapping_df=revenue_sources_mapping_df,
         enrollment_df=enrollment_df,
         selected_year_current=selected_year_current,
         selected_year_previous=selected_year_previous
@@ -169,6 +177,10 @@ def main():
 
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:
+        st.plotly_chart(plot_revenue_sources_dumbbell(data))
+
+    _, col, _ = st.columns([1, single_chart_ratio, 1])
+    with col:
         departments_sorted = data.comparison_df_current.sort_values(by='ME', ascending=False).index.values
         top_3_departments = [dept for dept in departments_sorted if dept != 'TOTAL'][:3]
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
@@ -183,6 +195,7 @@ def main():
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Underinvestment'))
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
+
 
 
 if __name__ == "__main__":

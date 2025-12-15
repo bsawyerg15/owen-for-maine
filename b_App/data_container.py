@@ -16,7 +16,10 @@ class BudgetAnalysisData:
     me_standardized_df: pd.DataFrame
     economic_index_df: pd.DataFrame
     general_fund_sources_df: pd.DataFrame
+    me_standardized_general_fund_sources_df: pd.DataFrame
+    nh_standardized_general_fund_sources_df: pd.DataFrame
     department_mapping_df: pd.DataFrame
+    revenue_sources_mapping_df: pd.DataFrame
     enrollment_df: pd.DataFrame
 
     # Dynamic parameters (change with user selections)

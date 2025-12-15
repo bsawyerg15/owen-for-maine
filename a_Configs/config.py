@@ -36,6 +36,7 @@ class Config:
     DATA_DIR_GEN_FUND_SOURCES = 'z_Data/ME General Fund Sources/'
     DEPARTMENT_MAPPING_FILE = 'a_Configs/department_mapping.csv'
     SUB_DEPARTMENT_MAPPING_FILE = 'a_Configs/sub_department_breakout.csv'
+    REVENUE_SOURCES_MAPPING_FILE = 'a_Configs/Revenue Sources Map.csv'
 
     # Output directories
     EXPLORATION_DIR = 'c_Exploration/'
