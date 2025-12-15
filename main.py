@@ -177,7 +177,11 @@ def main():
 
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:
-        st.plotly_chart(plot_revenue_sources_dumbbell(data))
+        # TODO: make years dynamic -- need nh data through time
+        st.plotly_chart(plot_revenue_sources_dumbbell(data, me_year='2025', nh_year='2026'))
+        st.markdown('<p style="font-size: 12px;">NOTE: Data for each state is of different years, but relationships are relatively stable through time. ' \
+        'Unrestricted revenue refers to General Fund in Maine and General Fund plus Educational Trust Fund in NH. '\
+        'The quantity referenced as NH\'s sales and use tax referes to their Meals and Rooms tax as they don\'t have a general sales tax.</p>', unsafe_allow_html=True)
 
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:

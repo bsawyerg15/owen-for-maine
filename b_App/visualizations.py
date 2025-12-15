@@ -57,7 +57,7 @@ def plot_budget_and_spending(df, department='TOTAL', funding_source='DEPARTMENT 
     return fig
 
 
-def plot_revenue_sources_dumbbell(data):
+def plot_revenue_sources_dumbbell(data, me_year, nh_year):
     """Create dumbbell plot comparing ME and NH standardized revenue sources as percentages."""
 
     # Extract data to local variables
@@ -65,13 +65,13 @@ def plot_revenue_sources_dumbbell(data):
     nh_sources_df = data.nh_standardized_general_fund_sources_df
 
     # Get ME 2025 and NH 2026 data
-    me_2025 = me_sources_df['2025'] if '2025' in me_sources_df.columns else me_sources_df.iloc[:, -1]  # Use latest if 2025 not available
-    nh_2026 = nh_sources_df['2026']
+    me_slice = me_sources_df[me_year] if me_year in me_sources_df.columns else me_sources_df.iloc[:, -1]  # Use latest if 2025 not available
+    nh_slice = nh_sources_df['2026']
 
     # Combine into comparison df
     comparison_df = pd.DataFrame({
-        'ME': me_2025,
-        'NH': nh_2026
+        'ME': me_slice,
+        'NH': nh_slice
     }).fillna(0)
 
     # Exclude TOTAL row if present
@@ -83,17 +83,17 @@ def plot_revenue_sources_dumbbell(data):
     comparison_df['ME_pct'] = (comparison_df['ME'] / me_total * 100).round(1)
     comparison_df['NH_pct'] = (comparison_df['NH'] / nh_total * 100).round(1)
 
-    # Sort by ME percentage descending
-    comparison_df = comparison_df.sort_values('ME_pct', ascending=False)
+    # Sort by ME percentage ascending
+    comparison_df = comparison_df.sort_values('ME_pct', ascending=True)
 
     fig = go.Figure()
 
     # Add ME points
     fig.add_trace(go.Scatter(
-        x=comparison_df.index,
-        y=comparison_df['ME_pct'],
+        y=comparison_df.index,
+        x=comparison_df['ME_pct'],
         mode='markers',
-        name='Maine 2025',
+        name=f'Maine {me_year}',
         marker=dict(color='blue', size=10),
         text=[f'ME: {val:.1f}%' for val in comparison_df['ME_pct']],
         hoverinfo='text'
@@ -101,10 +101,10 @@ def plot_revenue_sources_dumbbell(data):
 
     # Add NH points
     fig.add_trace(go.Scatter(
-        x=comparison_df.index,
-        y=comparison_df['NH_pct'],
+        y=comparison_df.index,
+        x=comparison_df['NH_pct'],
         mode='markers',
-        name='New Hampshire 2026',
+        name=f'New Hampshire {nh_year}',
         marker=dict(color='red', size=10),
         text=[f'NH: {val:.1f}%' for val in comparison_df['NH_pct']],
         hoverinfo='text'
@@ -113,8 +113,8 @@ def plot_revenue_sources_dumbbell(data):
     # Add connecting lines
     for source in comparison_df.index:
         fig.add_trace(go.Scatter(
-            x=[source, source],
-            y=[comparison_df.loc[source, 'ME_pct'], comparison_df.loc[source, 'NH_pct']],
+            y=[source, source],
+            x=[comparison_df.loc[source, 'ME_pct'], comparison_df.loc[source, 'NH_pct']],
             mode='lines',
             line=dict(color='gray', width=2),
             showlegend=False,
@@ -122,11 +122,10 @@ def plot_revenue_sources_dumbbell(data):
         ))
 
     fig.update_layout(
-        title='Maine vs New Hampshire Revenue Sources Comparison<br>(General Fund Sources, Standardized Categories)',
-        xaxis_title='Revenue Source',
-        yaxis_title='Percentage of General Fund Revenue (%)',
-        xaxis=dict(tickangle=-45),
-        yaxis=dict(rangemode='tozero'),
+        title='ME vs NH Revenue Sources Comparison<br>(Unrestricted Revenue)',
+        yaxis_title='Revenue Source',
+        xaxis_title='Percentage of General Fund Revenue (%)',
+        xaxis=dict(rangemode='tozero'),
         showlegend=True
     )
 
