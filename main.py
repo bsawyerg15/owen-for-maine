@@ -179,7 +179,7 @@ def main():
     with col:
         # TODO: make years dynamic -- need nh data through time
         st.plotly_chart(plot_revenue_sources_dumbbell(data, me_year='2025', nh_year='2026'))
-        st.markdown('<p style="font-size: 12px;">NOTE: Data for each state is of different years, but relationships are relatively stable through time. ' \
+        st.markdown('<p style="font-size: 12px; color:gray;">NOTE: Data for each state is of different years, but relationships are relatively stable through time. ' \
         'Unrestricted revenue refers to General Fund in Maine and General Fund plus Educational Trust Fund in NH. '\
         'The quantity referenced as NH\'s sales and use tax referes to their Meals and Rooms tax as they don\'t have a general sales tax.</p>', unsafe_allow_html=True)
 
@@ -190,12 +190,13 @@ def main():
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
 
         departments_to_deep_dive = ['HEALTH & HUMAN SERVICES', 'EDUCATION']
-        for department in departments_to_deep_dive: 
+        for department in departments_to_deep_dive:
             with st.expander(department, expanded=False):
                 st.plotly_chart(plot_enrollment_comparison(data, department))
                 st.plotly_chart(plot_budget_per_enrollee_comparison(data, department))
 
-        biggest_underinvestment = ['MILITARY & VETERANS', 'ENERGY', 'ECONOMIC DEVELOPMENT']
+
+        biggest_underinvestment = (data.comparison_df_current['ME'] - data.comparison_df_current['NH']).sort_values(ascending=True).head(6).index.values
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Underinvestment'))
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
