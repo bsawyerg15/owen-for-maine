@@ -132,10 +132,21 @@ def main():
     st.markdown("---")
     st.header("Bird's Eye View")
     
-    _, col, _ = st.columns([1, single_chart_ratio, 1])
+    st.markdown("We’ll start by getting a lay of the land to understand how the budget has changed through time and where the money’s coming from. " \
+    "The General Fund referenced below refers to the money the Maine government has to use as they see fit (i.e. not dedicated for a specific purpose). " \
+    "This fund is where all of your state income, sales, corporate taxes, etc. go and so the size of this will correspond to how much Maine is levying in taxes. ")
+
+    _, col, button_col = st.columns([1, single_chart_ratio, 1])
     with col:
         st.plotly_chart(plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=['CPI', 'Maine Population'], start_year=selected_year_previous))
+    with button_col:
+        with st.popover(" ℹ️ "):
+            st.markdown(f"The dashed lines on the chart to the left puts the growth in context. The green line literally means _what would the General Fund size be if the {selected_year_previous} spending grew at the same rate as inflation and population growth?_ " \
+                        "Intuitively, you could roughly understand this as the government is providing a similar set of services through time. "\
+                        "On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts will increases as GDP rises.")
 
+    st.markdown("In addition to the General Fund, there are other sources of funds such as federal funds, highway funds, etc. that need to be used for specific earmarked purposes. " \
+    "In general, throughout this analysis, we’ll use either the General Fund or Total Spending to answer questions about the impact of programs on taxes or overall government footprint, respectively. ")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -189,7 +200,8 @@ def main():
         top_3_departments = [dept for dept in departments_sorted if dept != 'TOTAL'][:3]
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
 
-        departments_to_deep_dive = ['HEALTH & HUMAN SERVICES', 'EDUCATION']
+        departments_to_deep_dive = ['HEALTH & HUMAN'
+        ' SERVICES', 'EDUCATION']
         for department in departments_to_deep_dive:
             with st.expander(department, expanded=False):
                 st.plotly_chart(plot_enrollment_comparison(data, department))
