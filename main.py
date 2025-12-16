@@ -128,6 +128,27 @@ def main():
     """)
 
     #######################################################################################################
+    # Overview
+    #######################################################################################################
+
+    st.markdown("---")
+    st.header("What is this tool?")
+
+    st.markdown("""
+    We're setting out to answer two questions about Maine's budget:
+    1. **Where is our state spending tax dollars?**
+    2. **Does this spending make sense?** 
+                
+    To answer these questions, after putting the overall budget growth in context, we’ll take a close look at (1) how spending n each department has evolved through time and (2) how our spending in each area compares to New Hampshire. 
+    """)
+
+    with st.expander("💡 How to use this tool", expanded=False):
+        st.markdown("You’ll notice that the tool is very interactive. " \
+        "The charts will update if you change the date parameters and you can change the presentation of the charts by clicking the buttons around it. " \
+        "By default, it compares the 2019 budgets to 2026 which corresponds to Mills' time as governor. " \
+        "Additionally, if you’re curious to learn more about what a chart shows, click the ℹ️ button next to it for additional color.")
+
+    #######################################################################################################
     # Headline Spending Section
     #######################################################################################################
 
