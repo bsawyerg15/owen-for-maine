@@ -139,7 +139,7 @@ def main():
     1. **Where is our state spending tax dollars?**
     2. **Does this spending make sense?** 
                 
-    To answer these questions, after putting the overall budget growth in context, we’ll take a close look at (1) how spending n each department has evolved through time and (2) how our spending in each area compares to New Hampshire. 
+    After putting the overall budget in context, to answer these questions, we’ll take a close look at (1) how spending in each department has evolved through time and (2) how our spending in each area compares to New Hampshire. 
     """)
 
     with st.expander("💡 How to use this tool", expanded=False):

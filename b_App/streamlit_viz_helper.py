@@ -7,7 +7,8 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
 
     _, col, col2 = st.columns([1, single_chart_ratio, 1])
     with col:
-        st.plotly_chart(produce_department_bar_chart(data, year=data.selected_year_current, top_n=3, funding_source=funding_source, produce_all_others=True, title=f'Top Department Spending - {funding_source.title()}', prior_year=data.selected_year_previous))
+        num_top_department_to_show = 2 if funding_source == "GENERAL FUND" else 3
+        st.plotly_chart(produce_department_bar_chart(data, year=data.selected_year_current, top_n=num_top_department_to_show, funding_source=funding_source, produce_all_others=True, title=f'Top Department Spending - {funding_source.title()}', prior_year=data.selected_year_previous))
 
         ### Deep Dives into Key Departments
         if funding_source == 'DEPARTMENT TOTAL':
