@@ -5,9 +5,9 @@ from b_App.visualizations import *
 def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suffix):
     """Render the spending footprint tab content for a given funding source."""
 
-    _, col, _ = st.columns([1, single_chart_ratio, 1])
+    _, col, col2 = st.columns([1, single_chart_ratio, 1])
     with col:
-        st.plotly_chart(produce_department_bar_chart(data, year=data.selected_year_current, top_n=3, funding_source=funding_source, produce_all_others=True, title='Spending is Dominated by 3 Departments', prior_year=data.selected_year_previous))
+        st.plotly_chart(produce_department_bar_chart(data, year=data.selected_year_current, top_n=3, funding_source=funding_source, produce_all_others=True, title=f'Top Department Spending - {funding_source.title()}', prior_year=data.selected_year_previous))
 
         ### Deep Dives into Key Departments
         if funding_source == 'DEPARTMENT TOTAL':
@@ -38,10 +38,17 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 # Bar chart comparison to NH
                 st.plotly_chart(plot_state_single_comparison_bars(data, department_name=standardized_name), key=f"{department}_state_comp_{suffix}")
 
-    bar_col, line_col = st.columns(2)
+    with col2:
+        with st.popover(" ℹ️ "):
+            st.markdown(f"The chart to the left is showing the growth of the largest departments and benchmarking it inflation + population growth (i.e. our proxy for normal growth if the government kept the set of services offered the same). "\
+                        "That is, if the dark blue bar is above the dot, that would suggest the government is expanding their footprint. " \
+                        "If it's below the dot, that would suggest either they are reducing the set of services offered or becoming more efficient in offering the same services. " \
+                        "As a technical note, when calculating the CPI and population growth rate, we use actual data where available, but fill in missing years with 5 year average annual rate.")
+
+    bar_col, line_col, explain_col = st.columns([1, 0.9, 0.1])
     with bar_col:
         # Small Departments Summary
-        st.plotly_chart(produce_department_bar_chart(data, year=data.selected_year_current, top_n=10,
+        st.plotly_chart(produce_department_bar_chart(data, year=data.selected_year_current, top_n=11,
                                                     to_exclude=Config.LARGE_MAINE_DEPARTMENTS,
                                                     funding_source=funding_source,
                                                     produce_all_others=True,
@@ -50,7 +57,10 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                                                     )
 
     with line_col:
-        st.plotly_chart(plot_small_departments_summary(data, funding_source=funding_source, title='\"Smaller\" Departments are Growing in Number and Size'))
+        st.plotly_chart(plot_small_departments_summary(data, funding_source=funding_source, title=f'Growth of Smaller Departments - {funding_source.title()}'))
+    with explain_col:
+        with st.popover(" ℹ️ "):
+            st.markdown("The chart to the left looks at all the smaller departments (i.e. excluding the largest 3) to show how they've changed through time in aggregate.")
 
      # Get list of smaller departments (excluding top 3 and TOTAL)
     all_departments_sorted = data.me_processed_df.xs(funding_source, level='Funding Source').sort_values(by=data.selected_year_current, ascending=False).index.tolist()
@@ -59,7 +69,7 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
 
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:
-        deep_dive_expander = st.expander("Deep Dive into Smaller Departments", expanded=False)
+        deep_dive_expander = st.expander("⭐ Deep Dive into Smaller Departments", expanded=False)
         with deep_dive_expander:
             selected_department = st.selectbox(f"Select a Department:", smaller_departments, format_func=lambda x: x.title(), key=f"selectbox{suffix}")
 

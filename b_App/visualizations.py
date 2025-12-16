@@ -258,12 +258,13 @@ def plot_general_fund_sources(data, start_year=None, end_year=None, make_percent
     return fig
 
 
-def plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=[], title=None, start_year=None):
+def plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=[], to_exclude=[], title=None, start_year=None):
     """Create a plotly chart plotting spending series vs each economic index, with first points aligned."""
 
     # Extract data to local variables
     me_processed_df = data.me_processed_df
     economic_index_df = data.economic_index_df
+    economic_index_df = economic_index_df[~economic_index_df.index.isin(to_exclude)]
 
     spending_series = me_processed_df.loc[(department, funding_source)]
     spending_series = (spending_series / Config.TOTAL_BUDGET_SCALE).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
@@ -654,6 +655,7 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
     total_for_year_df = total_df[years_to_use].sort_values(by=year, ascending=False)
     total_with_exclusions = total_for_year_df[~total_for_year_df.index.isin(to_exclude)]
     top_departments = total_with_exclusions.head(top_n)
+    
     if produce_all_others:
         others_sum = total_with_exclusions.iloc[top_n:].sum()
         top_departments = pd.concat([top_departments, pd.DataFrame([others_sum.values], index=['ALL OTHERS'], columns=top_departments.columns)])
@@ -719,13 +721,6 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
         showlegend=True,
         height=500,
         barmode='group'
-    )
-    fig.add_annotation(
-        text="Note: Department growth at CPI + population rate uses actual data where available but will extend using\n5 year average growth rate for missing years.",
-        xref="paper", yref="paper",
-        showarrow=False,
-        x=0, y=-0.2 if top_n <= 4 else -0.5,  # Position below chart
-        font=dict(size=10)
     )
 
     return fig
@@ -1023,6 +1018,93 @@ def plot_budget_per_enrollee_comparison(data, department):
             tickangle=-45
         ),
         yaxis=dict(rangemode='tozero')
+    )
+
+    return fig
+
+
+def plot_headline_comparison(data, start_year, end_year):
+    """
+    Create a line chart comparing Maine and New Hampshire GDP and Total Spending over time.
+
+    Parameters:
+    - data: BudgetAnalysisData object containing raw_economic_df, me_standardized_df, nh_standardized_df
+    - start_year: Starting year for the comparison (str)
+    - end_year: Ending year for the comparison (str)
+
+    Returns:
+    - plotly.graph_objects.Figure: The plotly figure
+    """
+
+    # Extract raw GDP data directly (GDP data is in millions of dollars from FRED)
+    me_gdp = data.raw_economic_df.loc['Maine GDP']
+    nh_gdp = data.raw_economic_df.loc['New Hampshire GDP']
+
+    # Scale to billions for display (divide by 1e3 since GDP is in millions: millions / 1e3 = billions)
+    me_gdp_scaled = me_gdp / 1e3
+    nh_gdp_scaled = nh_gdp / 1e3
+
+    # Extract total spending data
+    me_spending = data.me_standardized_df.loc[('TOTAL', 'DEPARTMENT TOTAL')] / Config.TOTAL_BUDGET_SCALE
+    nh_spending = data.nh_standardized_df.loc[('TOTAL', 'DEPARTMENT TOTAL')] / Config.TOTAL_BUDGET_SCALE
+
+    fig = go.Figure()
+
+    # Maine spending trace (left axis, blue)
+    fig.add_trace(go.Scatter(
+        x=me_spending.index,
+        y=me_spending.values,
+        mode='lines',
+        name='Maine Total Appropriations',
+        line=dict(color='blue')
+    ))
+
+    # NH spending trace (left axis, red)
+    fig.add_trace(go.Scatter(
+        x=nh_spending.index,
+        y=nh_spending.values,
+        mode='lines',
+        name='NH Total Appropriations',
+        line=dict(color='red')
+    ))
+
+    # Maine GDP trace (right axis, light blue)
+    fig.add_trace(go.Scatter(
+        x=me_gdp_scaled.index,
+        y=me_gdp_scaled.values,
+        mode='lines',
+        name='Maine GDP',
+        line=dict(color='lightblue', dash='dash'),
+        yaxis='y2'
+    ))
+
+    # New Hampshire GDP trace (right axis, light red)
+    fig.add_trace(go.Scatter(
+        x=nh_gdp_scaled.index,
+        y=nh_gdp_scaled.values,
+        mode='lines',
+        name='NH GDP',
+        line=dict(color='lightcoral', dash='dash'),
+        yaxis='y2'
+    ))
+
+    fig.update_layout(
+        title='ME vs NH Headline Comparison',
+        xaxis_title='Year',
+        yaxis_title=f'Total Appropriations ({Config.TOTAL_BUDGET_SCALE_LABEL})',
+        yaxis2=dict(
+            title=f'GDP ({Config.TOTAL_BUDGET_SCALE_LABEL})',
+            overlaying='y',
+            side='right',
+            showgrid=False
+        ),
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False,
+            tickangle=-45
+        ),
+        yaxis=dict(rangemode='tozero'),
+        legend=dict(x=1.05, y=1)
     )
 
     return fig

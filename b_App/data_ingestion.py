@@ -154,7 +154,7 @@ def get_fred_series(fred_client, series_id, start_date, freq='YE'):
 
 def get_economic_indicators_df(fred_client, start_date='2016'):
     """
-    Fetch CPI, Maine GDP, and Maine residential population data from FRED,
+    Fetch CPI, Maine GDP, New Hampshire GDP, and Maine residential population data from FRED,
     process them using get_indexed_fred_series, and combine into a single DataFrame.
 
     Parameters:
@@ -163,15 +163,17 @@ def get_economic_indicators_df(fred_client, start_date='2016'):
     - base_multiplier: Multiplier for re-indexing (default 100)
 
     Returns:
-    - pd.DataFrame: DataFrame with columns 'CPI', 'Maine_GDP', 'Maine_Population', indexed by year
+    - pd.DataFrame: DataFrame with columns 'CPI', 'Maine_GDP', 'New Hampshire_GDP', 'Maine_Population', indexed by year
     """
     cpi_series = get_fred_series(fred_client, 'CPIAUCSL', start_date)
-    gdp_series = get_fred_series(fred_client, 'MENQGSP', start_date)
+    me_gdp_series = get_fred_series(fred_client, 'MENQGSP', start_date)
+    nh_gdp_series = get_fred_series(fred_client, 'NHNQGSP', start_date)
     pop_series = get_fred_series(fred_client, 'MEPOP', start_date)
 
     df = pd.DataFrame({
         'CPI': cpi_series,
-        'Maine GDP': gdp_series,
+        'Maine GDP': me_gdp_series,
+        'New Hampshire GDP': nh_gdp_series,
         'Maine Population': pop_series
     })
 

@@ -43,7 +43,7 @@ def main():
 
     # Year selection widgets
     st.sidebar.header("Parameters")
-    year_options = [str(year) for year in range(2016, 2028)]
+    year_options = [str(year) for year in range(2016, 2027)]
     selected_year_current = st.sidebar.selectbox(
         "Current Year",
         options=year_options,
@@ -74,6 +74,7 @@ def main():
     me_standardized_df = standardize_budget(me_processed_df, department_mapping_df, sub_category_map_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, department_mapping_df, sub_category_map_df, 'New Hampshire')
 
+    raw_economic_df = get_economic_indicators_df(fred)
     economic_index_df = produce_economic_index_df(fred).sort_values(by='2023', ascending=False)
 
     general_fund_sources_df = create_through_time_general_fund_sources()
@@ -92,6 +93,7 @@ def main():
         me_processed_df=me_processed_df,
         nh_standardized_df=nh_standardized_df,
         me_standardized_df=me_standardized_df,
+        raw_economic_df=raw_economic_df,
         economic_index_df=economic_index_df,
         general_fund_sources_df=general_fund_sources_df,
         me_standardized_general_fund_sources_df=me_standardized_general_fund_sources_df,
@@ -116,9 +118,9 @@ def main():
     st.markdown("""
     When I first sat down to create my plan for Maine, I found that while the state budget is public, the details are buried in [1000-page pdfs](https://legislature.maine.gov/ofpr/total-state-budget-information/9304).
     I realized that if the information is this inaccessible to me, it must be the same for every voter in the state.
-    That said, I decided to build a tool to better understand our state’s budget and am releasing it publicly to help voters make more informed decisions this upcoming election.  
+    That said, I asked my campaign to build a tool to better understand our state’s budget and am releasing it publicly to help voters make more informed decisions this upcoming election.  
                 
-    I’d like this tool to be as useful and transparent as possible, so if you see any issues or have additional questions that the tool doesn’t answer, please email my team at someemail@owenformaine.com.
+    I’d like this tool to be as useful and transparent as possible, so if you see any issues or have additional questions that the tool doesn’t answer, please email my team at budgettool@owenformaine.com.
     
     Best,
                 
@@ -138,14 +140,14 @@ def main():
 
     _, col, button_col = st.columns([1, single_chart_ratio, 1])
     with col:
-        st.plotly_chart(plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=['CPI', 'Maine Population'], start_year=selected_year_previous))
+        st.plotly_chart(plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=['CPI', 'Maine Population'], to_exclude=['New Hampshire GDP'], start_year=selected_year_previous))
     with button_col:
         with st.popover(" ℹ️ "):
-            st.markdown(f"The dashed lines on the chart to the left puts the growth in context. The green line literally means _what would the General Fund size be if the {selected_year_previous} spending grew at the same rate as inflation and population growth?_ " \
-                        "Intuitively, you could roughly understand this as the government is providing a similar set of services through time. "\
-                        "On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts will increases as GDP rises.")
+            st.markdown(f"The dashed lines on the chart to the left puts the budget growth in context. The green line literally means _what would the General Fund size be if the {selected_year_previous} spending grew at the same rate as inflation and population growth?_ " \
+                        "Intuitively, budget growth at the green line would be close to saying the government is providing a similar set of services through time. "\
+                        "On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts increases as GDP rises.")
 
-    st.markdown("In addition to the General Fund, there are other sources of funds such as federal funds, highway funds, etc. that need to be used for specific earmarked purposes. " \
+    st.markdown("In addition to the General Fund, there are other sources of funds such as Federal Funds, Highway Funds, etc. that are required to be used for specific earmarked purposes. " \
     "In general, throughout this analysis, we’ll use either the General Fund or Total Spending to answer questions about the impact of programs on taxes or overall government footprint, respectively. ")
 
     col1, col2 = st.columns(2)
@@ -164,6 +166,9 @@ def main():
     st.markdown("---")
     st.header("Spending Footprint")
 
+    st.markdown("This section aims to explain where our government is spending tax dollars and how each department's funding has changed through time. " \
+    "You can toggle this section between Total Spending and General Fund spending depending on whether you’re more curious about how the government’s overall footprint has changed or where your state tax dollars are going. ")
+
     tab1, tab2 = st.tabs(["Total Spending", "General Fund"])
 
     with tab1:
@@ -181,18 +186,27 @@ def main():
     st.header("Comparison to New Hampshire")
 
     st.markdown("_**Why compare to New Hampshire?**_ The main question I had when starting to understand Maine's budget was: _Does our spending make sense?_ " \
-    "In addition to understanding the changes through time, another way to answer this question is to compare our spending to a similar state. " \
-    "New Hampshire is a useful choice because it has similar demographics (including an almost identical populaton) and geographic proximity. " \
-    "However, despite these similarities, New Hampshire has better outcomes than us in economic growth and education while keeping cost of living low by imposing no income or sales tax. " \
-    "Knowing how our states differ in spending our tax dollars is a useful clue for how we can achieve these outcomes for Maine.")
+    "In addition to understanding the changes through time, another way come at this question is to compare our spending to a similar state. " \
+    "New Hampshire is a useful choice because it has similar demographics (including an almost identical population size) and geographic proximity. " \
+    "However, despite these similarities, New Hampshire has a substaintially stronger economy and better educational outcomes while keeping cost of living low by imposing no income or general sales tax. " \
+    "Understanding how our states differ in spending our tax dollars offers a useful clue for how we can build a more prosperous Maine.")
 
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:
+        st.plotly_chart(plot_headline_comparison(data, selected_year_previous, selected_year_current))
+
+    st.markdown("Interestingly, we’re able to see that despite having a similar demographic makeup, the fact that New Hampshire has a stronger economy means it’s able to fund an outsized portion of its General Fund spending with business taxes. " \
+    "In contrast, business taxes make up a small portion of Maine’s revenues despite having a lower corporate tax rate than Maine (9% vs 7%).")
+
+    _, col, info_col = st.columns([1, single_chart_ratio, 1])
+    with col:
         # TODO: make years dynamic -- need nh data through time
         st.plotly_chart(plot_revenue_sources_dumbbell(data, me_year='2025', nh_year='2026'))
-        st.markdown('<p style="font-size: 12px; color:gray;">NOTE: Data for each state is of different years, but relationships are relatively stable through time. ' \
-        'Unrestricted revenue refers to General Fund in Maine and General Fund plus Educational Trust Fund in NH. '\
-        'The quantity referenced as NH\'s sales and use tax referes to their Meals and Rooms tax as they don\'t have a general sales tax.</p>', unsafe_allow_html=True)
+    with info_col:
+        with st.popover(" ℹ️ "):
+            st.markdown('Data for each state is of different years, but relationships are relatively stable through time. ' \
+            'Unrestricted revenue refers to General Fund in Maine and General Fund plus Educational Trust Fund in NH. '\
+            'The quantity referenced as NH\'s sales and use tax referes to their Meals and Rooms tax as they don\'t have a general sales tax.')
 
     _, col, _ = st.columns([1, single_chart_ratio, 1])
     with col:
@@ -209,7 +223,13 @@ def main():
 
 
         biggest_underinvestment = (data.comparison_df_current['ME'] - data.comparison_df_current['NH']).sort_values(ascending=True).head(6).index.values
-        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Underinvestment'))
+        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Public Underinvestment'))
+
+    st.markdown("The charts above tried to pop some of the interesting relationships between functions across the state. " \
+    "There’s a lot more to explore with some of the smaller functions, so we’re providing all of the total spending data below. " \
+    "As a note, because the organizational structures of the governments are different, we had to make some choices around how to map different functions in a standardized way. " \
+    "E.g. New Hampshire has separate departments for Police and Police training and we map both to Policing. " \
+    "This mapping isn’t perfect, so be skeptical before drawing conclusions and if you notice anything that’s clearly wrong, please reach out to the email in the introduction.")
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
 
