@@ -5,6 +5,7 @@ import numpy as np
 from b_App.data_ingestion import get_fred_series
 from b_App.data_processing import create_state_comparison_through_time
 from a_Configs.config import Config
+from a_Configs.sources_config import SourcesConfig
 
 # Cache for department mapping to avoid repeated file reads
 _DEPARTMENT_MAPPING = None
@@ -122,7 +123,7 @@ def plot_revenue_sources_dumbbell(data, me_year, nh_year):
         ))
 
     fig.update_layout(
-        title='ME vs NH Revenue Sources Comparison<br>(Unrestricted Revenue)',
+        title=f'ME vs NH Revenue Sources Comparison{SourcesConfig.get_footnotes_superscripts(["maine_dept_financial", "transparent_nh_revenue"])}<br>(Unrestricted Revenue)',
         yaxis_title='Revenue Source',
         xaxis_title='Percentage of General Fund Revenue (%)',
         xaxis=dict(rangemode='tozero'),
@@ -178,7 +179,7 @@ def plot_department_funding_sources(data, department, start_year=None, end_year=
 
     # Update layout
     fig.update_layout(
-        title=f'{department_name} Spending by Funding Source'.strip(),
+        title=f'{department_name} Spending by Funding Source{SourcesConfig.get_footnotes_superscripts("maine_legislature")}'.strip(),
         xaxis=dict(
             range=[start_year, end_year],
             autorange=False
@@ -241,7 +242,7 @@ def plot_general_fund_sources(data, start_year=None, end_year=None, make_percent
 
     # Update layout
     fig.update_layout(
-        title='General Fund Sources',
+        title=f'General Fund Sources{SourcesConfig.get_footnotes_superscripts("maine_dept_financial")}',
         xaxis=dict(
             range=[str(start_year), str(last_display_year)],
             autorange=False
@@ -306,8 +307,13 @@ def plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERA
             visible=visibility
         ))
 
+    sources = ['maine_legislature', 'FRED_me_gdp', 'FRED_cpi', 'FRED_me_pop']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
+
     if not title:
-        title = f'{funding_source.title()} Spending vs Economic Indices<br>(Reindexed to FY {start_year} Spending)'
+        title = f'{funding_source.title()} Spending vs Economic Indices<br>(Reindexed to FY {start_year} Spending){source_superscripts}'
+    else:
+        title = f"{title}{source_superscripts}"
 
     # Update layout
     fig.update_layout(
@@ -462,6 +468,8 @@ def plot_state_comparison_bars(data, departments_to_show=[], title=None):
     # Adjust title based on filtering mode
     if not title:
         title = f'Maine vs New Hampshire State Budgets'
+    elif 'Top Departments' in title or 'Areas of Largest' in title:
+        title = f"{title}{SourcesConfig.get_footnotes_superscripts(['maine_legislature', 'transparent_nh_expenditure'])}"
 
     fig.update_layout(
         title=title,
@@ -578,6 +586,10 @@ def plot_small_departments_summary(data, funding_source='DEPARTMENT TOTAL', big_
         line=dict(color='black'),
         yaxis='y2'
     ))
+
+    sources = ['maine_legislature']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
+    title = f'{title}{source_superscripts}'
 
     fig.update_layout(
         title=title,
@@ -712,8 +724,11 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
         tickangle=-45 if top_n > 4 else 0
     )
 
+    sources = ['maine_legislature', 'FRED_cpi', 'FRED_me_pop']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
     if not title:
         title = f'{funding_source.title()} Departments by Spending'
+    title = f'{title}{source_superscripts}'
 
     fig.update_yaxes(title_text=f'Spending ({Config.DEPARTMENT_SCALE_LABEL})')
     fig.update_layout(
@@ -838,9 +853,11 @@ def plot_enrollment(data, department, funding_source='DEPARTMENT TOTAL'):
     if department == 'HEALTH & HUMAN SERVICES':
         enrollment_name = 'MaineCare Enrollment'
         dept_name = 'DHHS'
+        enrollment_source = 'mainecare_enrollment'
     else:
         enrollment_name = 'Public School Enrollment'
         dept_name = department.title()
+        enrollment_source = 'me_public_school_enrollment'
 
     fig = go.Figure()
 

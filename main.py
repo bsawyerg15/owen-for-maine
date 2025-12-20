@@ -155,26 +155,30 @@ def main():
     st.markdown("---")
     st.header("Bird's Eye View")
     
-    st.markdown("We’ll start by getting a lay of the land to understand how the budget has changed through time and where the money’s coming from. " \
-    "The General Fund referenced below refers to the money the Maine government has to use as they see fit (i.e. not dedicated for a specific purpose). " \
-    "This fund is where all of your state income, sales, corporate taxes, etc. go and so the size of this will correspond to how much Maine is levying in taxes. ")
+    headline_chart_explainer = f"We’ll start by getting a lay of the land to understand how the budget has changed through time and where the money’s coming from. " \
+                        f"The dashed lines on the chart below puts the budget growth in context. The green line literally means _what would the General Fund size be if the {selected_year_previous} spending grew at the same rate as inflation and population growth?_ " \
+                        f"Intuitively, budget growth at the green line would be close to saying the government is providing a similar set of services through time. "\
+                        f"On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts increases as GDP rises."
+
+    general_fund_explainer = f"The General Fund referenced to the left refers to the money the Maine government has to use as they see fit (i.e. not dedicated for a specific purpose). " \
+        "This fund is where all of your state income, sales, corporate taxes, etc. go and so the size of this will correspond to how much Maine is levying in taxes. "
+
+    st.markdown(headline_chart_explainer)
 
     _, col, button_col = st.columns([1, single_chart_ratio, 1])
     with col:
         st.plotly_chart(plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERAL FUND', to_hide=['CPI', 'Maine Population'], to_exclude=['New Hampshire GDP'], start_year=selected_year_previous))
     with button_col:
         with st.popover(" ℹ️ "):
-            st.markdown(f"The dashed lines on the chart to the left puts the budget growth in context. The green line literally means _what would the General Fund size be if the {selected_year_previous} spending grew at the same rate as inflation and population growth?_ " \
-                        "Intuitively, budget growth at the green line would be close to saying the government is providing a similar set of services through time. "\
-                        "On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts increases as GDP rises.")
+            st.markdown(general_fund_explainer)
 
+    st.markdown(" ")
     st.markdown("In addition to the General Fund, there are other sources of funds such as Federal Funds, Highway Funds, etc. that are required to be used for specific earmarked purposes. " \
     "In general, throughout this analysis, we’ll use either the General Fund or Total Spending to answer questions about the impact of programs on taxes or overall government footprint, respectively. ")
 
     col1, col2 = st.columns(2)
     with col1:
         st.plotly_chart(plot_department_funding_sources(data, 'TOTAL'))
-
     with col2:
         st.plotly_chart(plot_general_fund_sources(data, make_percent=True))
 
@@ -235,6 +239,8 @@ def main():
         top_3_departments = [dept for dept in departments_sorted if dept != 'TOTAL'][:3]
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=top_3_departments, title='ME vs NH: Top Departments & Growth'))
 
+        # Headline sources
+
         departments_to_deep_dive = ['HEALTH & HUMAN'
         ' SERVICES', 'EDUCATION']
         for department in departments_to_deep_dive:
@@ -246,6 +252,7 @@ def main():
         biggest_underinvestment = (data.comparison_df_current['ME'] - data.comparison_df_current['NH']).sort_values(ascending=True).head(6).index.values
         st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Public Underinvestment'))
 
+
     st.markdown("The charts above tried to pop some of the interesting relationships between functions across the state. " \
     "There’s a lot more to explore with some of the smaller functions, so we’re providing all of the total spending data below. " \
     "As a note, because the organizational structures of the governments are different, we had to make some choices around how to map different functions in a standardized way. " \
@@ -253,8 +260,17 @@ def main():
     "This mapping isn’t perfect, so be skeptical before drawing conclusions and if you notice anything that’s clearly wrong, please reach out to the email in the introduction.")
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
+    st.markdown(f'<div style="text-align: center; font-size: 0.8em;">{SourcesConfig.get_footnotes_superscripts(["maine_legislature", "transparent_nh_expenditure"])}</div>', unsafe_allow_html=True)
 
+    st.markdown("---")
+    st.header("Sources")
 
+    sources = SourcesConfig.SOURCES
+    sources_text = "\n\n".join([
+        f'<sup><a href="{info["url"]}">{i+1}</a></sup> {info["name"]}'
+        for i, (key, info) in enumerate(sources.items())
+    ])
+    st.markdown(sources_text, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
