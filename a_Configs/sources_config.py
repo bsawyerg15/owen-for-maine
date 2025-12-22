@@ -41,21 +41,19 @@ class SourcesConfig:
         },
         'mainecare_enrollment':{
             'name': "MaineCare Enrollment",
-            'url': ''
+            'url': 'https://www.dhhs.nh.gov/sites/g/files/ehbemt476/files/documents2/bpq-da-medicaid-enrollment.pdf'
         },
         'me_public_school_enrollment': {
             'name': "Maine DOE: Maine Public School Enrollment",
             'url': 'https://www.maine.gov/doe/data-warehouse/reporting/enrollment'
         },
-        'nh_medicaid_enrollment':{
+        'nh_medicaid_enrollment':  {
             'name': "NH DHHS: Medicaid Enrollment",
             'url': 'https://www.dhhs.nh.gov/sites/g/files/ehbemt476/files/documents2/bpq-da-medicaid-enrollment.pdf?'
         },
-        'nh_public_school_enrollment':
+        'nh_public_school_enrollment': {
             'name': 'New Hampshire Public School Enrollment',
-            'url': ''
-        {
-
+            'url': 'https://my.doe.nh.gov/iPlatform/Report/Report?path=%2FBDMQ%2FiPlatform%20Reports%2FEnrollment%20Data%2FState%20Totals%2FState%20Totals%20Ten%20Years%20Public%20and%20Private%20Fall%20Enrollments&name=State%20Totals%20Ten%20Years%20Public%20and%20Private%20Fall%20Enrollments&categoryName=State%20Totals&categoryId=12'
         }
     }
 

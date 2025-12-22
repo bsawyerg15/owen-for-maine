@@ -545,7 +545,9 @@ def plot_state_single_comparison_bars(data, department_name):
         name=f'NH Change from {selected_year_previous}'
     ))
 
-    title = f'{department_name.title()}: Maine vs New Hampshire'
+    sources = ['maine_legislature', 'transparent_nh_expenditure']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
+    title = f'{department_name.title()}: Maine vs New Hampshire{source_superscripts}'
 
     fig.update_layout(
         title=title,
@@ -881,7 +883,7 @@ def plot_enrollment(data, department, funding_source='DEPARTMENT TOTAL'):
     ))
 
     fig.update_layout(
-        title=f'{enrollment_name} and {dept_name} Budget per {"Enrollee" if department == "HEALTH & HUMAN SERVICES" else "Student"} - {funding_source.title()}',
+        title=f'{enrollment_name} and {dept_name} Budget per {"Enrollee" if department == "HEALTH & HUMAN SERVICES" else "Student"} - {funding_source.title()}{SourcesConfig.get_footnotes_superscripts([enrollment_source, "maine_legislature"])}',
         xaxis_title='Fiscal Year',
         yaxis_title='Enrollment',
         yaxis2=dict(
@@ -925,7 +927,9 @@ def plot_enrollment_comparison(data, department):
     enrollment_pivot = enrollment_df.pivot(index='Year', columns='State', values='Enrollment')
 
     # Set title based on department
-    title = f'{"Medicaid" if department == "HEALTH & HUMAN SERVICES" else "Public School"} Enrollment Comparison: Maine vs New Hampshire'
+    sources = ['mainecare_enrollment', 'nh_medicaid_enrollment'] if department == 'HEALTH & HUMAN SERVICES' else ['me_public_school_enrollment', 'nh_public_school_enrollment']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
+    title = f'{"Medicaid" if department == "HEALTH & HUMAN SERVICES" else "Public School"} Enrollment Comparison: Maine vs New Hampshire{source_superscripts}'
 
     fig = go.Figure()
 
@@ -1025,8 +1029,14 @@ def plot_budget_per_enrollee_comparison(data, department):
         line=dict(color='red')
     ))
 
+    sources = ['mainecare_', 'transparent_nh_expenditure']
+
+    sources = (['mainecare_enrollment', 'nh_medicaid_enrollment'] if department == 'HEALTH & HUMAN SERVICES' else ['me_public_school_enrollment', 'nh_public_school_enrollment']) + ['maine_legislature', 'transparent_nh_expenditure']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
+    title = f'{dept_short} Budget per {program_name} Comparison - {funding_source.title()}{source_superscripts}'
+
     fig.update_layout(
-        title=f'{dept_short} Budget per {program_name} Comparison - {funding_source.title()}',
+        title=title,
         xaxis_title='Fiscal Year',
         yaxis_title=f'Budget per {program_name} ($)',
         xaxis=dict(
@@ -1105,8 +1115,11 @@ def plot_headline_comparison(data, start_year, end_year):
         yaxis='y2'
     ))
 
+    sources = ['FRED_me_gdp', 'FRED_nh_gdp', 'maine_legislature', 'transparent_nh_expenditure']
+    source_superscripts = SourcesConfig.get_footnotes_superscripts(sources)
+
     fig.update_layout(
-        title='ME vs NH Headline Comparison',
+        title=f'ME vs NH Headline Comparison{source_superscripts}',
         xaxis_title='Year',
         yaxis_title=f'Total Appropriations ({Config.TOTAL_BUDGET_SCALE_LABEL})',
         yaxis2=dict(

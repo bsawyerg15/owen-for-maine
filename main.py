@@ -241,8 +241,7 @@ def main():
 
         # Headline sources
 
-        departments_to_deep_dive = ['HEALTH & HUMAN'
-        ' SERVICES', 'EDUCATION']
+        departments_to_deep_dive = ['HEALTH & HUMAN SERVICES', 'EDUCATION']
         for department in departments_to_deep_dive:
             with st.expander(department, expanded=False):
                 st.plotly_chart(plot_enrollment_comparison(data, department))
