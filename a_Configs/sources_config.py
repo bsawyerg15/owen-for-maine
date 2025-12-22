@@ -8,20 +8,8 @@ class SourcesConfig:
     # Sources for footnotes
     SOURCES = {
         'maine_legislature': {
-            'name': 'Maine State Legislature',
+            'name': 'Maine State Budget: Maine Legislature',
             'url': 'https://legislature.maine.gov/ofpr/total-state-budget-information/9304'
-        },
-        'maine_dept_financial': {
-            'name': 'Maine Dept. of Administrative and Financial Services',
-            'url': 'https://www.maine.gov/osc/financial-reporting/revenue-reports/reports-archive'
-        },
-        'transparent_nh_revenue': {
-            'name': 'Transparent NH (Revenue Sources)',
-            'url': 'https://www.nh.gov/transparentnh/where-the-money-comes-from/'
-        },
-        'transparent_nh_expenditure': {
-            'name': "Transparent NH (Governor's Expenditure Reports)",
-            'url': 'https://www.nh.gov/transparentnh/where-the-money-goes/governors-expenditure-reports/index.htm'
         },
         'FRED_me_gdp': {
             'name': "FRED: Maine GDP",
@@ -35,24 +23,36 @@ class SourcesConfig:
             'name': "FRED: Maine Population",
             'url': 'https://fred.stlouisfed.org/series/MEPOP'
         },
+        'maine_dept_financial': {
+            'name': 'General Fund Revenue Sources: Maine Dept. of Administrative and Financial Services',
+            'url': 'https://www.maine.gov/osc/financial-reporting/revenue-reports/reports-archive'
+        },
+        'mainecare_enrollment':{
+            'name': "MaineCare Enrollment: Maine DHHS",
+            'url': 'https://www.dhhs.nh.gov/sites/g/files/ehbemt476/files/documents2/bpq-da-medicaid-enrollment.pdf'
+        },
+        'me_public_school_enrollment': {
+            'name': "Maine Public School Enrollment: Maine DOE",
+            'url': 'https://www.maine.gov/doe/data-warehouse/reporting/enrollment'
+        },
+        'transparent_nh_expenditure': {
+            'name': "NH Expenditure Reports: Transparent NH",
+            'url': 'https://www.nh.gov/transparentnh/where-the-money-goes/governors-expenditure-reports/index.htm'
+        },
         'FRED_nh_gdp': {
             'name': "FRED: New Hampshire GDP",
             'url': 'https://fred.stlouisfed.org/series/NHNQGSP'
         },
-        'mainecare_enrollment':{
-            'name': "MaineCare Enrollment",
-            'url': 'https://www.dhhs.nh.gov/sites/g/files/ehbemt476/files/documents2/bpq-da-medicaid-enrollment.pdf'
-        },
-        'me_public_school_enrollment': {
-            'name': "Maine DOE: Maine Public School Enrollment",
-            'url': 'https://www.maine.gov/doe/data-warehouse/reporting/enrollment'
+        'transparent_nh_revenue': {
+            'name': 'NH Revenue Sources: Transparent NH',
+            'url': 'https://www.nh.gov/transparentnh/where-the-money-comes-from/'
         },
         'nh_medicaid_enrollment':  {
-            'name': "NH DHHS: Medicaid Enrollment",
+            'name': "NH Medicaid Enrollment: NH DHHS",
             'url': 'https://www.dhhs.nh.gov/sites/g/files/ehbemt476/files/documents2/bpq-da-medicaid-enrollment.pdf?'
         },
         'nh_public_school_enrollment': {
-            'name': 'New Hampshire Public School Enrollment',
+            'name': 'New Hampshire Public School Enrollment: NH DOE',
             'url': 'https://my.doe.nh.gov/iPlatform/Report/Report?path=%2FBDMQ%2FiPlatform%20Reports%2FEnrollment%20Data%2FState%20Totals%2FState%20Totals%20Ten%20Years%20Public%20and%20Private%20Fall%20Enrollments&name=State%20Totals%20Ten%20Years%20Public%20and%20Private%20Fall%20Enrollments&categoryName=State%20Totals&categoryId=12'
         }
     }
