@@ -2,6 +2,7 @@ import pdfplumber
 import pandas as pd
 import re
 import numpy as np
+import streamlit as st
 from a_Configs.config import *
 
 """Ingest functions for Maine General Fund Revenue Sources from PDF reports. Ie. how much from Sales Tax vs Corporate, etc."""
@@ -59,6 +60,7 @@ def load_me_general_fund_source_table(year):
     return pd.DataFrame(data, columns=columns)
 
 
+@st.cache_data
 def create_through_time_general_fund_sources(start_year=2016, end_year=2025):
     """Create a DataFrame of Maine General Fund Revenue Sources through time."""
     all_years_df = pd.DataFrame()

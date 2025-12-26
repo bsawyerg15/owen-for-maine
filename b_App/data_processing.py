@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
+import streamlit as st
 from .data_ingestion import get_economic_indicators_df
 from a_Configs.config import *
 
+@st.cache_data
 def process_me_budget(me_budget_as_reported_df):
     """Augment Maine budget data with calculated fields. In particular it:
         1. Adds a 'Total' column summing across all funding sources for each department.
@@ -90,12 +92,13 @@ def identify_double_counted_departments(as_reported_df, sub_category_map_df, ful
     return pd.concat([totals_already_mapped, as_reported_df_used.set_index(['Department', 'Funding Source'])])
 
 
+@st.cache_data
 def standardize_budget(as_reported_df, category_mapping_df, sub_category_map_df, full_state_name):
     """Standardize budget data using department mapping for comparison across States."""
-    
+
     # Map the exception cases first via sub-departments
     standardized_df_from_sub_departments = standardize_budget_from_sub_departments(as_reported_df, sub_category_map_df, full_state_name)
-    
+
     # Subtract out the sub-departments that were mapped from totals to avoid double counting
     totals_already_mapped = identify_double_counted_departments(as_reported_df, sub_category_map_df, full_state_name)
     remaining_funds_df = as_reported_df.subtract(totals_already_mapped, fill_value=0)
@@ -122,9 +125,10 @@ def create_state_comparison(year, me_standardized_df, nh_standardized_df):
     return comparison_df
 
 
+@st.cache_data
 def create_state_comparison_through_time(me_standardized_df, nh_standardized_df, start_year, end_year):
     """Create comparison DataFrame between Maine and New Hampshire budgets for a given year."""
-    
+
     me_standardized_df = (me_standardized_df / Config.DEPARTMENT_SCALE).round(0)  # Scale Maine data to millions
     nh_standardized_df = (nh_standardized_df / Config.DEPARTMENT_SCALE).round(0)  # Scale New Hampshire data to millions
 
@@ -177,12 +181,13 @@ def create_state_comparison_through_time(me_standardized_df, nh_standardized_df,
     return comparison_df
 
 
-def produce_economic_index_df(fred_client, start_year='2016'):
+@st.cache_data
+def produce_economic_index_df(_fred_client, start_year='2016'):
     """Produce DataFrame with economic indicators indexed to start_year."""
-    econ_df = get_economic_indicators_df(fred_client, start_year)
+    econ_df = get_economic_indicators_df(_fred_client, start_year)
     economic_index_df = econ_df.div(econ_df.iloc[:, 0], axis=0)
     economic_index_df = add_cpi_times_pop_growth_index(economic_index_df)
-    
+
     return economic_index_df
 
 def add_cpi_times_pop_growth_index(economic_index_df):
@@ -194,6 +199,7 @@ def add_cpi_times_pop_growth_index(economic_index_df):
     return pd.concat([economic_index_df, cpi_and_pop_growth])
 
 
+@st.cache_data
 def standardize_revenue_sources(df, mapping_df, state):
     """Standardize revenue sources using mapping for comparison across States."""
     state_mapping_df = mapping_df[mapping_df['State'] == state][['As Reported', 'Standardized']]

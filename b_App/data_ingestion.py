@@ -2,7 +2,9 @@ import pandas as pd
 import pdfplumber
 import re
 from fredapi import Fred
+import streamlit as st
 
+@st.cache_data
 def load_department_mapping(filepath='../a_Configs/department_mapping.csv'):
     """Load department category mapping from CSV."""
     mapping_df = pd.read_csv(filepath)
@@ -10,6 +12,7 @@ def load_department_mapping(filepath='../a_Configs/department_mapping.csv'):
     return mapping_df
 
 
+@st.cache_data
 def load_revenue_sources_mapping(filepath='../a_Configs/Revenue Sources Map.csv'):
     """Load revenue sources mapping from CSV."""
     mapping_df = pd.read_csv(filepath)
@@ -77,6 +80,7 @@ def parse_me_headline_table(headline_table, first_year, second_year):
     return df
 
 
+@st.cache_data
 def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
     """Load and parse all Maine budget PDFs into a single DataFrame."""
     me_as_reported_df = pd.DataFrame()
@@ -119,6 +123,7 @@ def load_and_clean_nh_budget(year, data_dir='../z_Data/NH/'):
     return df_appr
 
 
+@st.cache_data
 def load_nh_budget_as_reported(budget_years, data_dir='../z_Data/NH/'):
     """Load New Hampshire budget CSV files and concatenate into single DataFrame."""
     nh_as_reported_df = pd.DataFrame()
@@ -130,7 +135,7 @@ def load_nh_budget_as_reported(budget_years, data_dir='../z_Data/NH/'):
     return nh_as_reported_df
 
 
-def get_fred_series(fred_client, series_id, start_date, freq='YE'):
+def get_fred_series(_fred_client, series_id, start_date, freq='YE'):
     """
     Fetch FRED series data, downsample to specified frequency, filter by date,
     index relative to first value, convert index to year strings, and re-index with multiplier.
@@ -145,14 +150,15 @@ def get_fred_series(fred_client, series_id, start_date, freq='YE'):
     Returns:
     - pandas.Series: Processed and re-indexed series
     """
-    data = fred_client.get_series(series_id)
+    data = _fred_client.get_series(series_id)
     resampled = data.resample(freq).mean()
     filtered = resampled[resampled.index >= start_date]
     filtered.index = filtered.index.year.astype(str)
     return filtered
 
 
-def get_economic_indicators_df(fred_client, start_date='2016'):
+@st.cache_data(ttl=86400)  # Cache for 24 hours since economic data doesn't change frequently
+def get_economic_indicators_df(_fred_client, start_date='2016'):
     """
     Fetch CPI, Maine GDP, New Hampshire GDP, and Maine residential population data from FRED,
     process them using get_indexed_fred_series, and combine into a single DataFrame.
@@ -165,10 +171,10 @@ def get_economic_indicators_df(fred_client, start_date='2016'):
     Returns:
     - pd.DataFrame: DataFrame with columns 'CPI', 'Maine_GDP', 'New Hampshire_GDP', 'Maine_Population', indexed by year
     """
-    cpi_series = get_fred_series(fred_client, 'CPIAUCSL', start_date)
-    me_gdp_series = get_fred_series(fred_client, 'MENQGSP', start_date)
-    nh_gdp_series = get_fred_series(fred_client, 'NHNQGSP', start_date)
-    pop_series = get_fred_series(fred_client, 'MEPOP', start_date)
+    cpi_series = get_fred_series(_fred_client, 'CPIAUCSL', start_date)
+    me_gdp_series = get_fred_series(_fred_client, 'MENQGSP', start_date)
+    nh_gdp_series = get_fred_series(_fred_client, 'NHNQGSP', start_date)
+    pop_series = get_fred_series(_fred_client, 'MEPOP', start_date)
 
     df = pd.DataFrame({
         'CPI': cpi_series,
@@ -215,6 +221,7 @@ def load_public_school_enrollment(filepath='z_Data/Department Statistics/Educati
     return df
 
 
+@st.cache_data
 def load_enrollment_data():
     """
     Load and combine all enrollment data (Medicaid and Public School) into a single DataFrame.
@@ -228,6 +235,7 @@ def load_enrollment_data():
     return combined_df
 
 
+@st.cache_data
 def load_nh_general_fund_sources():
     """
     Load New Hampshire General Fund Revenue Sources for 2026 from CSV.
