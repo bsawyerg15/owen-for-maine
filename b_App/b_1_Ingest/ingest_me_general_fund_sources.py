@@ -3,6 +3,7 @@ import pandas as pd
 import re
 import numpy as np
 import streamlit as st
+from pathlib import Path
 from a_Configs.config import *
 
 """Ingest functions for Maine General Fund Revenue Sources from PDF reports. Ie. how much from Sales Tax vs Corporate, etc."""
@@ -61,21 +62,49 @@ def load_me_general_fund_source_table(year):
 
 
 @st.cache_data
+def load_revenue_pickle_file(filepath):
+    """Cache individual pickle file loading."""
+    return pd.read_pickle(filepath)
+
+
 def create_through_time_general_fund_sources(start_year=2016, end_year=2025):
     """Create a DataFrame of Maine General Fund Revenue Sources through time."""
-    all_years_df = pd.DataFrame()
-    general_fund_source_data_column = 'FYTD Actual'
+    dfs = []
 
     for year in range(start_year, end_year + 1):
-        year_df = load_me_general_fund_source_table(year)
-        if year_df.empty:
-            continue
-        year_df.set_index('Source', inplace=True)
-        year_df = year_df[[general_fund_source_data_column]].rename(columns={general_fund_source_data_column: str(year)})
-        year_df = year_df.astype(float)
-        if all_years_df.empty:
-            all_years_df = year_df
-        else:
-            all_years_df = all_years_df.join(year_df, how='outer')
+        # Try to load from pre-processed pickle file first
+        processed_path = Path("preprocessed_data/revenue") / f"revenue_{year}.pkl"
 
-    return all_years_df
+        if processed_path.exists():
+            try:
+                # Load from pre-processed file (cached)
+                year_df = load_revenue_pickle_file(processed_path)
+                year_df.set_index('Source', inplace=True)
+                year_df = year_df[['FYTD Actual']].rename(columns={'FYTD Actual': str(year)})
+                dfs.append(year_df)
+                continue
+            except Exception as e:
+                st.warning(f"Failed to load pre-processed revenue data for {year}, falling back to PDF parsing: {e}")
+
+        # Fallback to PDF parsing
+        try:
+            year_df = load_me_general_fund_source_table(year)
+            if year_df.empty:
+                continue
+            year_df.set_index('Source', inplace=True)
+            year_df = year_df[['FYTD Actual']].rename(columns={'FYTD Actual': str(year)})
+            year_df = year_df.astype(float)
+            dfs.append(year_df)
+        except Exception as e:
+            st.error(f"Failed to process revenue data for {year}: {e}")
+            continue
+
+    if not dfs:
+        return pd.DataFrame()
+
+    # Join all years
+    result_df = dfs[0]
+    for df in dfs[1:]:
+        result_df = result_df.join(df, how='outer')
+
+    return result_df

@@ -3,6 +3,7 @@ import pdfplumber
 import re
 from fredapi import Fred
 import streamlit as st
+from pathlib import Path
 
 @st.cache_data
 def load_department_mapping(filepath='../a_Configs/department_mapping.csv'):
@@ -81,24 +82,56 @@ def parse_me_headline_table(headline_table, first_year, second_year):
 
 
 @st.cache_data
+def load_budget_pickle_file(filepath):
+    """Cache individual Pickle file loading."""
+    return pd.read_pickle(filepath)
+
+
 def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
-    """Load and parse all Maine budget PDFs into a single DataFrame."""
-    me_as_reported_df = pd.DataFrame()
+    """Load Maine budget data from pre-processed files, with PDF fallback."""
+    dfs = []
 
-    for budget in budget_to_end_page.keys():
-        end_page = budget_to_end_page[budget]
-        first_year, second_year = budget.split('-')
-        pdf_path = f"{data_dir}{budget} ME State Budget.pdf"
+    for budget_year in budget_to_end_page.keys():
+        # Try to load from pre-processed Pickle file first
+        processed_path = Path("preprocessed_data/budgets") / f"{budget_year}_budget.pkl"
 
-        with pdfplumber.open(pdf_path) as pdf:
-            pages = pdf.pages[1:end_page]
-            text_list = [page.extract_text() for page in pages]
-            headline_table = '\n'.join(text_list)
+        if processed_path.exists():
+            try:
+                # Load from pre-processed file (cached)
+                df = load_budget_pickle_file(processed_path)
+                dfs.append(df)
+                continue
+            except Exception as e:
+                st.warning(f"Failed to load pre-processed data for {budget_year}, falling back to PDF parsing: {e}")
 
-        budget_df = parse_me_headline_table(headline_table, first_year, second_year)
-        me_as_reported_df = pd.concat([me_as_reported_df, budget_df], axis=1)
+        # Fallback to PDF parsing
+        try:
+            end_page = budget_to_end_page[budget_year]
+            first_year, second_year = budget_year.split('-')
+            pdf_path = Path(data_dir) / f"{budget_year} ME State Budget.pdf"
 
-    return me_as_reported_df.sort_index(axis=1)
+            if not pdf_path.exists():
+                st.error(f"PDF file not found: {pdf_path}")
+                continue
+
+            with pdfplumber.open(pdf_path) as pdf:
+                pages = pdf.pages[1:end_page]
+                text_list = [page.extract_text() for page in pages]
+                headline_table = '\n'.join(text_list)
+
+            budget_df = parse_me_headline_table(headline_table, first_year, second_year)
+            dfs.append(budget_df)
+
+        except Exception as e:
+            st.error(f"Failed to parse PDF for {budget_year}: {e}")
+            continue
+
+    if not dfs:
+        return pd.DataFrame()
+
+    # Concatenate all DataFrames
+    result_df = pd.concat(dfs, axis=1)
+    return result_df.sort_index(axis=1)
 
 
 def load_and_clean_nh_budget(year, data_dir='../z_Data/NH/'):
