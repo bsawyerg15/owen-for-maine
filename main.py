@@ -262,14 +262,13 @@ def main():
     st.markdown(f'<div style="text-align: center; font-size: 0.8em;">{SourcesConfig.get_footnotes_superscripts(["maine_legislature", "transparent_nh_expenditure"])}</div>', unsafe_allow_html=True)
 
     st.markdown("---")
-    st.header("Sources")
-
-    sources = SourcesConfig.SOURCES
-    sources_text = "\n\n".join([
-        f'<sup><a href="{info["url"]}">{i+1}</a></sup> {info["name"]}'
-        for i, (key, info) in enumerate(sources.items())
-    ])
-    st.markdown(sources_text, unsafe_allow_html=True)
+    with st.expander("Sources"):
+        sources = SourcesConfig.SOURCES
+        sources_text = "\n\n".join([
+            f'<sup><a href="{info["url"]}">{i+1}</a></sup> {info["name"]}'
+            for i, (key, info) in enumerate(sources.items())
+        ])
+        st.markdown(sources_text, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
