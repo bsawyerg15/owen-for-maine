@@ -33,6 +33,9 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 if enrollment_dept:
                     st.plotly_chart(plot_enrollment(data, enrollment_dept, funding_source), key=f"{department}_enrollment_{suffix}")
 
+                # plot number of employees per department
+                st.plotly_chart(plot_department_positions(data, department), key=f"{department}_positions_{suffix}")
+
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(data, department), key=f"{department}_funding_{suffix}")
 
@@ -78,6 +81,8 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 department_mapping_row = data.department_mapping_df[(data.department_mapping_df['As Reported'] == selected_department) & (data.department_mapping_df['State'] == 'Maine')]
                 standardized_name = department_mapping_row['Standardized'].values[0]
                 clean_name = department_mapping_row['Shortened Name'].values[0]
+
+                st.plotly_chart(plot_department_positions(data, department), key=f"{department}_positions_{suffix}")
 
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(data, selected_department), key=f"{selected_department}_funding_{suffix}")

@@ -195,6 +195,51 @@ def plot_department_funding_sources(data, department, start_year=None, end_year=
     return fig
 
 
+def plot_department_positions(data, department, start_year=None, end_year=None):
+    """Create line chart of department positions over time."""
+
+    # Extract data to local variables
+    me_positions_df = data.me_positions_df
+    selected_year_current = data.selected_year_current
+    selected_year_previous = data.selected_year_previous
+
+    if start_year is None:
+        start_year = selected_year_previous
+    if end_year is None:
+        end_year = selected_year_current
+
+    positions_series = me_positions_df.loc[department]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+        x=positions_series.index,
+        y=positions_series.values,
+        mode='lines',
+        name='Positions',
+        line=dict(color='blue')
+    ))
+
+    department_name = '' if department == 'TOTAL' else f'{department.title()}'
+
+    # Update layout
+    fig.update_layout(
+        title=f'{department_name} Positions Over Time{SourcesConfig.get_footnotes_superscripts("maine_legislature")}'.strip(),
+        xaxis=dict(
+            range=[start_year, end_year],
+            autorange=False
+        ),
+        xaxis_title='Fiscal Year',
+        yaxis_title='Number of Positions'
+    )
+
+    # Add grid lines
+    fig.update_xaxes(showgrid=False)
+    fig.update_yaxes(showgrid=True, gridcolor='lightgray', gridwidth=1)
+
+    return fig
+
+
 def plot_general_fund_sources(data, start_year=None, end_year=None, make_percent=False):
     """Create general fund sources breakdown chart."""
 
