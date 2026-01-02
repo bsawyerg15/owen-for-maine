@@ -9,6 +9,7 @@ Usage:
     python scripts/preprocess_pdfs.py              # Process all PDFs
     python scripts/preprocess_pdfs.py --budget-pdfs # Maine budget PDFs only
     python scripts/preprocess_pdfs.py --revenue-pdfs # Revenue PDFs only
+    python scripts/preprocess_pdfs.py --positions-pdfs # Position data from budget PDFs only
     python scripts/preprocess_pdfs.py --validate    # Validate processed data
 """
 
@@ -247,6 +248,35 @@ def preprocess_revenue_pdfs():
     logger.info(f"Revenue PDF pre-processing complete. Processed {processed_count} files.")
 
 
+def preprocess_positions_pdfs():
+    """Process all Maine budget PDFs and extract position data."""
+    logger.info("Starting Maine positions PDF pre-processing...")
+
+    # Import the position extraction function
+    try:
+        from extract_positions import save_positions_to_pickle
+    except ImportError:
+        logger.error("Could not import extract_positions module. Make sure extract_positions.py is in the scripts directory.")
+        return
+
+    pdf_dir = Path("z_Data/ME")
+    processed_count = 0
+
+    for pdf_file in pdf_dir.glob("*ME State Budget.pdf"):
+        try:
+            logger.info(f"Processing positions from {pdf_file.name}...")
+
+            # Save positions as pickle
+            output_path = save_positions_to_pickle(pdf_file)
+            processed_count += 1
+
+        except Exception as e:
+            logger.error(f"Error processing positions from {pdf_file.name}: {e}")
+            continue
+
+    logger.info(f"Positions PDF pre-processing complete. Processed {processed_count} files.")
+
+
 def validate_processed_data():
     """Validate that processed data matches source PDFs."""
     logger.info("Starting data validation...")
@@ -341,12 +371,13 @@ def main():
     parser = argparse.ArgumentParser(description='Pre-process Maine budget PDFs')
     parser.add_argument('--budget-pdfs', action='store_true', help='Process Maine budget PDFs only')
     parser.add_argument('--revenue-pdfs', action='store_true', help='Process revenue PDFs only')
+    parser.add_argument('--positions-pdfs', action='store_true', help='Process position data from budget PDFs only')
     parser.add_argument('--validate', action='store_true', help='Validate processed data only')
 
     args = parser.parse_args()
 
     # If no specific args, run everything
-    run_all = not any([args.budget_pdfs, args.revenue_pdfs, args.validate])
+    run_all = not any([args.budget_pdfs, args.revenue_pdfs, args.positions_pdfs, args.validate])
 
     try:
         if args.budget_pdfs or run_all:
@@ -354,6 +385,9 @@ def main():
 
         if args.revenue_pdfs or run_all:
             preprocess_revenue_pdfs()
+
+        if args.positions_pdfs or run_all:
+            preprocess_positions_pdfs()
 
         if args.validate or run_all:
             validate_processed_data()

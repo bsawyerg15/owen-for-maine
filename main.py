@@ -64,6 +64,9 @@ def main():
     me_as_reported_df = load_me_budget_as_reported(budget_to_end_page, Config.DATA_DIR_ME)
     nh_as_reported_df = load_nh_budget_as_reported(budget_years, Config.DATA_DIR_NH)
 
+    # Load position data for all available years
+    me_positions_df = load_me_positions_as_reported(Config.ME_POSITION_YEARS)
+
     me_processed_df = process_me_budget(me_as_reported_df)
 
     # Standardized Dataframes
@@ -93,6 +96,7 @@ def main():
         me_processed_df=me_processed_df,
         nh_standardized_df=nh_standardized_df,
         me_standardized_df=me_standardized_df,
+        me_positions_df=me_positions_df,
         raw_economic_df=raw_economic_df,
         economic_index_df=economic_index_df,
         general_fund_sources_df=general_fund_sources_df,

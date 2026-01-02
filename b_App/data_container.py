@@ -14,6 +14,7 @@ class BudgetAnalysisData:
     me_processed_df: pd.DataFrame
     nh_standardized_df: pd.DataFrame
     me_standardized_df: pd.DataFrame
+    me_positions_df: pd.DataFrame
     raw_economic_df: pd.DataFrame
     economic_index_df: pd.DataFrame
     general_fund_sources_df: pd.DataFrame

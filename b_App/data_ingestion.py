@@ -87,6 +87,12 @@ def load_budget_pickle_file(filepath):
     return pd.read_pickle(filepath)
 
 
+@st.cache_data
+def load_position_pickle_file(filepath):
+    """Cache individual position Pickle file loading."""
+    return pd.read_pickle(filepath)
+
+
 def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
     """Load Maine budget data from pre-processed files, with PDF fallback."""
     dfs = []
@@ -132,6 +138,58 @@ def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
     # Concatenate all DataFrames
     result_df = pd.concat(dfs, axis=1)
     return result_df.sort_index(axis=1)
+
+
+@st.cache_data
+def load_me_positions_as_reported(position_years, data_dir='preprocessed_data/positions'):
+    """
+    Load Maine position data from pre-processed files.
+
+    Args:
+        position_years (list): List of year ranges like ['2016-2017', '2018-2019', ...]
+        data_dir (str): Directory containing position pickle files
+
+    Returns:
+        pd.DataFrame: DataFrame with departments as index and years as columns
+    """
+    dfs = []
+
+    for year_range in position_years:
+        # Try to load from pre-processed Pickle file
+        processed_path = Path(data_dir) / f"{year_range}_positions.pkl"
+
+        if processed_path.exists():
+            try:
+                # Load from pre-processed file (cached)
+                df = load_position_pickle_file(processed_path)
+
+                # Extract TOTAL POSITIONS rows (department-level totals)
+                total_positions = df[df.index.get_level_values(1) == 'TOTAL POSITIONS']
+
+                # Reset Position_Type index level to get department as regular index
+                total_positions = total_positions.reset_index(level=1, drop=True)
+
+                # Keep only the year columns (exclude 'Total' column which sums Year1+Year2)
+                year_cols = [col for col in total_positions.columns if col != 'Total']
+                dfs.append(total_positions[year_cols])
+
+            except Exception as e:
+                st.warning(f"Failed to load position data for {year_range}: {e}")
+                continue
+        else:
+            st.warning(f"Position data not found for {year_range}: {processed_path}")
+            continue
+
+    if not dfs:
+        return pd.DataFrame()
+
+    # Concatenate all DataFrames along columns (years)
+    result_df = pd.concat(dfs, axis=1)
+
+    # Sort columns by year
+    result_df = result_df.sort_index(axis=1)
+
+    return result_df
 
 
 def load_and_clean_nh_budget(year, data_dir='../z_Data/NH/'):

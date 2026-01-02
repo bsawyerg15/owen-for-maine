@@ -19,6 +19,9 @@ class Config:
         "2016-2017": 8
     }
 
+    # Maine position years (biennial periods)
+    ME_POSITION_YEARS = ["2016-2017", "2018-2019", "2020-2021", "2022-2023", "2024-2025", "2026-2027"]
+
     LARGE_MAINE_DEPARTMENTS = ['TOTAL', 'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)', 'DEPARTMENT OF EDUCATION', 'DEPARTMENT OF TRANSPORTATION']
 
     # New Hampshire budget years
