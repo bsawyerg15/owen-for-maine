@@ -64,15 +64,16 @@ def main():
     me_as_reported_df = load_me_budget_as_reported(budget_to_end_page, Config.DATA_DIR_ME)
     nh_as_reported_df = load_nh_budget_as_reported(budget_years, Config.DATA_DIR_NH)
 
-    # Load position data for all available years
-    me_positions_df = load_me_positions_as_reported(Config.ME_POSITION_YEARS)
-
     me_processed_df = process_me_budget(me_as_reported_df)
 
     # Standardized Dataframes
     department_mapping_df = load_department_mapping(Config.DEPARTMENT_MAPPING_FILE)
     sub_category_map_df = load_department_mapping(Config.SUB_DEPARTMENT_MAPPING_FILE)
     revenue_sources_mapping_df = load_revenue_sources_mapping(Config.REVENUE_SOURCES_MAPPING_FILE)
+
+    # Load position data for all available years
+    me_positions_df = load_me_positions_as_reported(Config.ME_POSITION_YEARS)
+    me_positions_df = standardize_positions(me_positions_df, department_mapping_df)
 
     me_standardized_df = standardize_budget(me_processed_df, department_mapping_df, sub_category_map_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, department_mapping_df, sub_category_map_df, 'New Hampshire')
@@ -186,7 +187,9 @@ def main():
     with col2:
         st.plotly_chart(plot_general_fund_sources(data, make_percent=True))
 
-    # st.plotly_chart(plot_budget_and_spending(me_processed_df, funding_source='GENERAL FUND', title='General Fund vs Overall Spending'))
+    _, col, button_col = st.columns([1, single_chart_ratio, 1])
+    with col:
+        st.plotly_chart(plot_department_num_employees(data, 'TOTAL'))
 
     #######################################################################################################
     # Why is it growing?

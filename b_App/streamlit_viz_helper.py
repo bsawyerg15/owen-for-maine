@@ -33,11 +33,11 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 if enrollment_dept:
                     st.plotly_chart(plot_enrollment(data, enrollment_dept, funding_source), key=f"{department}_enrollment_{suffix}")
 
-                # plot number of employees per department
-                st.plotly_chart(plot_department_positions(data, department), key=f"{department}_positions_{suffix}")
-
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(data, department), key=f"{department}_funding_{suffix}")
+
+                # plot number of employees per department
+                st.plotly_chart(plot_department_num_employees(data, department), key=f"{department}_positions_{suffix}")
 
                 # Bar chart comparison to NH
                 st.plotly_chart(plot_state_single_comparison_bars(data, department_name=standardized_name), key=f"{department}_state_comp_{suffix}")
@@ -82,10 +82,11 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 standardized_name = department_mapping_row['Standardized'].values[0]
                 clean_name = department_mapping_row['Shortened Name'].values[0]
 
-                st.plotly_chart(plot_department_positions(data, department), key=f"{department}_positions_{suffix}")
-
                 # Time series of department funding sources
                 st.plotly_chart(plot_department_funding_sources(data, selected_department), key=f"{selected_department}_funding_{suffix}")
+
+                # plot number of employees per department
+                st.plotly_chart(plot_department_num_employees(data, department), key=f"{department}_positions_{suffix}a")
 
                 # Bar chart comparison to NH
                 st.plotly_chart(plot_state_single_comparison_bars(data, department_name=standardized_name), key=f"{selected_department}_state_comp_{suffix}")

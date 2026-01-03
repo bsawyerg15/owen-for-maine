@@ -200,6 +200,33 @@ def add_cpi_times_pop_growth_index(economic_index_df):
 
 
 @st.cache_data
+def standardize_positions(positions_df, category_mapping_df):
+    """Standardize positions data using department mapping."""
+    state_mapping_df = category_mapping_df[category_mapping_df['State'] == 'Maine'][['Positions As Reported', 'As Reported']].dropna(subset=['Positions As Reported'])
+
+    # Map positions as reported to standardized names
+    standardized_df = positions_df.reset_index().merge(state_mapping_df, left_on='Department', right_on='Positions As Reported', how='left')
+
+    # Check for unmapped departments
+    if standardized_df['As Reported'].isna().any():
+        unmapped_depts = standardized_df[standardized_df['As Reported'].isna()]['Department'].unique()
+        print("⚠️  Unmapped Maine positions departments:")
+        [print(f"{dept}") for dept in unmapped_depts]
+
+    standardized_df.drop(columns=['Department', 'Positions As Reported'], inplace=True)
+    standardized_df.rename(columns={'As Reported': 'Department'}, inplace=True)
+
+    # Sum over any departments that mapped to the same standardized name
+    standardized_df = standardized_df.groupby('Department').sum()
+
+    # Add total row
+    total_row = standardized_df.sum(axis=0)
+    standardized_df.loc['TOTAL'] = total_row
+
+    return standardized_df
+
+
+@st.cache_data
 def standardize_revenue_sources(df, mapping_df, state):
     """Standardize revenue sources using mapping for comparison across States."""
     state_mapping_df = mapping_df[mapping_df['State'] == state][['As Reported', 'Standardized']]

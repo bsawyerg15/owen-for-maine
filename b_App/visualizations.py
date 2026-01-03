@@ -195,7 +195,7 @@ def plot_department_funding_sources(data, department, start_year=None, end_year=
     return fig
 
 
-def plot_department_positions(data, department, start_year=None, end_year=None):
+def plot_department_num_employees(data, department, start_year=None, end_year=None):
     """Create line chart of department positions over time."""
 
     # Extract data to local variables
@@ -224,7 +224,7 @@ def plot_department_positions(data, department, start_year=None, end_year=None):
 
     # Update layout
     fig.update_layout(
-        title=f'{department_name} Positions Over Time{SourcesConfig.get_footnotes_superscripts("maine_legislature")}'.strip(),
+        title=f'{department_name} Number of Employees{SourcesConfig.get_footnotes_superscripts("maine_legislature")}'.strip(),
         xaxis=dict(
             range=[start_year, end_year],
             autorange=False
