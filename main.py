@@ -187,10 +187,6 @@ def main():
     with col2:
         st.plotly_chart(plot_general_fund_sources(data, make_percent=True))
 
-    _, col, button_col = st.columns([1, single_chart_ratio, 1])
-    with col:
-        st.plotly_chart(plot_department_num_employees(data, 'TOTAL'))
-
     #######################################################################################################
     # Why is it growing?
     #######################################################################################################

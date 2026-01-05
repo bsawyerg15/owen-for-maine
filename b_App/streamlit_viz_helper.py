@@ -86,7 +86,7 @@ def render_spending_footprint_tab(data, funding_source, single_chart_ratio, suff
                 st.plotly_chart(plot_department_funding_sources(data, selected_department), key=f"{selected_department}_funding_{suffix}")
 
                 # plot number of employees per department
-                st.plotly_chart(plot_department_num_employees(data, department), key=f"{department}_positions_{suffix}a")
+                st.plotly_chart(plot_department_num_employees(data, selected_department), key=f"{department}_positions_{suffix}a")
 
                 # Bar chart comparison to NH
                 st.plotly_chart(plot_state_single_comparison_bars(data, department_name=standardized_name), key=f"{selected_department}_state_comp_{suffix}")
