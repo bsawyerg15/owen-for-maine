@@ -11,6 +11,7 @@ sys.path.append('.')
 import streamlit as st
 import matplotlib.pyplot as plt
 from fredapi import Fred
+import base64
 
 # Import our modules
 from b_App.data_ingestion import  *
@@ -110,22 +111,35 @@ def main():
         selected_year_previous=selected_year_previous
     )
 
+    # Load and encode the image for display
+    with open("z_Data/owenformaine.png", "rb") as f:
+        img_data = base64.b64encode(f.read()).decode()
+    img_html = f'<a href="https://owenformaine.com"><img src="data:image/png;base64,{img_data}" style="max-width:100%; height:auto;"></a>'
+
 ######## Visualizations ###################################################################################
 
     #######################################################################################################
     # Title & Intro
     #######################################################################################################
 
-    st.title("Maine State Budget Tool")
+    col1, col2, _ = st.columns([2.5, 1, 0.3])
 
-    st.subheader("By: [Owen For Maine](https://owenformaine.com)")
+    with col1:
+        st.markdown('')
+        st.markdown('')
+        st.markdown('')
+        st.title("Maine State Budget Tool")
+        st.subheader("By: [Owen for Maine](https://owenformaine.com)")
+
+    with col2:
+        st.markdown(img_html, unsafe_allow_html=True)
 
     st.markdown("""
     When I first sat down to create my plan for Maine, I found that while the state budget is public, the details are buried in [1000-page pdfs](https://legislature.maine.gov/ofpr/total-state-budget-information/9304).
     I realized that if the information is this inaccessible to me, it must be the same for every voter in the state.
     That said, I asked my campaign to build a tool to better understand our state’s budget and am releasing it publicly to help voters make more informed decisions this upcoming election.  
                 
-    I’d like this tool to be as useful and transparent as possible, so if you see any issues or have additional questions that the tool doesn’t answer, please email my team at budgettool@owenformaine.com.
+    I’d like this tool to be as useful and transparent as possible, so if you see any issues or have additional questions that the tool doesn’t answer, please email my team at info@owenformaine.com.
     
     Best,
                 
