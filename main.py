@@ -279,7 +279,8 @@ def main():
     "There’s a lot more to explore with some of the smaller functions, so we’re providing all of the total spending data below. " \
     "As a note, because the organizational structures of the governments are different, we had to make some choices around how to map different functions in a standardized way. " \
     "E.g. New Hampshire has separate departments for Police and Police training and we map both to Policing. " \
-    "This mapping isn’t perfect, so be skeptical before drawing conclusions and if you notice anything that’s clearly wrong, please reach out to the email in the introduction.")
+    "You can see the full mapping below. "\
+    "This mapping isn’t going to be perfect, so be skeptical before drawing conclusions and if you notice anything that’s clearly wrong, please reach out to the email in the introduction.")
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
     st.markdown(f'<div style="text-align: center; font-size: 0.8em;">{SourcesConfig.get_footnotes_superscripts(["maine_legislature", "transparent_nh_expenditure"])}</div>', unsafe_allow_html=True)
