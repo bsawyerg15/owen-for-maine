@@ -105,6 +105,7 @@ def main():
         me_standardized_general_fund_sources_df=me_standardized_general_fund_sources_df,
         nh_standardized_general_fund_sources_df=nh_standardized_general_fund_sources_df,
         department_mapping_df=department_mapping_df,
+        sub_category_map_df=sub_category_map_df,
         revenue_sources_mapping_df=revenue_sources_mapping_df,
         enrollment_df=enrollment_df,
         selected_year_current=selected_year_current,
@@ -282,6 +283,31 @@ def main():
 
     st.dataframe(comparison_through_time_df, use_container_width=True)
     st.markdown(f'<div style="text-align: center; font-size: 0.8em;">{SourcesConfig.get_footnotes_superscripts(["maine_legislature", "transparent_nh_expenditure"])}</div>', unsafe_allow_html=True)
+
+    with st.expander("Department Name Mapping", expanded=False):
+        st.markdown("These tables show how 'as reported' department and sub-department names from Maine and New Hampshire budgets are standardized for comparison. " \
+                    "To see all the departments that we've mapped to a single function, select its name in the dropdown below. " \
+                    "In many cases, multiple departments are mapped to the same standardized name either to account for different organizational structures across states or because the department name has changed in the budget through time. " \
+                    "There is some art to selecting the mapping to get a useful comparison, but that said if you notice any mappings that seem incorrect, please reach out to info@owenformaine.com so we can fix it.")
+
+        # Filter widget
+        department_options = ["ALL"] + sorted(data.department_mapping_df['Standardized'].dropna().astype(str).unique())
+        selected_department = st.selectbox("Filter by Function", department_options)
+
+        st.subheader("Department Level Mapping")
+        dept_df_filtered = data.department_mapping_df[['State', 'Standardized', 'As Reported']]
+        if selected_department != "ALL":
+            dept_df_filtered = dept_df_filtered[dept_df_filtered['Standardized'] == selected_department]
+        dept_df_filtered = dept_df_filtered.sort_values(['State', 'Standardized']).reset_index(drop=True)
+        st.dataframe(dept_df_filtered, use_container_width=True)
+
+        st.subheader("Sub-Department/Funding Source Mapping")
+        sub_df_filtered = data.sub_category_map_df[['State', 'Standardized', 'As Reported', 'Funding Source']]
+        if selected_department != "ALL":
+            sub_df_filtered = sub_df_filtered[sub_df_filtered['Standardized'] == selected_department]
+        sub_df_filtered = sub_df_filtered.sort_values(['State', 'As Reported', 'Standardized']).reset_index(drop=True)
+        st.dataframe(sub_df_filtered, use_container_width=True)
+
 
     st.markdown("---")
     with st.expander("Sources"):
