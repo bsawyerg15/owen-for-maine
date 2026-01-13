@@ -265,8 +265,13 @@ def main():
                 st.plotly_chart(plot_budget_per_enrollee_comparison(data, department))
 
 
-        biggest_underinvestment = (data.comparison_df_current['ME'] - data.comparison_df_current['NH']).sort_values(ascending=True).head(6).index.values
-        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Public Underinvestment'))
+        diff_investment = data.comparison_df_current['ME'] - data.comparison_df_current['NH']
+
+        biggest_overinvestment_ex_healthcare_education = diff_investment.drop(index=['TOTAL', 'HEALTH & HUMAN SERVICES', 'EDUCATION']).sort_values(ascending=False).head(6).index.values
+        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_overinvestment_ex_healthcare_education, title='ME vs NH: Largest Relative Spending (Ex. Healthcare & Education)'))
+
+        biggest_underinvestment = diff_investment.sort_values(ascending=True).head(6).index.values
+        st.plotly_chart(plot_state_comparison_bars(data, departments_to_show=biggest_underinvestment, title='ME vs NH: Areas of Largest Relative Underinvestment'))
 
 
     st.markdown("The charts above tried to pop some of the interesting relationships between functions across the state. " \
@@ -280,6 +285,7 @@ def main():
 
     st.markdown("---")
     with st.expander("Sources"):
+        st.markdown("The data powering this analysis comes from a variety of public sources. In each chart title, there is a link to the relevant sources that went into making that chart.")
         sources = SourcesConfig.SOURCES
         sources_text = "\n\n".join([
             f'<sup><a href="{info["url"]}">{i+1}</a></sup> {info["name"]}'

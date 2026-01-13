@@ -513,7 +513,7 @@ def plot_state_comparison_bars(data, departments_to_show=[], title=None):
     # Adjust title based on filtering mode
     if not title:
         title = f'Maine vs New Hampshire State Budgets'
-    elif 'Top Departments' in title or 'Areas of Largest' in title:
+    else:
         title = f"{title}{SourcesConfig.get_footnotes_superscripts(['maine_legislature', 'transparent_nh_expenditure'])}"
 
     fig.update_layout(
