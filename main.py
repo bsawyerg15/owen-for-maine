@@ -178,7 +178,7 @@ def main():
     headline_chart_explainer = f"We’ll start by getting a lay of the land to understand how the budget has changed through time and where the money’s coming from. " \
                         f"The dashed lines on the chart below puts the budget growth in context. The green line literally means _what would the General Fund size be if the {selected_year_previous} spending grew at the same rate as inflation and population growth?_ " \
                         f"Intuitively, budget growth at the green line would be close to saying the government is providing a similar set of services through time. "\
-                        f"On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts increases as GDP rises."
+                        f"On the other hand, if it’s growing in line with the red line, you could interpret that as the government is growing as fast as it can be supported because taxes receipts increase as GDP rises."
 
     general_fund_explainer = f"The General Fund referenced to the left refers to the money the Maine government has to use as they see fit (i.e. not dedicated for a specific purpose). " \
         "This fund is where all of your state income, sales, corporate taxes, etc. go and so the size of this will correspond to how much Maine is levying in taxes. "
