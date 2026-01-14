@@ -129,8 +129,8 @@ def main():
         st.markdown('')
         st.markdown('')
         st.markdown('')
+        st.markdown('')
         st.title("Maine State Budget Tool")
-        st.subheader("By: [Owen for Maine](https://owenformaine.com)")
 
     with col2:
         st.markdown(img_html, unsafe_allow_html=True)
