@@ -137,6 +137,7 @@ def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
 
     # Concatenate all DataFrames
     result_df = pd.concat(dfs, axis=1)
+
     return result_df.sort_index(axis=1)
 
 
@@ -344,3 +345,54 @@ def load_nh_general_fund_sources():
     df['2026'] = df['2026'].str.replace('$', '').str.replace(',', '').astype(float)
     df = df.set_index('Source')
     return df
+
+
+@st.cache_data
+def load_me_budget_archive(filepath='z_Data/ME/ME Total Budget Archive.csv'):
+    """
+    Load Maine budget archive data from CSV and restructure to match the main budget DataFrame format.
+
+    Returns:
+    - pd.DataFrame: DataFrame with Department and Funding Source as multiindex, years as columns.
+    """
+    # Load the archive CSV
+    df = pd.read_csv(filepath)
+
+    # Clean column names and data
+    df.columns = df.columns.str.strip()
+    df['FISCAL YEAR'] = df['FISCAL YEAR'].astype(str)
+
+    # Remove commas and convert to float for all fund columns
+    fund_columns = ['GENERAL FUND', 'HIGHWAY FUND', 'FEDERAL FUNDS', 'OTHER STATE FUNDS', 'TOTAL EXPENDITURES']
+    for col in fund_columns:
+        if col in df.columns:
+            df[col] = df[col].astype(str).str.replace(',', '').str.replace('$', '').astype(float)
+
+    # Map funding source names to match current naming conventions
+    funding_source_mapping = {
+        'GENERAL FUND': 'GENERAL FUND',
+        'HIGHWAY FUND': 'HIGHWAY FUND',
+        'FEDERAL FUNDS': 'FEDERAL EXPENDITURES FUND',
+        'OTHER STATE FUNDS': 'OTHER STATE FUNDS',
+        'TOTAL EXPENDITURES': 'DEPARTMENT TOTAL'
+    }
+
+    # Melt the DataFrame to create rows for each year and funding source
+    df_melted = df.melt(id_vars=['FISCAL YEAR'], value_vars=fund_columns,
+                       var_name='Funding Source', value_name='Amount')
+
+    # Map funding source names
+    df_melted['Funding Source'] = df_melted['Funding Source'].map(funding_source_mapping)
+
+    # Set Department to 'TOTAL' for all rows
+    df_melted['Department'] = 'TOTAL'
+
+    # Pivot to create the multiindex format
+    df_pivot = df_melted.pivot_table(
+        index=['Department', 'Funding Source'],
+        columns='FISCAL YEAR',
+        values='Amount',
+        aggfunc='first'
+    )
+
+    return df_pivot

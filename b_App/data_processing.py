@@ -9,11 +9,13 @@ def process_me_budget(me_budget_as_reported_df):
     """Augment Maine budget data with calculated fields. In particular it:
         1. Adds a 'Total' column summing across all funding sources for each department.
         2. Creates a Funding Source "Department Total ex Federal"
+        3. Adds historical data from the archive to extend the TOTAL department
     """
     me_budget_clean_totals_df = clean_total_rows(me_budget_as_reported_df)
     me_budget_w_ex_federal = add_department_total_ex_federal(me_budget_clean_totals_df)
+    me_budget_w_archive = add_archive_data(me_budget_w_ex_federal)
 
-    return me_budget_w_ex_federal
+    return me_budget_w_archive
 
 
 def clean_total_rows(as_reported_df):
@@ -35,6 +37,28 @@ def add_department_total_ex_federal(df):
     ex_federal_df['Funding Source'] = 'DEPARTMENT TOTAL ex FEDERAL'
     ex_federal_df = ex_federal_df.reset_index().set_index(['Department', 'Funding Source'])
     return pd.concat([df, ex_federal_df]).sort_index()
+
+
+@st.cache_data
+def add_archive_data(df):
+    """Add historical budget data from the archive to extend the TOTAL department."""
+    from .data_ingestion import load_me_budget_archive
+
+    # Load archive data
+    archive_df = load_me_budget_archive()
+    if archive_df.empty:
+        return df
+
+    # Concatenate the archive data with the processed data
+    # This will add the historical columns to the DataFrame
+    result_df = pd.concat([df, archive_df], axis=1)
+
+    # Sort columns by year
+    year_cols = sorted([col for col in result_df.columns if col.isdigit()], key=int)
+    other_cols = [col for col in result_df.columns if not col.isdigit()]
+    result_df = result_df[other_cols + year_cols]
+
+    return result_df
 
 
 def standardize_budget_from_sub_departments(as_reported_df, sub_category_map_df, full_state_name):
