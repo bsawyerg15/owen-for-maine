@@ -31,6 +31,7 @@ class Config:
     YEAR_CURRENT = '2026'
     YEAR_PREVIOUS = '2019'
     LATEST_MAINE_BUDGET = '2025'
+    ME_DEPARTMENT_START_YEAR = '2016'
     DEPARTMENTS_TO_IGNORE = []  # Add any departments to ignore in comparisons
 
     # File paths (relative to project root)

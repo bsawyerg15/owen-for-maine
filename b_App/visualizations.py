@@ -325,6 +325,9 @@ def plot_spending_vs_econ_index(data, department='TOTAL', funding_source='GENERA
     # Re-index economic indices to start at base_value
     econ_reindexed = (economic_index_df.div(economic_index_df[start_year], axis=0) * base_value).round(Config.TOTAL_BUDGET_SCALE_ROUNDING)
 
+    # Truncate economic indices to start at the year they're being indexed to
+    econ_reindexed = econ_reindexed.loc[:, start_year:]
+
     # Create plotly figure
     fig = go.Figure()
 
@@ -609,6 +612,7 @@ def plot_small_departments_summary(data, funding_source='DEPARTMENT TOTAL', big_
     me_processed_df = data.me_processed_df
 
     total_df = me_processed_df.xs(funding_source, level='Funding Source').fillna(0)
+    total_df = total_df.loc[:, Config.ME_DEPARTMENT_START_YEAR:]  # Start from specified year
     total_df = (total_df / Config.DEPARTMENT_SCALE)
     ex_big_total_df = total_df[~total_df.index.isin(big_departments)]
     ex_big_total_df = ex_big_total_df.replace(0, np.nan)
