@@ -731,6 +731,10 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
 
         department_spending_at_cpi_n_pop_growth = (top_departments[prior_year] * growth_index).round(Config.DEPARTMENT_SCALE_ROUNDING)
 
+    if prior_year:
+        total_budget_series = total_df.loc[('TOTAL'),:]
+        total_budget_growth_index = calc_geo_growth_index_w_extension(total_budget_series, str(int(prior_year) - 9), str(int(prior_year) - 1), lookback_years=5)
+        department_spending_at_prior_growth = (top_departments[prior_year] * total_budget_growth_index).round(Config.DEPARTMENT_SCALE_ROUNDING)
 
     # Create vertical bar chart using plotly.graph_objects for better control over multiline labels
     fig = go.Figure()
@@ -764,6 +768,19 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
             marker=dict(symbol='circle', color='lightblue', size=8),
             name=f'{prior_year} + CPI & Pop. Growth',
             hovertext=top_departments.index
+        ))
+
+    if prior_year:
+        funding_source_cleaned = funding_source.replace('DEPARTMENT TOTAL', 'Total').title()
+        
+        fig.add_trace(go.Scatter(
+            x=list(range(len(top_departments))),
+            y=department_spending_at_prior_growth.values,
+            mode='markers',
+            marker=dict(symbol='circle', color='lightgray', size=8),
+            name=f'{prior_year} + Prior 8 yr {funding_source_cleaned} Growth Rate',
+            hovertext=top_departments.index,
+            visible='legendonly'
         ))
 
     # Set x-axis labels with multiline text
