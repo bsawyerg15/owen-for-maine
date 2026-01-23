@@ -778,7 +778,7 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
             y=department_spending_at_prior_growth.values,
             mode='markers',
             marker=dict(symbol='circle', color='lightgray', size=8),
-            name=f'{prior_year} + Prior 8 yr {funding_source_cleaned} Growth Rate',
+            name=f'{prior_year} + \'{str(int(prior_year) - 9)[2:4]} to \'{str(int(prior_year) - 1)[2:4]} Growth Rate',
             hovertext=top_departments.index,
             visible='legendonly'
         ))
