@@ -761,24 +761,24 @@ def produce_department_bar_chart(data, year=None, top_n=10, funding_source='DEPA
     ))
 
     if prior_year:
-        fig.add_trace(go.Scatter(
-            x=list(range(len(top_departments))),
-            y=department_spending_at_cpi_n_pop_growth.values,
-            mode='markers',
-            marker=dict(symbol='circle', color='lightblue', size=8),
-            name=f'{prior_year} + CPI & Pop. Growth',
-            hovertext=top_departments.index
-        ))
-
-    if prior_year:
         funding_source_cleaned = funding_source.replace('DEPARTMENT TOTAL', 'Total').title()
         
         fig.add_trace(go.Scatter(
             x=list(range(len(top_departments))),
             y=department_spending_at_prior_growth.values,
             mode='markers',
-            marker=dict(symbol='circle', color='lightgray', size=8),
+            marker=dict(symbol='circle', color='darkgray', size=8),
             name=f'{prior_year} + \'{str(int(prior_year) - 9)[2:4]} to \'{str(int(prior_year) - 1)[2:4]} Growth Rate',
+            hovertext=top_departments.index
+        ))
+
+    if prior_year:
+        fig.add_trace(go.Scatter(
+            x=list(range(len(top_departments))),
+            y=department_spending_at_cpi_n_pop_growth.values,
+            mode='markers',
+            marker=dict(symbol='circle', color='lightblue', size=8),
+            name=f'{prior_year} + CPI & Pop. Growth',
             hovertext=top_departments.index,
             visible='legendonly'
         ))
