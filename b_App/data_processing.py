@@ -10,10 +10,13 @@ def process_me_budget(me_budget_as_reported_df):
         1. Adds a 'Total' column summing across all funding sources for each department.
         2. Creates a Funding Source "Department Total ex Federal"
         3. Adds historical data from the archive to extend the TOTAL department
+        4. Adds supplemental budget data for 2026-2027
     """
-    me_budget_clean_totals_df = clean_total_rows(me_budget_as_reported_df)
+    me_budget_w_supplemental = add_supplemental_data(me_budget_as_reported_df)
+    me_budget_clean_totals_df = clean_total_rows(me_budget_w_supplemental)
     me_budget_w_ex_federal = add_department_total_ex_federal(me_budget_clean_totals_df)
     me_budget_w_archive = add_archive_data(me_budget_w_ex_federal)
+    
 
     return me_budget_w_archive
 
@@ -57,6 +60,22 @@ def add_archive_data(df):
     year_cols = sorted([col for col in result_df.columns if col.isdigit()], key=int)
     other_cols = [col for col in result_df.columns if not col.isdigit()]
     result_df = result_df[other_cols + year_cols]
+
+    return result_df
+
+
+@st.cache_data
+def add_supplemental_data(df):
+    """Add supplemental budget data for 2026-2027."""
+    from .data_ingestion import load_me_supplemental_budget
+
+    # Load supplemental data
+    supplemental_df = load_me_supplemental_budget()
+    if supplemental_df.empty:
+        return df
+
+    # Add supplemental data to existing data (adds to matching department/funding source combinations)
+    result_df = df.add(supplemental_df, fill_value=0)
 
     return result_df
 

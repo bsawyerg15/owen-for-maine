@@ -138,6 +138,8 @@ def load_me_budget_as_reported(budget_to_end_page, data_dir='../z_Data/ME/'):
     # Concatenate all DataFrames
     result_df = pd.concat(dfs, axis=1)
 
+
+
     return result_df.sort_index(axis=1)
 
 
@@ -396,3 +398,23 @@ def load_me_budget_archive(filepath='z_Data/ME/ME Total Budget Archive.csv'):
     )
 
     return df_pivot
+
+
+@st.cache_data
+def load_me_supplemental_budget(filepath='z_Data/ME Supplemental 2026-27/supplemental_totals_2026_27.csv'):
+    """
+    Load Maine supplemental budget data from CSV and restructure to match the main budget DataFrame format.
+
+    Returns:
+    - pd.DataFrame: DataFrame with Department and Funding Source as multiindex, years as columns.
+    """
+    # Load the supplemental CSV
+    df = pd.read_csv(filepath)
+
+    # Set the multiindex
+    df = df.set_index(['Department', 'Funding Source'])
+
+    # Group by index and sum to handle any duplicates
+    df = df.groupby(level=['Department', 'Funding Source']).sum()
+
+    return df
