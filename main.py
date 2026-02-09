@@ -163,11 +163,12 @@ def main():
     """)
 
     with st.expander("💡 How to use this tool", expanded=False):
-        st.markdown("You'll have a much better experience accessing this tool on your desktop as opposed to phone.\n\n" \
-        "You’ll notice that the tool is very interactive. " \
+        st.markdown("You’ll notice that the tool is very interactive. " \
         "The charts will update if you change the date parameters and you can change the presentation of the charts by clicking the buttons around it. " \
         "By default, it compares the 2019 budgets to 2026 which corresponds to Mills' time as governor. " \
         "Additionally, if you’re curious to learn more about what a chart shows, click the ℹ️ button next to it for additional color.")
+
+    st.info("🖥️  For now, this tool is intended to used on a desktop. We'd recommend you switch if you're currently on a phone.")
 
     #######################################################################################################
     # Headline Spending Section
