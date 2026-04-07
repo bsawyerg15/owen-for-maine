@@ -865,7 +865,7 @@ def create_styled_comparison_through_time(me_standardized_df, nh_standardized_df
             vmax=absmax[col]
         )
 
-    styler = styler.applymap(lambda v: 'background-color: white' if pd.isna(v) else '')
+    styler = styler.map(lambda v: 'background-color: white' if pd.isna(v) else '')
 
     formats = {}
     for col in comparison_df.columns:
