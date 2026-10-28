@@ -29,6 +29,8 @@ def main():
     """Execute the streamlit app."""
 
     # Initialize FRED API client
+    if not Config.FRED_API_KEY:
+        raise RuntimeError("FRED_API_KEY environment variable is not set")
     fred = Fred(api_key=Config.FRED_API_KEY)
 
     #######################################################################################################

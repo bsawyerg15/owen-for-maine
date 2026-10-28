@@ -3,11 +3,13 @@ Configuration file for the Owen for Maine project.
 Centralized location for all configuration variables and constants.
 """
 
+import os
+
 class Config:
     """Configuration class containing all project settings."""
 
     # API Keys
-    FRED_API_KEY = "902a2e4cf2100e3f1045cfbec0139940"
+    FRED_API_KEY = os.environ.get("FRED_API_KEY")
 
     # Maine budget configuration
     ME_BUDGET_END_PAGES = {
