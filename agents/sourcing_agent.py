@@ -3,6 +3,7 @@ import asyncio
 import string
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import urlparse
 
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKError, HookMatcher, ResultMessage, query
 from a_Configs.sources_config import SourcesConfig
@@ -24,7 +25,7 @@ RESULT_SCHEMA = {
     "type": "object",
     "properties": {
         "source_key": {"type": "string"},
-        "status": {"type": "string", "enum": ["new_data", "no_new_data", "escalate", "error"]},
+        "status": {"type": "string", "enum": ["new_data", "revised", "no_new_data", "escalate", "error"]},
         "files": {"type": "array", "items": {"type": "string"}},
         "periods": {"type": "array", "items": {"type": "string"}},
         "notes": {"type": "string"},
@@ -47,7 +48,8 @@ class SourcingResult:
 
     @property
     def new_data_found(self):
-        return self.status == "new_data"
+        # Revised data also needs to go through Configuration/Testing, so it counts as new
+        return self.status in ("new_data", "revised")
 
 
 def get_source(source_key):
@@ -105,7 +107,7 @@ def _path_guard(allowed_dirs, path_keys, cwd, action):
     return hook
 
 
-def _build_options(data_dir):
+def _build_options(data_dir, source_url):
     write_guard = _path_guard([data_dir], ["file_path"], data_dir, "write")
     read_guard = _path_guard(READABLE_DIRS, ["file_path", "path"], data_dir, "read")
     return ClaudeAgentOptions(
@@ -127,7 +129,8 @@ def _build_options(data_dir):
                 HookMatcher(matcher="Read|Glob|Grep", hooks=[read_guard]),
             ]
         },
-        # Bash runs sandboxed: it can only write in cwd (data_dir) and can only read a_Configs and z_Data in the repo
+        # Bash runs sandboxed: it can only write in cwd (data_dir), can only read a_Configs and z_Data in the repo,
+        # and can only reach the source's own domain (for curl downloads)
         sandbox={
             "enabled": True,
             "autoAllowBashIfSandboxed": True,
@@ -137,6 +140,7 @@ def _build_options(data_dir):
                 "denyRead": [str(REPO_ROOT)],
                 "allowRead": [str(d) for d in READABLE_DIRS],
             },
+            "network": {"allowedDomains": [urlparse(source_url).hostname]},
         },
     )
 
@@ -160,11 +164,12 @@ async def run_sourcing_agent(source_key, special_instructions=None):
     """Run the sourcing agent for one source and return a SourcingResult.
 
     special_instructions carries feedback from the Configuration/Testing agent on a retry."""
-    data_dir = REPO_ROOT / get_source(source_key)["data_dir"]
+    source = get_source(source_key)
+    data_dir = REPO_ROOT / source["data_dir"]
     prompt = build_prompt(source_key, special_instructions)
     final = None
     try:
-        async for message in query(prompt=prompt, options=_build_options(data_dir)):
+        async for message in query(prompt=prompt, options=_build_options(data_dir, source["url"])):
             if isinstance(message, ResultMessage):
                 final = message
     except ClaudeSDKError as e:

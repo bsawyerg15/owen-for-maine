@@ -76,7 +76,8 @@ def main():
 
     # Load position data for all available years
     me_positions_df = load_me_positions_as_reported(Config.ME_POSITION_YEARS)
-    me_positions_df = standardize_positions(me_positions_df, department_mapping_df)
+    positions_backhistory_df = load_positions_backhistory(Config.POSITIONS_BACKHISTORY_FILE)
+    me_positions_df = standardize_positions(me_positions_df, department_mapping_df, positions_backhistory_df)
 
     me_standardized_df = standardize_budget(me_processed_df, department_mapping_df, sub_category_map_df, 'Maine')
     nh_standardized_df = standardize_budget(nh_as_reported_df, department_mapping_df, sub_category_map_df, 'New Hampshire')

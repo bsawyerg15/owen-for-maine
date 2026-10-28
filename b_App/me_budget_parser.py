@@ -1,13 +1,41 @@
 import pandas as pd
 import re
 
-def parse_headline_table(headline_table):
+"""Parser for the summary ("Table of Contents") pages of the Maine State Budget PDFs.
+Kept free of streamlit so the preprocessing and validation scripts can use it."""
+
+AMOUNT = r'\(?\d{1,3}(?:,\d{3})*\)?'
+FUNDING_PATTERN = re.compile(rf'^(.+?)\s+({AMOUNT})\s+({AMOUNT})$')
+# pdfplumber sometimes splits the leading digit(s) of a number off with a space, e.g. "GENERAL FUND 1 1,792,254" for 11,792,254
+SPLIT_LEADING_DIGITS = re.compile(r'^(.*\D)\s+(\d{1,3})$')
+
+
+def parse_amount(amount_str):
+    """Convert '1,234' to 1234.0 and '(1,234)' to -1234.0."""
+    negative = amount_str.startswith('(') and amount_str.endswith(')')
+    value = float(amount_str.strip('()').replace(',', ''))
+    return -value if negative else value
+
+
+def rejoin_split_amount(funding_source, first_amount):
+    """Undo a number split by a space: ('GENERAL FUND 1', '1,792,254') -> ('GENERAL FUND', '11,792,254')."""
+    match = SPLIT_LEADING_DIGITS.match(funding_source)
+    if match and not first_amount.startswith('('):
+        joined = match.group(2) + first_amount
+        if re.fullmatch(AMOUNT, joined):
+            return match.group(1).strip(), joined
+    return funding_source, first_amount
+
+
+def parse_me_headline_table(headline_table, first_year, second_year):
     """
-    Parse the headline_table text into a DataFrame with columns:
-    Department | Funding Source | 2023 | 2024
+    Parse the headline_table from Maine budget text into a DataFrame with columns:
+    Department | Funding Source | first_year | second_year
 
     Args:
         headline_table (str): The text containing budget information
+        first_year (str): First year column name
+        second_year (str): Second year column name
 
     Returns:
         pd.DataFrame: DataFrame with parsed budget data
@@ -15,7 +43,6 @@ def parse_headline_table(headline_table):
     lines = headline_table.strip().split('\n')
     data = []
     current_dept = None
-    funding_pattern = re.compile(r'^(.+?)\s+(\d{1,3}(?:,\d{3})*)\s+(\d{1,3}(?:,\d{3})*)$')
 
     for line in lines:
         line = line.strip()
@@ -29,63 +56,23 @@ def parse_headline_table(headline_table):
                 current_dept = parts[1]
             else:
                 current_dept = line
-        elif current_dept:
-            match = funding_pattern.match(line)
+        else:
+            match = FUNDING_PATTERN.match(line)
             if match:
                 # Funding source
-                funding_source = match.group(1).strip()
-                amt_2023_str = match.group(2).replace(',', '')
-                amt_2024_str = match.group(3).replace(',', '')
-
-                try:
-                    amt_2023 = float(amt_2023_str)
-                except ValueError:
-                    amt_2023 = 0.0
-
-                try:
-                    amt_2024 = float(amt_2024_str)
-                except ValueError:
-                    amt_2024 = 0.0
-
+                funding_source, first_amount = rejoin_split_amount(match.group(1).strip(), match.group(2))
                 data.append({
                     'Department': current_dept,
                     'Funding Source': funding_source,
-                    '2023': amt_2023,
-                    '2024': amt_2024
+                    first_year: parse_amount(first_amount),
+                    second_year: parse_amount(match.group(3))
                 })
-            else:
-                # Append to department name
-                current_dept += ' ' + line
 
     df = pd.DataFrame(data)
+    df = df.set_index(['Department', 'Funding Source'])
     return df
 
-# Example usage:
-if __name__ == "__main__":
-    sample_text = """131st LEGISLATURE, 1st Regular Session
-131st LEGISLATURE, 1st Special Session
-131st LEGISLATURE, 2nd Regular Session
-132nd LEGISLATURE, 1st Regular Session
-132nd LEGISLATURE, 1st Special Session
-Updated July 31, 2025
-Table of Contents
-Page Department/Agency 2023-24 2024-25
-1 DEPARTMENT OF ADMINISTRATIVE AND FINANCIAL SERVICES
-(Includes Departments and Agencies - Statewide)
-GENERAL FUND 303,364,875 290,558,426
-HIGHWAY FUND 3,018,483 3,321,882
-FEDERAL EXPENDITURES FUND 489,350 489,350
-FUND FOR A HEALTHY MAINE 0 0
-OTHER SPECIAL REVENUE 68,888,949 67,507,917
-FEDERAL EXPENDITURES FUND ARP SFR 13,749,675 10,385,118
-FEDERAL EXPENDITURES FUND ARP 0 0
-FINANCIAL & PERSONNEL SERVICES FUND 29,332,374 30,089,127
-POSTAL,PRINTING & SUPPLY FUND 4,199,960 4,276,440
-15 OFFICE OF INFORMATION SERVICES
-RISK MANAGEMENT FUND 9,661,808 6,187,679
-WORKERS COMP. MANAGEMENT FUND 20,283,494 20,721,885
-CENTRAL MOTOR POOL 9,834,253 9,872,415
-REAL PROPERTY LEASE SERVICES 30,428,200 30,437,129"""
 
-    df = parse_headline_table(sample_text)
-    print(df.head())
+def read_me_budget_summary(pdf, end_page):
+    """Extract the text of the summary pages (pages 1 through end_page - 1) from an open pdfplumber PDF."""
+    return '\n'.join(page.extract_text() for page in pdf.pages[1:end_page])

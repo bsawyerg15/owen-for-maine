@@ -224,9 +224,10 @@ def add_cpi_times_pop_growth_index(economic_index_df):
 
 
 @st.cache_data
-def standardize_positions(positions_df, category_mapping_df):
-    """Standardize positions data using department mapping."""
-    state_mapping_df = category_mapping_df[category_mapping_df['State'] == 'Maine'][['Positions As Reported', 'As Reported']].dropna(subset=['Positions As Reported'])
+def standardize_positions(positions_df, category_mapping_df, backhistory_df):
+    """Standardize positions data using department mapping, plus older positions names from the backhistory config."""
+    state_mapping_df = pd.concat([category_mapping_df, backhistory_df])
+    state_mapping_df = state_mapping_df[state_mapping_df['State'] == 'Maine'][['Positions As Reported', 'As Reported']].dropna(subset=['Positions As Reported'])
 
     # Map positions as reported to standardized names
     standardized_df = positions_df.reset_index().merge(state_mapping_df, left_on='Department', right_on='Positions As Reported', how='left')

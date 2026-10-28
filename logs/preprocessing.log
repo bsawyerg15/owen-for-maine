@@ -127,3 +127,1050 @@
 2026-01-02 13:41:35,493 - INFO - Processing positions from 2022-2023 ME State Budget.pdf...
 2026-01-02 13:41:58,860 - INFO - Positions PDF pre-processing complete. Processed 6 files.
 2026-01-02 13:41:58,860 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 16:27:55,907 - INFO - Starting data validation...
+2026-10-28 16:27:56,519 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:27:56,519 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:27:56,519 - ERROR - ✗ budget 2016-2017: summary_pages
+2026-10-28 16:27:56,519 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:27:56,519 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:27:56,519 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:27:56,519 - ERROR - ✗ budget 2016-2017: funding_source_totals
+2026-10-28 16:27:56,519 - ERROR -     ABANDONED PROPERTY FUND 2016: departments sum to 226,249, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     ABANDONED PROPERTY FUND 2017: departments sum to 292,424, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     ACCIDENT, SICKNESS & HEALTH INSURANCE 2016: departments sum to 1,823,773, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     ACCIDENT, SICKNESS & HEALTH INSURANCE 2017: departments sum to 1,819,011, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     BUREAU OF REVENUE SERVICES 2016: departments sum to 151,720, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     BUREAU OF REVENUE SERVICES 2017: departments sum to 151,720, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     CENTRAL MOTOR POOL 2016: departments sum to 10,035,911, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     CENTRAL MOTOR POOL 2017: departments sum to 10,024,430, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2016: departments sum to 3,082,515, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2017: departments sum to 3,348,400, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2016: departments sum to 6,411,122, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2017: departments sum to 6,459,131, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2016: departments sum to 184,350,000, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2017: departments sum to 184,350,000, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     FINANCIAL & PERSONNEL SERVICES FUND 2016: departments sum to 21,101,772, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     FINANCIAL & PERSONNEL SERVICES FUND 2017: departments sum to 21,037,055, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2016: departments sum to 1,780,692, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2017: departments sum to 1,779,516, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     FLEET SERVICES FUND - DOT 2016: departments sum to 28,513,425, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     FLEET SERVICES FUND - DOT 2017: departments sum to 28,945,608, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2016: departments sum to 500,000, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2017: departments sum to 500,000, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     ISLAND FERRY SERVICES FUND 2016: departments sum to 10,224,567, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     ISLAND FERRY SERVICES FUND 2017: departments sum to 10,383,584, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     MAINE MILITARY AUTHORITY 2016: departments sum to 93,633,635, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     MAINE MILITARY AUTHORITY 2017: departments sum to 94,107,488, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     OFFICE OF INFORMATION SERVICES 2016: departments sum to 56,783,424, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     OFFICE OF INFORMATION SERVICES 2017: departments sum to 56,525,369, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     POSTAL,PRINTING & SUPPLY FUND 2016: departments sum to 3,827,871, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     POSTAL,PRINTING & SUPPLY FUND 2017: departments sum to 3,841,814, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     PRISON INDUSTRIES FUND 2016: departments sum to 2,476,786, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     PRISON INDUSTRIES FUND 2017: departments sum to 2,493,380, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     REAL PROPERTY LEASE SERVICES 2016: departments sum to 25,902,827, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     REAL PROPERTY LEASE SERVICES 2017: departments sum to 25,898,643, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     RETIREE HEALTH INSURANCE 2016: departments sum to 48,400,235, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     RETIREE HEALTH INSURANCE 2017: departments sum to 48,400,235, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     RISK MANAGEMENT FUND 2016: departments sum to 3,958,504, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     RISK MANAGEMENT FUND 2017: departments sum to 3,953,104, grand totals show 0
+2026-10-28 16:27:56,519 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2016: departments sum to 11,834,280, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2017: departments sum to 11,828,338, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     STATE LOTTERY FUND 2016: departments sum to 3,868,812, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     STATE LOTTERY FUND 2017: departments sum to 3,851,057, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     STATE-ADMINISTERED FUND 2016: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     STATE-ADMINISTERED FUND 2017: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     TRANSPORTATION FACILITIES FUND 2016: departments sum to 2,200,000, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     TRANSPORTATION FACILITIES FUND 2017: departments sum to 2,200,000, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     WORKERS COMP. MANAGEMENT FUND 2016: departments sum to 19,703,345, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR -     WORKERS COMP. MANAGEMENT FUND 2017: departments sum to 19,696,008, grand totals show 0
+2026-10-28 16:27:56,520 - ERROR - ✗ budget 2016-2017: grand_total
+2026-10-28 16:27:56,520 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:27:57,190 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:27:57,190 - ERROR - ✗ budget 2018-2019: staleness
+2026-10-28 16:27:57,190 - ERROR -     ('COMMISSION ON GOVERNMENTAL ETHICS AND ELECTION PRACTICES', 'OTHER SPECIAL REVENUE') 2019: processed 510,760, PDF -510,760
+2026-10-28 16:27:57,190 - ERROR -     ('COMMISSION ON GOVERNMENTAL ETHICS AND ELECTION PRACTICES', 'DEPARTMENT TOTAL') 2019: processed 359,436, PDF -359,436
+2026-10-28 16:27:57,190 - ERROR -     ('MAINE COMMISSION ON INDIGENT LEGAL SERVICES', 'GENERAL FUND') 2019: processed 58,000, PDF -58,000
+2026-10-28 16:27:57,190 - ERROR - ✗ budget 2018-2019: summary_pages
+2026-10-28 16:27:57,190 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:27:57,190 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:27:57,190 - ERROR - ✗ budget 2018-2019: department_totals
+2026-10-28 16:27:57,190 - ERROR -     COMMISSION ON GOVERNMENTAL ETHICS AND ELECTION PRACTICES 2019: funding sources sum to 662,084, DEPARTMENT TOTAL is 359,436
+2026-10-28 16:27:57,190 - ERROR -     MAINE COMMISSION ON INDIGENT LEGAL SERVICES 2019: funding sources sum to 20,056,767, DEPARTMENT TOTAL is 19,940,767
+2026-10-28 16:27:57,190 - ERROR - ✗ budget 2018-2019: funding_source_totals
+2026-10-28 16:27:57,190 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 16:27:57,190 - ERROR - ✗ budget 2018-2019: grand_total
+2026-10-28 16:27:57,190 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:27:57,905 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:27:57,905 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:27:57,905 - ERROR - ✗ budget 2020-2021: summary_pages
+2026-10-28 16:27:57,905 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:27:57,905 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:27:57,905 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:27:57,905 - ERROR - ✗ budget 2020-2021: funding_source_totals
+2026-10-28 16:27:57,905 - ERROR -     ABANDONED PROPERTY FUND 2020: departments sum to 325,454, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     ABANDONED PROPERTY FUND 2021: departments sum to 325,454, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2020: departments sum to 3,783,191, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2021: departments sum to 3,814,113, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2020: departments sum to 6,487,443, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2021: departments sum to 6,713,975, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2020: departments sum to 174,350,000, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2021: departments sum to 174,350,000, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2020: departments sum to 131,726, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2021: departments sum to 131,703, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2020: departments sum to 500,000, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2021: departments sum to 500,000, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     ISLAND FERRY SERVICES FUND 2020: departments sum to 11,856,483, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     ISLAND FERRY SERVICES FUND 2021: departments sum to 12,183,176, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     MAINE MILITARY AUTHORITY 2020: departments sum to 92,096,058, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     MAINE MILITARY AUTHORITY 2021: departments sum to 93,938,625, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     PRISON INDUSTRIES FUND 2020: departments sum to 2,576,917, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     PRISON INDUSTRIES FUND 2021: departments sum to 2,594,511, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2020: departments sum to 147,856,645, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2021: departments sum to 147,941,094, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATE LOTTERY FUND 2020: departments sum to 4,353,437, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATE LOTTERY FUND 2021: departments sum to 4,378,782, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATE-ADMINISTERED FUND 2020: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATE-ADMINISTERED FUND 2021: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATEWIDE RADIO & NETWORK FUND 2020: departments sum to 500, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR -     STATEWIDE RADIO & NETWORK FUND 2021: departments sum to 500, grand totals show 0
+2026-10-28 16:27:57,905 - ERROR - ✗ budget 2020-2021: grand_total
+2026-10-28 16:27:57,905 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:27:58,679 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:27:58,679 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:27:58,679 - ERROR - ✗ budget 2022-2023: summary_pages
+2026-10-28 16:27:58,679 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:27:58,679 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:27:58,679 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:27:58,679 - ERROR - ✗ budget 2022-2023: funding_source_totals
+2026-10-28 16:27:58,679 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 16:27:58,679 - ERROR - ✗ budget 2022-2023: grand_total
+2026-10-28 16:27:58,679 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:27:59,617 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:27:59,617 - ERROR - ✗ budget 2024-2025: staleness
+2026-10-28 16:27:59,617 - ERROR -     ('MAINE MUNICIPAL BOND BANK', 'OTHER SPECIAL REVENUE') 2025: processed 80,620, PDF -80,620
+2026-10-28 16:27:59,617 - ERROR -     ('MAINE MUNICIPAL BOND BANK', 'DEPARTMENT TOTAL') 2025: processed 11,289, PDF -11,289
+2026-10-28 16:27:59,617 - ERROR - ✗ budget 2024-2025: summary_pages
+2026-10-28 16:27:59,617 - ERROR -     ME_BUDGET_END_PAGES is 9 but the summary ends at page 7, so it should be 8
+2026-10-28 16:27:59,617 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:27:59,617 - ERROR - ✗ budget 2024-2025: department_totals
+2026-10-28 16:27:59,617 - ERROR -     MAINE MUNICIPAL BOND BANK 2025: funding sources sum to 149,951, DEPARTMENT TOTAL is 11,289
+2026-10-28 16:27:59,617 - ERROR - ✗ budget 2024-2025: funding_source_totals
+2026-10-28 16:27:59,617 - ERROR -     FAMILY PAID MEDICAL LEAVE INSURANCE FUND 2025: departments sum to 12,661,300, grand totals show 0
+2026-10-28 16:27:59,617 - ERROR -     OTHER SPECIAL REVENUE 2025: departments sum to 2,241,648,026, grand totals show 2,241,486,786
+2026-10-28 16:27:59,617 - ERROR -     PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND 2025: departments sum to 0, grand totals show 12,661,300
+2026-10-28 16:27:59,617 - ERROR - ✗ budget 2024-2025: grand_total
+2026-10-28 16:27:59,617 - ERROR -     2025: DEPARTMENT TOTAL rows sum to 13,984,252,279, grand total is 13,984,229,701
+2026-10-28 16:28:00,402 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:28:00,402 - ERROR - ✗ budget 2026-2027: staleness
+2026-10-28 16:28:00,402 - ERROR -     Rows differ: 6 in the PDF but not the processed file, 3 the other way
+2026-10-28 16:28:00,402 - ERROR -     Only in PDF: ('DEPARTMENT OF PUBLIC SAFETY', 'GENERAL FUND')
+2026-10-28 16:28:00,402 - ERROR -     Only in PDF: ('DEPARTMENT OF THE SECRETARY OF STATE', 'GENERAL FUND')
+2026-10-28 16:28:00,402 - ERROR -     Only in PDF: ('MAINE MUNICIPAL BOND BANK', 'OTHER SPECIAL REVENUE')
+2026-10-28 16:28:00,402 - ERROR -     Only in PDF: ('OFFICE OF THE TREASURER OF STATE', 'GENERAL FUND')
+2026-10-28 16:28:00,402 - ERROR -     Only in PDF: ('PUBLIC UTILITIES COMMISSION', 'GENERAL FUND')
+2026-10-28 16:28:00,402 - ERROR -     Only in PDF: ('STATE BOARD OF EDUCATION', 'OTHER SPECIAL REVENUE')
+2026-10-28 16:28:00,402 - ERROR -     Only in processed file: ('DEPARTMENT OF PUBLIC SAFETY', 'GENERAL FUND 8')
+2026-10-28 16:28:00,402 - ERROR -     Only in processed file: ('DEPARTMENT OF THE SECRETARY OF STATE', 'GENERAL FUND 1')
+2026-10-28 16:28:00,402 - ERROR -     Only in processed file: ('OFFICE OF THE TREASURER OF STATE', 'GENERAL FUND 1')
+2026-10-28 16:28:00,402 - ERROR - ✗ budget 2026-2027: summary_pages
+2026-10-28 16:28:00,402 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:28:00,402 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:28:00,402 - ERROR - ✗ budget 2026-2027: department_totals
+2026-10-28 16:28:00,402 - ERROR -     DEPARTMENT OF ADMINISTRATIVE AND FINANCIAL SERVICES 2026: funding sources sum to 680,899,001, DEPARTMENT TOTAL is 675,165,319
+2026-10-28 16:28:00,402 - ERROR -     DEPARTMENT OF ADMINISTRATIVE AND FINANCIAL SERVICES 2027: funding sources sum to 698,248,452, DEPARTMENT TOTAL is 692,319,448
+2026-10-28 16:28:00,402 - ERROR -     DEPARTMENT OF PUBLIC SAFETY 2026: funding sources sum to 111,279,377, DEPARTMENT TOTAL is 191,279,377
+2026-10-28 16:28:00,402 - ERROR -     DEPARTMENT OF THE SECRETARY OF STATE 2026: funding sources sum to 67,418,989, DEPARTMENT TOTAL is 77,418,989
+2026-10-28 16:28:00,402 - ERROR -     OFFICE OF THE TREASURER OF STATE 2026: funding sources sum to 293,854,231, DEPARTMENT TOTAL is 393,854,231
+2026-10-28 16:28:00,402 - ERROR - ✗ budget 2026-2027: funding_source_totals
+2026-10-28 16:28:00,402 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 16:28:00,402 - ERROR - ✗ budget 2026-2027: grand_total
+2026-10-28 16:28:00,402 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:28:00,607 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:28:00,607 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:28:00,607 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:28:00,607 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:28:00,814 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:28:00,814 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:28:00,814 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:28:00,814 - ERROR - ✗ revenue 2017: revenue_totals
+2026-10-28 16:28:00,814 - ERROR -     Month Actual: sources sum to 410,944,926, Total Collected is 410,944,928
+2026-10-28 16:28:00,814 - ERROR -     Month Variance: sources sum to 37,893,713, Total Collected is 37,893,715
+2026-10-28 16:28:00,997 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:28:00,997 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:28:00,997 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:28:00,997 - ERROR - ✗ revenue 2018: revenue_totals
+2026-10-28 16:28:00,997 - ERROR -     FYTD Actual: sources sum to 3,587,675,849, Total Collected is 3,587,675,847
+2026-10-28 16:28:00,997 - ERROR -     FYTD Variance: sources sum to 82,055,420, Total Collected is 82,055,418
+2026-10-28 16:28:00,997 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:28:00,997 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:28:01,340 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:28:01,340 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:28:01,340 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:28:01,340 - ERROR - ✗ revenue 2020: revenue_totals
+2026-10-28 16:28:01,340 - ERROR -     FYTD Actual: sources sum to 3,969,343,704, Total Collected is 3,969,343,702
+2026-10-28 16:28:01,607 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:28:01,607 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:28:01,607 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:28:01,607 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:28:01,919 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:28:01,920 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:28:01,920 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:28:01,920 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:28:02,227 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:28:02,227 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:28:02,227 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:28:02,227 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:28:02,617 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:28:02,617 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:28:02,617 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:28:02,617 - ERROR - ✗ revenue 2024: revenue_totals
+2026-10-28 16:28:02,617 - ERROR -     Month Actual: sources sum to 661,700,166, Total Collected is 661,700,164
+2026-10-28 16:28:02,617 - ERROR -     Month Variance: sources sum to 70,657,613, Total Collected is 70,657,611
+2026-10-28 16:28:02,956 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:28:02,956 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:28:02,957 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:28:02,957 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:28:02,957 - ERROR - ✗ 29 of 79 checks failed
+2026-10-28 16:28:13,815 - INFO - Starting data validation...
+2026-10-28 16:28:14,424 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:28:14,424 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:28:14,424 - ERROR - ✗ budget 2016-2017: summary_pages
+2026-10-28 16:28:14,424 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:28:14,424 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:28:14,424 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:28:14,424 - ERROR - ✗ budget 2016-2017: funding_source_totals
+2026-10-28 16:28:14,424 - ERROR -     ABANDONED PROPERTY FUND 2016: departments sum to 226,249, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     ABANDONED PROPERTY FUND 2017: departments sum to 292,424, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     ACCIDENT, SICKNESS & HEALTH INSURANCE 2016: departments sum to 1,823,773, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     ACCIDENT, SICKNESS & HEALTH INSURANCE 2017: departments sum to 1,819,011, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     BUREAU OF REVENUE SERVICES 2016: departments sum to 151,720, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     BUREAU OF REVENUE SERVICES 2017: departments sum to 151,720, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     CENTRAL MOTOR POOL 2016: departments sum to 10,035,911, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     CENTRAL MOTOR POOL 2017: departments sum to 10,024,430, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2016: departments sum to 3,082,515, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2017: departments sum to 3,348,400, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2016: departments sum to 6,411,122, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2017: departments sum to 6,459,131, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2016: departments sum to 184,350,000, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2017: departments sum to 184,350,000, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     FINANCIAL & PERSONNEL SERVICES FUND 2016: departments sum to 21,101,772, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     FINANCIAL & PERSONNEL SERVICES FUND 2017: departments sum to 21,037,055, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2016: departments sum to 1,780,692, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2017: departments sum to 1,779,516, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     FLEET SERVICES FUND - DOT 2016: departments sum to 28,513,425, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     FLEET SERVICES FUND - DOT 2017: departments sum to 28,945,608, grand totals show 0
+2026-10-28 16:28:14,424 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2016: departments sum to 500,000, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2017: departments sum to 500,000, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     ISLAND FERRY SERVICES FUND 2016: departments sum to 10,224,567, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     ISLAND FERRY SERVICES FUND 2017: departments sum to 10,383,584, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     MAINE MILITARY AUTHORITY 2016: departments sum to 93,633,635, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     MAINE MILITARY AUTHORITY 2017: departments sum to 94,107,488, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     OFFICE OF INFORMATION SERVICES 2016: departments sum to 56,783,424, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     OFFICE OF INFORMATION SERVICES 2017: departments sum to 56,525,369, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     POSTAL,PRINTING & SUPPLY FUND 2016: departments sum to 3,827,871, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     POSTAL,PRINTING & SUPPLY FUND 2017: departments sum to 3,841,814, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     PRISON INDUSTRIES FUND 2016: departments sum to 2,476,786, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     PRISON INDUSTRIES FUND 2017: departments sum to 2,493,380, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     REAL PROPERTY LEASE SERVICES 2016: departments sum to 25,902,827, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     REAL PROPERTY LEASE SERVICES 2017: departments sum to 25,898,643, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     RETIREE HEALTH INSURANCE 2016: departments sum to 48,400,235, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     RETIREE HEALTH INSURANCE 2017: departments sum to 48,400,235, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     RISK MANAGEMENT FUND 2016: departments sum to 3,958,504, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     RISK MANAGEMENT FUND 2017: departments sum to 3,953,104, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2016: departments sum to 11,834,280, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2017: departments sum to 11,828,338, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     STATE LOTTERY FUND 2016: departments sum to 3,868,812, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     STATE LOTTERY FUND 2017: departments sum to 3,851,057, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     STATE-ADMINISTERED FUND 2016: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     STATE-ADMINISTERED FUND 2017: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     TRANSPORTATION FACILITIES FUND 2016: departments sum to 2,200,000, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     TRANSPORTATION FACILITIES FUND 2017: departments sum to 2,200,000, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     WORKERS COMP. MANAGEMENT FUND 2016: departments sum to 19,703,345, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR -     WORKERS COMP. MANAGEMENT FUND 2017: departments sum to 19,696,008, grand totals show 0
+2026-10-28 16:28:14,425 - ERROR - ✗ budget 2016-2017: grand_total
+2026-10-28 16:28:14,425 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:28:15,115 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:28:15,115 - ERROR - ✗ budget 2018-2019: staleness
+2026-10-28 16:28:15,115 - ERROR -     ('COMMISSION ON GOVERNMENTAL ETHICS AND ELECTION PRACTICES', 'OTHER SPECIAL REVENUE') 2019: processed 510,760, PDF -510,760
+2026-10-28 16:28:15,115 - ERROR -     ('COMMISSION ON GOVERNMENTAL ETHICS AND ELECTION PRACTICES', 'DEPARTMENT TOTAL') 2019: processed 359,436, PDF -359,436
+2026-10-28 16:28:15,115 - ERROR -     ('MAINE COMMISSION ON INDIGENT LEGAL SERVICES', 'GENERAL FUND') 2019: processed 58,000, PDF -58,000
+2026-10-28 16:28:15,115 - ERROR - ✗ budget 2018-2019: summary_pages
+2026-10-28 16:28:15,115 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:28:15,115 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:28:15,115 - ERROR - ✗ budget 2018-2019: department_totals
+2026-10-28 16:28:15,115 - ERROR -     COMMISSION ON GOVERNMENTAL ETHICS AND ELECTION PRACTICES 2019: funding sources sum to 662,084, DEPARTMENT TOTAL is 359,436
+2026-10-28 16:28:15,115 - ERROR -     MAINE COMMISSION ON INDIGENT LEGAL SERVICES 2019: funding sources sum to 20,056,767, DEPARTMENT TOTAL is 19,940,767
+2026-10-28 16:28:15,115 - ERROR - ✗ budget 2018-2019: funding_source_totals
+2026-10-28 16:28:15,115 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 16:28:15,115 - ERROR - ✗ budget 2018-2019: grand_total
+2026-10-28 16:28:15,115 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:28:15,843 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:28:15,843 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:28:15,843 - ERROR - ✗ budget 2020-2021: summary_pages
+2026-10-28 16:28:15,843 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:28:15,843 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:28:15,843 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:28:15,843 - ERROR - ✗ budget 2020-2021: funding_source_totals
+2026-10-28 16:28:15,843 - ERROR -     ABANDONED PROPERTY FUND 2020: departments sum to 325,454, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     ABANDONED PROPERTY FUND 2021: departments sum to 325,454, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2020: departments sum to 3,783,191, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     COMPETETIVE SKILLS SCHOLARSHIP FUND 2021: departments sum to 3,814,113, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2020: departments sum to 6,487,443, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     CONSOLIDATED EMERGENCY COMMUNICATIO 2021: departments sum to 6,713,975, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2020: departments sum to 174,350,000, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     EMPLOYMENT SECURITY TRUST FUND 2021: departments sum to 174,350,000, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2020: departments sum to 131,726, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     FIREFIGHT AND LAW ENF HLTH INS 2021: departments sum to 131,703, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2020: departments sum to 500,000, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     INDUSTRIAL DRIVE FACILITY FUND 2021: departments sum to 500,000, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     ISLAND FERRY SERVICES FUND 2020: departments sum to 11,856,483, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     ISLAND FERRY SERVICES FUND 2021: departments sum to 12,183,176, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     MAINE MILITARY AUTHORITY 2020: departments sum to 92,096,058, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     MAINE MILITARY AUTHORITY 2021: departments sum to 93,938,625, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     PRISON INDUSTRIES FUND 2020: departments sum to 2,576,917, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     PRISON INDUSTRIES FUND 2021: departments sum to 2,594,511, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2020: departments sum to 147,856,645, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATE ALCOHOLIC BEVERAGE FUND 2021: departments sum to 147,941,094, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATE LOTTERY FUND 2020: departments sum to 4,353,437, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATE LOTTERY FUND 2021: departments sum to 4,378,782, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATE-ADMINISTERED FUND 2020: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATE-ADMINISTERED FUND 2021: departments sum to 2,042,515, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATEWIDE RADIO & NETWORK FUND 2020: departments sum to 500, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR -     STATEWIDE RADIO & NETWORK FUND 2021: departments sum to 500, grand totals show 0
+2026-10-28 16:28:15,843 - ERROR - ✗ budget 2020-2021: grand_total
+2026-10-28 16:28:15,843 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:28:16,713 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:28:16,714 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:28:16,714 - ERROR - ✗ budget 2022-2023: summary_pages
+2026-10-28 16:28:16,714 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:28:16,714 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:28:16,714 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:28:16,714 - ERROR - ✗ budget 2022-2023: funding_source_totals
+2026-10-28 16:28:16,714 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 16:28:16,714 - ERROR - ✗ budget 2022-2023: grand_total
+2026-10-28 16:28:16,714 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:28:17,651 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:28:17,652 - ERROR - ✗ budget 2024-2025: staleness
+2026-10-28 16:28:17,652 - ERROR -     ('MAINE MUNICIPAL BOND BANK', 'OTHER SPECIAL REVENUE') 2025: processed 80,620, PDF -80,620
+2026-10-28 16:28:17,652 - ERROR -     ('MAINE MUNICIPAL BOND BANK', 'DEPARTMENT TOTAL') 2025: processed 11,289, PDF -11,289
+2026-10-28 16:28:17,652 - ERROR - ✗ budget 2024-2025: summary_pages
+2026-10-28 16:28:17,652 - ERROR -     ME_BUDGET_END_PAGES is 9 but the summary ends at page 7, so it should be 8
+2026-10-28 16:28:17,652 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:28:17,652 - ERROR - ✗ budget 2024-2025: department_totals
+2026-10-28 16:28:17,652 - ERROR -     MAINE MUNICIPAL BOND BANK 2025: funding sources sum to 149,951, DEPARTMENT TOTAL is 11,289
+2026-10-28 16:28:17,652 - ERROR - ✗ budget 2024-2025: funding_source_totals
+2026-10-28 16:28:17,652 - ERROR -     FAMILY PAID MEDICAL LEAVE INSURANCE FUND 2025: departments sum to 12,661,300, grand totals show 0
+2026-10-28 16:28:17,652 - ERROR -     OTHER SPECIAL REVENUE 2025: departments sum to 2,241,648,026, grand totals show 2,241,486,786
+2026-10-28 16:28:17,652 - ERROR -     PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND 2025: departments sum to 0, grand totals show 12,661,300
+2026-10-28 16:28:17,652 - ERROR - ✗ budget 2024-2025: grand_total
+2026-10-28 16:28:17,652 - ERROR -     2025: DEPARTMENT TOTAL rows sum to 13,984,252,279, grand total is 13,984,229,701
+2026-10-28 16:28:18,446 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:28:18,446 - ERROR - ✗ budget 2026-2027: staleness
+2026-10-28 16:28:18,446 - ERROR -     Rows differ: 6 in the PDF but not the processed file, 3 the other way
+2026-10-28 16:28:18,446 - ERROR -     Only in PDF: ('DEPARTMENT OF PUBLIC SAFETY', 'GENERAL FUND')
+2026-10-28 16:28:18,446 - ERROR -     Only in PDF: ('DEPARTMENT OF THE SECRETARY OF STATE', 'GENERAL FUND')
+2026-10-28 16:28:18,446 - ERROR -     Only in PDF: ('MAINE MUNICIPAL BOND BANK', 'OTHER SPECIAL REVENUE')
+2026-10-28 16:28:18,446 - ERROR -     Only in PDF: ('OFFICE OF THE TREASURER OF STATE', 'GENERAL FUND')
+2026-10-28 16:28:18,446 - ERROR -     Only in PDF: ('PUBLIC UTILITIES COMMISSION', 'GENERAL FUND')
+2026-10-28 16:28:18,446 - ERROR -     Only in PDF: ('STATE BOARD OF EDUCATION', 'OTHER SPECIAL REVENUE')
+2026-10-28 16:28:18,446 - ERROR -     Only in processed file: ('DEPARTMENT OF PUBLIC SAFETY', 'GENERAL FUND 8')
+2026-10-28 16:28:18,446 - ERROR -     Only in processed file: ('DEPARTMENT OF THE SECRETARY OF STATE', 'GENERAL FUND 1')
+2026-10-28 16:28:18,446 - ERROR -     Only in processed file: ('OFFICE OF THE TREASURER OF STATE', 'GENERAL FUND 1')
+2026-10-28 16:28:18,446 - ERROR - ✗ budget 2026-2027: summary_pages
+2026-10-28 16:28:18,446 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 16:28:18,446 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:28:18,447 - ERROR - ✗ budget 2026-2027: department_totals
+2026-10-28 16:28:18,447 - ERROR -     DEPARTMENT OF ADMINISTRATIVE AND FINANCIAL SERVICES 2026: funding sources sum to 680,899,001, DEPARTMENT TOTAL is 675,165,319
+2026-10-28 16:28:18,447 - ERROR -     DEPARTMENT OF ADMINISTRATIVE AND FINANCIAL SERVICES 2027: funding sources sum to 698,248,452, DEPARTMENT TOTAL is 692,319,448
+2026-10-28 16:28:18,447 - ERROR -     DEPARTMENT OF PUBLIC SAFETY 2026: funding sources sum to 111,279,377, DEPARTMENT TOTAL is 191,279,377
+2026-10-28 16:28:18,447 - ERROR -     DEPARTMENT OF THE SECRETARY OF STATE 2026: funding sources sum to 67,418,989, DEPARTMENT TOTAL is 77,418,989
+2026-10-28 16:28:18,447 - ERROR -     OFFICE OF THE TREASURER OF STATE 2026: funding sources sum to 293,854,231, DEPARTMENT TOTAL is 393,854,231
+2026-10-28 16:28:18,447 - ERROR - ✗ budget 2026-2027: funding_source_totals
+2026-10-28 16:28:18,447 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 16:28:18,447 - ERROR - ✗ budget 2026-2027: grand_total
+2026-10-28 16:28:18,447 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 16:28:18,646 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:28:18,646 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:28:18,646 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:28:18,646 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:28:18,837 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:28:18,837 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:28:18,837 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:28:18,837 - ERROR - ✗ revenue 2017: revenue_totals
+2026-10-28 16:28:18,837 - ERROR -     Month Actual: sources sum to 410,944,926, Total Collected is 410,944,928
+2026-10-28 16:28:18,837 - ERROR -     Month Variance: sources sum to 37,893,713, Total Collected is 37,893,715
+2026-10-28 16:28:19,016 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:28:19,016 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:28:19,016 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:28:19,017 - ERROR - ✗ revenue 2018: revenue_totals
+2026-10-28 16:28:19,017 - ERROR -     FYTD Actual: sources sum to 3,587,675,849, Total Collected is 3,587,675,847
+2026-10-28 16:28:19,017 - ERROR -     FYTD Variance: sources sum to 82,055,420, Total Collected is 82,055,418
+2026-10-28 16:28:19,017 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:28:19,017 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:28:19,354 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:28:19,354 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:28:19,354 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:28:19,354 - ERROR - ✗ revenue 2020: revenue_totals
+2026-10-28 16:28:19,354 - ERROR -     FYTD Actual: sources sum to 3,969,343,704, Total Collected is 3,969,343,702
+2026-10-28 16:28:19,624 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:28:19,624 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:28:19,624 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:28:19,624 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:28:19,920 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:28:19,921 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:28:19,921 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:28:19,921 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:28:20,222 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:28:20,222 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:28:20,222 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:28:20,222 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:28:20,612 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:28:20,612 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:28:20,612 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:28:20,612 - ERROR - ✗ revenue 2024: revenue_totals
+2026-10-28 16:28:20,612 - ERROR -     Month Actual: sources sum to 661,700,166, Total Collected is 661,700,164
+2026-10-28 16:28:20,612 - ERROR -     Month Variance: sources sum to 70,657,613, Total Collected is 70,657,611
+2026-10-28 16:28:20,946 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:28:20,946 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:28:20,946 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:28:20,946 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:28:20,946 - ERROR - ✗ 29 of 79 checks failed
+2026-10-28 16:28:39,021 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 16:28:39,021 - INFO - Processing 2024-2025 ME State Budget.pdf...
+2026-10-28 16:28:39,553 - INFO - ✓ Processed 2024-2025 ME State Budget.pdf → preprocessed_data/budgets/2024-2025_budget.pkl (342 rows)
+2026-10-28 16:28:39,553 - INFO - Processing 2020-2021 ME State Budget.pdf...
+2026-10-28 16:28:39,998 - INFO - ✓ Processed 2020-2021 ME State Budget.pdf → preprocessed_data/budgets/2020-2021_budget.pkl (287 rows)
+2026-10-28 16:28:39,998 - INFO - Processing 2018-2019 ME State Budget.pdf...
+2026-10-28 16:28:40,433 - INFO - ✓ Processed 2018-2019 ME State Budget.pdf → preprocessed_data/budgets/2018-2019_budget.pkl (291 rows)
+2026-10-28 16:28:40,433 - INFO - Processing 2016-2017 ME State Budget.pdf...
+2026-10-28 16:28:40,839 - INFO - ✓ Processed 2016-2017 ME State Budget.pdf → preprocessed_data/budgets/2016-2017_budget.pkl (296 rows)
+2026-10-28 16:28:40,840 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 16:28:41,397 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (346 rows)
+2026-10-28 16:28:41,397 - INFO - Processing 2022-2023 ME State Budget.pdf...
+2026-10-28 16:28:41,938 - INFO - ✓ Processed 2022-2023 ME State Budget.pdf → preprocessed_data/budgets/2022-2023_budget.pkl (323 rows)
+2026-10-28 16:28:41,938 - INFO - Budget PDF pre-processing complete. Processed 6 files.
+2026-10-28 16:28:41,938 - INFO - Starting revenue PDF pre-processing...
+2026-10-28 16:28:41,938 - INFO - Processing FY 2016 Revenue ME.pdf...
+2026-10-28 16:28:42,114 - INFO - ✓ Processed FY 2016 Revenue ME.pdf → preprocessed_data/revenue/revenue_2016.pkl (15 rows)
+2026-10-28 16:28:42,114 - INFO - Processing FY 2019 Revenue ME.pdf...
+2026-10-28 16:28:42,122 - WARNING - Exhibit I not found in z_Data/ME General Fund Sources/FY 2019 Revenue ME.pdf
+2026-10-28 16:28:42,122 - WARNING - No data extracted from FY 2019 Revenue ME.pdf
+2026-10-28 16:28:42,122 - INFO - Processing FY 2018 Revenue ME.pdf...
+2026-10-28 16:28:42,295 - INFO - ✓ Processed FY 2018 Revenue ME.pdf → preprocessed_data/revenue/revenue_2018.pkl (15 rows)
+2026-10-28 16:28:42,295 - INFO - Processing FY 2017 Revenue ME.pdf...
+2026-10-28 16:28:42,489 - INFO - ✓ Processed FY 2017 Revenue ME.pdf → preprocessed_data/revenue/revenue_2017.pkl (15 rows)
+2026-10-28 16:28:42,489 - INFO - Processing FY 2023 Revenue ME.pdf...
+2026-10-28 16:28:42,775 - INFO - ✓ Processed FY 2023 Revenue ME.pdf → preprocessed_data/revenue/revenue_2023.pkl (15 rows)
+2026-10-28 16:28:42,775 - INFO - Processing FY 2024 Revenue ME.pdf...
+2026-10-28 16:28:43,150 - INFO - ✓ Processed FY 2024 Revenue ME.pdf → preprocessed_data/revenue/revenue_2024.pkl (17 rows)
+2026-10-28 16:28:43,150 - INFO - Processing FY 2025 Revenue ME.pdf...
+2026-10-28 16:28:43,482 - INFO - ✓ Processed FY 2025 Revenue ME.pdf → preprocessed_data/revenue/revenue_2025.pkl (17 rows)
+2026-10-28 16:28:43,482 - INFO - Processing FY 2022 Revenue ME.pdf...
+2026-10-28 16:28:43,781 - INFO - ✓ Processed FY 2022 Revenue ME.pdf → preprocessed_data/revenue/revenue_2022.pkl (15 rows)
+2026-10-28 16:28:43,781 - INFO - Processing FY 2020 Revenue ME.pdf...
+2026-10-28 16:28:44,135 - INFO - ✓ Processed FY 2020 Revenue ME.pdf → preprocessed_data/revenue/revenue_2020.pkl (15 rows)
+2026-10-28 16:28:44,135 - INFO - Processing FY 2021 Revenue ME.pdf...
+2026-10-28 16:28:44,393 - INFO - ✓ Processed FY 2021 Revenue ME.pdf → preprocessed_data/revenue/revenue_2021.pkl (15 rows)
+2026-10-28 16:28:44,394 - INFO - Revenue PDF pre-processing complete. Processed 9 files.
+2026-10-28 16:28:44,394 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 16:28:44,904 - INFO - Starting data validation...
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 16:28:45,511 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 16:28:46,235 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 16:28:46,964 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 16:28:47,797 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 16:28:48,827 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:28:48,827 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 16:28:48,827 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 16:28:48,827 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:28:48,827 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 16:28:48,827 - ERROR - ✗ budget 2024-2025: funding_source_totals
+2026-10-28 16:28:48,828 - ERROR -     FAMILY PAID MEDICAL LEAVE INSURANCE FUND 2025: departments sum to 12,661,300, grand totals show 0
+2026-10-28 16:28:48,828 - ERROR -     PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND 2025: departments sum to 0, grand totals show 12,661,300
+2026-10-28 16:28:48,828 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 16:28:49,626 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:28:49,627 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 16:28:49,627 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 16:28:49,627 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:28:49,627 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 16:28:49,627 - ERROR - ✗ budget 2026-2027: funding_source_totals
+2026-10-28 16:28:49,627 - ERROR -     FAMILY PAID MEDICAL LEAVE INSURANCE FUND 2026: departments sum to 13,885,966, grand totals show 0
+2026-10-28 16:28:49,627 - ERROR -     FAMILY PAID MEDICAL LEAVE INSURANCE FUND 2027: departments sum to 13,904,822, grand totals show 0
+2026-10-28 16:28:49,627 - ERROR -     PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND 2026: departments sum to 0, grand totals show 13,885,966
+2026-10-28 16:28:49,627 - ERROR -     PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND 2027: departments sum to 0, grand totals show 13,904,822
+2026-10-28 16:28:49,627 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 16:28:49,860 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:28:49,860 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:28:49,860 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:28:49,860 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:28:50,114 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:28:50,114 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:28:50,114 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:28:50,114 - INFO - ✓ revenue 2017: revenue_totals
+2026-10-28 16:28:50,306 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:28:50,306 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:28:50,307 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:28:50,307 - INFO - ✓ revenue 2018: revenue_totals
+2026-10-28 16:28:50,307 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:28:50,307 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:28:50,744 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:28:50,744 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:28:50,744 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:28:50,744 - INFO - ✓ revenue 2020: revenue_totals
+2026-10-28 16:28:51,061 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:28:51,061 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:28:51,061 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:28:51,061 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:28:51,527 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:28:51,527 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:28:51,527 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:28:51,527 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:28:51,868 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:28:51,868 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:28:51,868 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:28:51,868 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:28:52,318 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:28:52,318 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:28:52,318 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:28:52,318 - INFO - ✓ revenue 2024: revenue_totals
+2026-10-28 16:28:52,698 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:28:52,698 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:28:52,698 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:28:52,699 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:28:52,699 - ERROR - ✗ 3 of 79 checks failed
+2026-10-28 16:29:18,248 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 16:29:18,249 - INFO - Processing positions from 2024-2025 ME State Budget.pdf...
+2026-10-28 16:29:41,182 - INFO - Processing positions from 2020-2021 ME State Budget.pdf...
+2026-10-28 16:29:59,019 - INFO - Processing positions from 2018-2019 ME State Budget.pdf...
+2026-10-28 16:30:16,007 - INFO - Processing positions from 2016-2017 ME State Budget.pdf...
+2026-10-28 16:30:31,431 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 16:30:51,921 - INFO - Processing positions from 2022-2023 ME State Budget.pdf...
+2026-10-28 16:31:13,903 - INFO - Positions PDF pre-processing complete. Processed 6 files.
+2026-10-28 16:31:13,904 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 16:31:16,111 - INFO - Starting data validation...
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 16:31:16,706 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 16:31:17,374 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 16:31:18,075 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 16:31:18,835 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: funding_source_totals
+2026-10-28 16:31:19,720 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 16:31:20,508 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 16:31:20,716 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:31:20,716 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:31:20,716 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:31:20,716 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:31:20,908 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:31:20,908 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:31:20,908 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:31:20,908 - INFO - ✓ revenue 2017: revenue_totals
+2026-10-28 16:31:21,088 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:31:21,088 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:31:21,088 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:31:21,088 - INFO - ✓ revenue 2018: revenue_totals
+2026-10-28 16:31:21,088 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:31:21,088 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:31:21,427 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:31:21,427 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:31:21,427 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:31:21,427 - INFO - ✓ revenue 2020: revenue_totals
+2026-10-28 16:31:21,695 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:31:21,695 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:31:21,695 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:31:21,695 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:31:21,984 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:31:21,984 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:31:21,984 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:31:21,984 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:31:22,276 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:31:22,276 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:31:22,276 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:31:22,276 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:31:22,653 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:31:22,653 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:31:22,653 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:31:22,653 - INFO - ✓ revenue 2024: revenue_totals
+2026-10-28 16:31:22,983 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:31:22,983 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:31:22,983 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:31:22,983 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:31:37,482 - INFO - ✓ positions 2016-2017: processed_file_exists
+2026-10-28 16:31:37,482 - INFO - ✓ positions 2016-2017: staleness
+2026-10-28 16:31:37,482 - ERROR - ✗ positions 2016-2017: mapping (Positions As Reported)
+2026-10-28 16:31:37,482 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:31:37,482 - ERROR -     No mapping for 'HEALTH AND HUMAN SERVICES, DEPARTMENT OF (FORMERLY BDS)' (column 'Positions As Reported')
+2026-10-28 16:31:54,214 - INFO - ✓ positions 2018-2019: processed_file_exists
+2026-10-28 16:31:54,214 - INFO - ✓ positions 2018-2019: staleness
+2026-10-28 16:31:54,214 - ERROR - ✗ positions 2018-2019: mapping (Positions As Reported)
+2026-10-28 16:31:54,214 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:31:54,214 - ERROR -     No mapping for 'HEALTH AND HUMAN SERVICES, DEPARTMENT OF (FORMERLY BDS)' (column 'Positions As Reported')
+2026-10-28 16:32:11,446 - INFO - ✓ positions 2020-2021: processed_file_exists
+2026-10-28 16:32:11,446 - INFO - ✓ positions 2020-2021: staleness
+2026-10-28 16:32:11,446 - ERROR - ✗ positions 2020-2021: mapping (Positions As Reported)
+2026-10-28 16:32:11,446 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:32:32,801 - INFO - ✓ positions 2022-2023: processed_file_exists
+2026-10-28 16:32:32,801 - INFO - ✓ positions 2022-2023: staleness
+2026-10-28 16:32:32,801 - ERROR - ✗ positions 2022-2023: mapping (Positions As Reported)
+2026-10-28 16:32:32,801 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:32:32,801 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:32:32,801 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:32:32,801 - ERROR -     No mapping for 'STATUS OF RACIAL, INDIGENOUS AND TRIBAL POPULATIONS, PERMANENT COMMISSION ON THE' (column 'Positions As Reported')
+2026-10-28 16:32:59,962 - INFO - ✓ positions 2024-2025: processed_file_exists
+2026-10-28 16:32:59,962 - INFO - ✓ positions 2024-2025: staleness
+2026-10-28 16:32:59,962 - ERROR - ✗ positions 2024-2025: mapping (Positions As Reported)
+2026-10-28 16:32:59,962 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:32:59,962 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:32:59,963 - ERROR -     No mapping for 'DISABILITY RIGHTS MAINE' (column 'Positions As Reported')
+2026-10-28 16:32:59,963 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:32:59,963 - ERROR -     No mapping for 'MAINE STATE CEMETERY PRESERVATION COMMISSION' (column 'Positions As Reported')
+2026-10-28 16:33:24,809 - INFO - ✓ positions 2026-2027: processed_file_exists
+2026-10-28 16:33:24,809 - INFO - ✓ positions 2026-2027: staleness
+2026-10-28 16:33:24,809 - ERROR - ✗ positions 2026-2027: mapping (Positions As Reported)
+2026-10-28 16:33:24,809 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:33:24,809 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:33:24,809 - ERROR -     No mapping for 'DISABILITY RIGHTS MAINE' (column 'Positions As Reported')
+2026-10-28 16:33:24,809 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:33:24,809 - ERROR -     No mapping for 'MAINE STATE CEMETERY PRESERVATION COMMISSION' (column 'Positions As Reported')
+2026-10-28 16:33:24,809 - ERROR - ✗ 7 of 97 checks failed
+2026-10-28 16:34:36,623 - INFO - Starting data validation...
+2026-10-28 16:34:37,232 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:34:37,232 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:34:37,232 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 16:34:37,232 - ERROR - ✗ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:34:37,232 - ERROR -     'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)' has 2 mapping rows (column 'As Reported'); expected one
+2026-10-28 16:34:37,232 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:34:37,232 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 16:34:37,232 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 16:34:37,909 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:34:37,909 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 16:34:37,909 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 16:34:37,909 - ERROR - ✗ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:34:37,909 - ERROR -     'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)' has 2 mapping rows (column 'As Reported'); expected one
+2026-10-28 16:34:37,909 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 16:34:37,909 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 16:34:37,909 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 16:34:38,618 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:34:38,619 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:34:38,619 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 16:34:38,619 - ERROR - ✗ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:34:38,619 - ERROR -     'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)' has 2 mapping rows (column 'As Reported'); expected one
+2026-10-28 16:34:38,619 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:34:38,619 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 16:34:38,619 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 16:34:39,440 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:34:39,440 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:34:39,440 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 16:34:39,440 - ERROR - ✗ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:34:39,440 - ERROR -     'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)' has 2 mapping rows (column 'As Reported'); expected one
+2026-10-28 16:34:39,440 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:34:39,440 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 16:34:39,440 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 16:34:40,439 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:34:40,439 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 16:34:40,439 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 16:34:40,439 - ERROR - ✗ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:34:40,439 - ERROR -     'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)' has 2 mapping rows (column 'As Reported'); expected one
+2026-10-28 16:34:40,439 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 16:34:40,439 - INFO - ✓ budget 2024-2025: funding_source_totals
+2026-10-28 16:34:40,439 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 16:34:41,271 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:34:41,271 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 16:34:41,271 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 16:34:41,271 - ERROR - ✗ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:34:41,271 - ERROR -     'DEPARTMENT OF HEALTH AND HUMAN SERVICES (Formerly DHS)' has 2 mapping rows (column 'As Reported'); expected one
+2026-10-28 16:34:41,271 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 16:34:41,271 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 16:34:41,271 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 16:34:41,477 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:34:41,477 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:34:41,477 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:34:41,477 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:34:41,671 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:34:41,672 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:34:41,672 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:34:41,672 - INFO - ✓ revenue 2017: revenue_totals
+2026-10-28 16:34:41,875 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:34:41,875 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:34:41,875 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:34:41,875 - INFO - ✓ revenue 2018: revenue_totals
+2026-10-28 16:34:41,875 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:34:41,875 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:34:42,270 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:34:42,270 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:34:42,271 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:34:42,271 - INFO - ✓ revenue 2020: revenue_totals
+2026-10-28 16:34:42,557 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:34:42,557 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:34:42,557 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:34:42,557 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:34:42,853 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:34:42,853 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:34:42,853 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:34:42,853 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:34:43,152 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:34:43,152 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:34:43,153 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:34:43,153 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:34:43,538 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:34:43,538 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:34:43,538 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:34:43,538 - INFO - ✓ revenue 2024: revenue_totals
+2026-10-28 16:34:43,893 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:34:43,893 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:34:43,893 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:34:43,893 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:34:43,893 - ERROR - ✗ 7 of 79 checks failed
+2026-10-28 16:35:24,472 - INFO - Starting data validation...
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 16:35:25,083 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 16:35:25,770 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 16:35:26,488 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 16:35:27,275 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 16:35:28,201 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:35:28,202 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 16:35:28,202 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 16:35:28,202 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:35:28,202 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 16:35:28,202 - INFO - ✓ budget 2024-2025: funding_source_totals
+2026-10-28 16:35:28,202 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 16:35:28,988 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 16:35:29,188 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:35:29,188 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:35:29,188 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:35:29,188 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:35:29,376 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:35:29,376 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:35:29,376 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:35:29,376 - INFO - ✓ revenue 2017: revenue_totals
+2026-10-28 16:35:29,552 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:35:29,552 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:35:29,552 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:35:29,552 - INFO - ✓ revenue 2018: revenue_totals
+2026-10-28 16:35:29,552 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:35:29,552 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:35:29,893 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:35:29,894 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:35:29,894 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:35:29,894 - INFO - ✓ revenue 2020: revenue_totals
+2026-10-28 16:35:30,165 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:35:30,165 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:35:30,165 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:35:30,165 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:35:30,458 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:35:30,458 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:35:30,458 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:35:30,458 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:35:30,757 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:35:30,757 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:35:30,757 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:35:30,757 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:35:31,146 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:35:31,146 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:35:31,146 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:35:31,146 - INFO - ✓ revenue 2024: revenue_totals
+2026-10-28 16:35:31,478 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:35:31,478 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:35:31,478 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:35:31,478 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:35:46,198 - INFO - ✓ positions 2016-2017: processed_file_exists
+2026-10-28 16:35:46,198 - INFO - ✓ positions 2016-2017: staleness
+2026-10-28 16:35:46,198 - ERROR - ✗ positions 2016-2017: mapping (Positions As Reported)
+2026-10-28 16:35:46,198 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:35:46,198 - ERROR -     No mapping for 'HEALTH AND HUMAN SERVICES, DEPARTMENT OF (FORMERLY BDS)' (column 'Positions As Reported')
+2026-10-28 16:36:03,360 - INFO - ✓ positions 2018-2019: processed_file_exists
+2026-10-28 16:36:03,361 - INFO - ✓ positions 2018-2019: staleness
+2026-10-28 16:36:03,361 - ERROR - ✗ positions 2018-2019: mapping (Positions As Reported)
+2026-10-28 16:36:03,361 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:36:03,361 - ERROR -     No mapping for 'HEALTH AND HUMAN SERVICES, DEPARTMENT OF (FORMERLY BDS)' (column 'Positions As Reported')
+2026-10-28 16:36:20,977 - INFO - ✓ positions 2020-2021: processed_file_exists
+2026-10-28 16:36:20,978 - INFO - ✓ positions 2020-2021: staleness
+2026-10-28 16:36:20,978 - ERROR - ✗ positions 2020-2021: mapping (Positions As Reported)
+2026-10-28 16:36:20,978 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:36:42,337 - INFO - ✓ positions 2022-2023: processed_file_exists
+2026-10-28 16:36:42,337 - INFO - ✓ positions 2022-2023: staleness
+2026-10-28 16:36:42,337 - ERROR - ✗ positions 2022-2023: mapping (Positions As Reported)
+2026-10-28 16:36:42,337 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:36:42,337 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:36:42,337 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:36:42,337 - ERROR -     No mapping for 'STATUS OF RACIAL, INDIGENOUS AND TRIBAL POPULATIONS, PERMANENT COMMISSION ON THE' (column 'Positions As Reported')
+2026-10-28 16:38:35,351 - INFO - Starting data validation...
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 16:38:35,987 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 16:38:36,690 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 16:38:37,394 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 16:38:38,166 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: funding_source_totals
+2026-10-28 16:38:39,081 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 16:38:39,864 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 16:38:40,061 - INFO - ✓ revenue 2016: processed_file_exists
+2026-10-28 16:38:40,061 - INFO - ✓ revenue 2016: staleness
+2026-10-28 16:38:40,061 - INFO - ✓ revenue 2016: mapping (As Reported)
+2026-10-28 16:38:40,061 - INFO - ✓ revenue 2016: revenue_totals
+2026-10-28 16:38:40,249 - INFO - ✓ revenue 2017: processed_file_exists
+2026-10-28 16:38:40,249 - INFO - ✓ revenue 2017: staleness
+2026-10-28 16:38:40,249 - INFO - ✓ revenue 2017: mapping (As Reported)
+2026-10-28 16:38:40,249 - INFO - ✓ revenue 2017: revenue_totals
+2026-10-28 16:38:40,422 - INFO - ✓ revenue 2018: processed_file_exists
+2026-10-28 16:38:40,422 - INFO - ✓ revenue 2018: staleness
+2026-10-28 16:38:40,422 - INFO - ✓ revenue 2018: mapping (As Reported)
+2026-10-28 16:38:40,422 - INFO - ✓ revenue 2018: revenue_totals
+2026-10-28 16:38:40,422 - ERROR - ✗ revenue 2019: processed_file_exists
+2026-10-28 16:38:40,422 - ERROR -     No pre-processed file at preprocessed_data/revenue/revenue_2019.pkl; run preprocessing
+2026-10-28 16:38:40,786 - INFO - ✓ revenue 2020: processed_file_exists
+2026-10-28 16:38:40,786 - INFO - ✓ revenue 2020: staleness
+2026-10-28 16:38:40,786 - INFO - ✓ revenue 2020: mapping (As Reported)
+2026-10-28 16:38:40,786 - INFO - ✓ revenue 2020: revenue_totals
+2026-10-28 16:38:41,062 - INFO - ✓ revenue 2021: processed_file_exists
+2026-10-28 16:38:41,062 - INFO - ✓ revenue 2021: staleness
+2026-10-28 16:38:41,062 - INFO - ✓ revenue 2021: mapping (As Reported)
+2026-10-28 16:38:41,062 - INFO - ✓ revenue 2021: revenue_totals
+2026-10-28 16:38:41,351 - INFO - ✓ revenue 2022: processed_file_exists
+2026-10-28 16:38:41,351 - INFO - ✓ revenue 2022: staleness
+2026-10-28 16:38:41,351 - INFO - ✓ revenue 2022: mapping (As Reported)
+2026-10-28 16:38:41,352 - INFO - ✓ revenue 2022: revenue_totals
+2026-10-28 16:38:41,644 - INFO - ✓ revenue 2023: processed_file_exists
+2026-10-28 16:38:41,645 - INFO - ✓ revenue 2023: staleness
+2026-10-28 16:38:41,645 - INFO - ✓ revenue 2023: mapping (As Reported)
+2026-10-28 16:38:41,645 - INFO - ✓ revenue 2023: revenue_totals
+2026-10-28 16:38:42,023 - INFO - ✓ revenue 2024: processed_file_exists
+2026-10-28 16:38:42,023 - INFO - ✓ revenue 2024: staleness
+2026-10-28 16:38:42,023 - INFO - ✓ revenue 2024: mapping (As Reported)
+2026-10-28 16:38:42,024 - INFO - ✓ revenue 2024: revenue_totals
+2026-10-28 16:38:42,352 - INFO - ✓ revenue 2025: processed_file_exists
+2026-10-28 16:38:42,352 - INFO - ✓ revenue 2025: staleness
+2026-10-28 16:38:42,352 - INFO - ✓ revenue 2025: mapping (As Reported)
+2026-10-28 16:38:42,352 - INFO - ✓ revenue 2025: revenue_totals
+2026-10-28 16:38:56,943 - INFO - ✓ positions 2016-2017: processed_file_exists
+2026-10-28 16:38:56,944 - INFO - ✓ positions 2016-2017: staleness
+2026-10-28 16:38:56,944 - ERROR - ✗ positions 2016-2017: mapping (Positions As Reported)
+2026-10-28 16:38:56,944 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:38:56,944 - ERROR -     No mapping for 'HEALTH AND HUMAN SERVICES, DEPARTMENT OF (FORMERLY BDS)' (column 'Positions As Reported')
+2026-10-28 16:38:56,944 - INFO - ✓ positions 2016-2017 backhistory: mapping (As Reported)
+2026-10-28 16:39:14,015 - INFO - ✓ positions 2018-2019: processed_file_exists
+2026-10-28 16:39:14,015 - INFO - ✓ positions 2018-2019: staleness
+2026-10-28 16:39:14,015 - ERROR - ✗ positions 2018-2019: mapping (Positions As Reported)
+2026-10-28 16:39:14,015 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:39:14,015 - ERROR -     No mapping for 'HEALTH AND HUMAN SERVICES, DEPARTMENT OF (FORMERLY BDS)' (column 'Positions As Reported')
+2026-10-28 16:39:14,015 - INFO - ✓ positions 2018-2019 backhistory: mapping (As Reported)
+2026-10-28 16:39:30,884 - INFO - ✓ positions 2020-2021: processed_file_exists
+2026-10-28 16:39:30,884 - INFO - ✓ positions 2020-2021: staleness
+2026-10-28 16:39:30,884 - ERROR - ✗ positions 2020-2021: mapping (Positions As Reported)
+2026-10-28 16:39:30,884 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:39:30,885 - INFO - ✓ positions 2020-2021 backhistory: mapping (As Reported)
+2026-10-28 16:39:52,092 - INFO - ✓ positions 2022-2023: processed_file_exists
+2026-10-28 16:39:52,092 - INFO - ✓ positions 2022-2023: staleness
+2026-10-28 16:39:52,092 - ERROR - ✗ positions 2022-2023: mapping (Positions As Reported)
+2026-10-28 16:39:52,092 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:39:52,092 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:39:52,093 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:39:52,093 - ERROR -     No mapping for 'STATUS OF RACIAL, INDIGENOUS AND TRIBAL POPULATIONS, PERMANENT COMMISSION ON THE' (column 'Positions As Reported')
+2026-10-28 16:39:52,093 - INFO - ✓ positions 2022-2023 backhistory: mapping (As Reported)
+2026-10-28 16:40:18,066 - INFO - ✓ positions 2024-2025: processed_file_exists
+2026-10-28 16:40:18,066 - INFO - ✓ positions 2024-2025: staleness
+2026-10-28 16:40:18,066 - ERROR - ✗ positions 2024-2025: mapping (Positions As Reported)
+2026-10-28 16:40:18,066 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:40:18,067 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:40:18,067 - ERROR -     No mapping for 'DISABILITY RIGHTS MAINE' (column 'Positions As Reported')
+2026-10-28 16:40:18,067 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:40:18,067 - ERROR -     No mapping for 'MAINE STATE CEMETERY PRESERVATION COMMISSION' (column 'Positions As Reported')
+2026-10-28 16:40:18,067 - INFO - ✓ positions 2024-2025 backhistory: mapping (As Reported)
+2026-10-28 16:40:40,413 - INFO - ✓ positions 2026-2027: processed_file_exists
+2026-10-28 16:40:40,413 - INFO - ✓ positions 2026-2027: staleness
+2026-10-28 16:40:40,413 - ERROR - ✗ positions 2026-2027: mapping (Positions As Reported)
+2026-10-28 16:40:40,413 - ERROR -     No mapping for 'BLUEBERRY COMMISSION OF MAINE, WILD' (column 'Positions As Reported')
+2026-10-28 16:40:40,413 - ERROR -     No mapping for 'CONNECTMAINE AUTHORITY' (column 'Positions As Reported')
+2026-10-28 16:40:40,413 - ERROR -     No mapping for 'DISABILITY RIGHTS MAINE' (column 'Positions As Reported')
+2026-10-28 16:40:40,413 - ERROR -     No mapping for 'MAINE CHILDREN'S CABINET EARLY CHILDHOOD ADVISORY COUNCIL' (column 'Positions As Reported')
+2026-10-28 16:40:40,413 - ERROR -     No mapping for 'MAINE STATE CEMETERY PRESERVATION COMMISSION' (column 'Positions As Reported')
+2026-10-28 16:40:40,413 - INFO - ✓ positions 2026-2027 backhistory: mapping (As Reported)
+2026-10-28 16:40:40,413 - ERROR - ✗ 7 of 103 checks failed
+2026-10-28 16:49:19,199 - INFO - Starting data validation...
+2026-10-28 16:49:35,308 - INFO - ✓ positions 2016-2017: processed_file_exists
+2026-10-28 16:49:35,308 - INFO - ✓ positions 2016-2017: staleness
+2026-10-28 16:49:35,309 - INFO - ✓ positions 2016-2017: mapping (Positions As Reported)
+2026-10-28 16:49:35,309 - INFO - ✓ positions 2016-2017 backhistory: mapping (As Reported)
+2026-10-28 16:49:53,928 - INFO - ✓ positions 2018-2019: processed_file_exists
+2026-10-28 16:49:53,928 - INFO - ✓ positions 2018-2019: staleness
+2026-10-28 16:49:53,928 - INFO - ✓ positions 2018-2019: mapping (Positions As Reported)
+2026-10-28 16:49:53,928 - INFO - ✓ positions 2018-2019 backhistory: mapping (As Reported)
+2026-10-28 16:50:10,763 - INFO - ✓ positions 2020-2021: processed_file_exists
+2026-10-28 16:50:10,763 - INFO - ✓ positions 2020-2021: staleness
+2026-10-28 16:50:10,763 - INFO - ✓ positions 2020-2021: mapping (Positions As Reported)
+2026-10-28 16:50:10,763 - INFO - ✓ positions 2020-2021 backhistory: mapping (As Reported)
+2026-10-28 16:50:32,291 - INFO - ✓ positions 2022-2023: processed_file_exists
+2026-10-28 16:50:32,291 - INFO - ✓ positions 2022-2023: staleness
+2026-10-28 16:50:32,291 - INFO - ✓ positions 2022-2023: mapping (Positions As Reported)
+2026-10-28 16:50:32,291 - INFO - ✓ positions 2022-2023 backhistory: mapping (As Reported)
+2026-10-28 16:50:56,572 - INFO - ✓ positions 2024-2025: processed_file_exists
+2026-10-28 16:50:56,572 - INFO - ✓ positions 2024-2025: staleness
+2026-10-28 16:50:56,572 - INFO - ✓ positions 2024-2025: mapping (Positions As Reported)
+2026-10-28 16:50:56,572 - INFO - ✓ positions 2024-2025 backhistory: mapping (As Reported)
+2026-10-28 16:51:18,543 - INFO - ✓ positions 2026-2027: processed_file_exists
+2026-10-28 16:51:18,543 - INFO - ✓ positions 2026-2027: staleness
+2026-10-28 16:51:18,543 - INFO - ✓ positions 2026-2027: mapping (Positions As Reported)
+2026-10-28 16:51:18,543 - INFO - ✓ positions 2026-2027 backhistory: mapping (As Reported)
+2026-10-28 16:51:18,543 - INFO - ✓ All 24 checks passed
+2026-10-28 16:51:20,683 - INFO - Starting data validation...
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 16:51:21,292 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 16:51:21,971 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 16:51:22,691 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 16:51:23,471 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: funding_source_totals
+2026-10-28 16:51:24,366 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 16:51:25,150 - INFO - ✓ All 42 checks passed
