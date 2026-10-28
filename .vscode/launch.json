@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Streamlit: main.py",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "streamlit run main.py",
+            "cwd": "${workspaceFolder}"
+        },
+        {
             "name": "Python Debugger: Current File",
             "type": "debugpy",
             "request": "launch",
