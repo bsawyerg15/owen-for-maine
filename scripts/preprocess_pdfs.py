@@ -117,8 +117,8 @@ def find_exhibit_page(pdf, exhibit_name):
     return -1
 
 
-def preprocess_budget_pdfs():
-    """Process all Maine budget PDFs and save as Parquet files."""
+def preprocess_budget_pdfs(years=None):
+    """Process Maine budget PDFs and save as Pickle files. years limits it to those periods, e.g. ['2026-2027']."""
     logger.info("Starting Maine budget PDF pre-processing...")
 
     pdf_dir = Path("z_Data/ME")
@@ -130,6 +130,8 @@ def preprocess_budget_pdfs():
         try:
             # Extract year from filename (e.g., "2016-2017 ME State Budget.pdf")
             year_range = pdf_file.stem.split()[0]  # "2016-2017"
+            if years and year_range not in years:
+                continue
             first_year, second_year = year_range.split('-')
 
             logger.info(f"Processing {pdf_file.name}...")
@@ -161,8 +163,8 @@ def preprocess_budget_pdfs():
     logger.info(f"Budget PDF pre-processing complete. Processed {processed_count} files.")
 
 
-def preprocess_revenue_pdfs():
-    """Process all revenue PDFs and save as Pickle files."""
+def preprocess_revenue_pdfs(years=None):
+    """Process revenue PDFs and save as Pickle files. years limits it to those fiscal years, e.g. ['2025']."""
     logger.info("Starting revenue PDF pre-processing...")
 
     pdf_dir = Path("z_Data/ME General Fund Sources")
@@ -174,6 +176,8 @@ def preprocess_revenue_pdfs():
         try:
             # Extract year from filename (e.g., "FY 2016 Revenue ME.pdf")
             year = pdf_file.stem.split()[1]  # "2016"
+            if years and year not in years:
+                continue
 
             logger.info(f"Processing {pdf_file.name}...")
 
@@ -201,8 +205,8 @@ def preprocess_revenue_pdfs():
     logger.info(f"Revenue PDF pre-processing complete. Processed {processed_count} files.")
 
 
-def preprocess_positions_pdfs():
-    """Process all Maine budget PDFs and extract position data."""
+def preprocess_positions_pdfs(years=None):
+    """Extract position data from Maine budget PDFs. years limits it to those periods, e.g. ['2026-2027']."""
     logger.info("Starting Maine positions PDF pre-processing...")
 
     # Import the position extraction function
@@ -216,6 +220,8 @@ def preprocess_positions_pdfs():
     processed_count = 0
 
     for pdf_file in pdf_dir.glob("*ME State Budget.pdf"):
+        if years and pdf_file.stem.split()[0] not in years:
+            continue
         try:
             logger.info(f"Processing positions from {pdf_file.name}...")
 
@@ -236,25 +242,31 @@ def main():
     parser.add_argument('--revenue-pdfs', action='store_true', help='Process revenue PDFs only')
     parser.add_argument('--positions-pdfs', action='store_true', help='Process position data from budget PDFs only')
     parser.add_argument('--validate', action='store_true', help='Validate processed data only')
+    parser.add_argument('--year', action='append', help='Only process this period, e.g. 2026-2027 or 2025. Repeatable')
+    parser.add_argument('--quiet', action='store_true', help='Only print warnings and errors (the log file still gets everything)')
 
     args = parser.parse_args()
+    if args.quiet:
+        for handler in logging.getLogger().handlers:
+            if not isinstance(handler, logging.FileHandler):
+                handler.setLevel(logging.WARNING)
 
     # If no specific args, run everything
     run_all = not any([args.budget_pdfs, args.revenue_pdfs, args.positions_pdfs, args.validate])
 
     try:
         if args.budget_pdfs or run_all:
-            preprocess_budget_pdfs()
+            preprocess_budget_pdfs(args.year)
 
         if args.revenue_pdfs or run_all:
-            preprocess_revenue_pdfs()
+            preprocess_revenue_pdfs(args.year)
 
         if args.positions_pdfs or run_all:
-            preprocess_positions_pdfs()
+            preprocess_positions_pdfs(args.year)
 
         if args.validate or run_all:
             from validate_data import validate_all
-            if not validate_all():
+            if not validate_all(years=args.year):
                 sys.exit(1)
 
         logger.info("Pre-processing pipeline completed successfully!")

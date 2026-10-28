@@ -21,6 +21,12 @@ class Config:
         "2016-2017": 9
     }
 
+    # The budget's grand totals section sometimes names a fund differently from the department sections.
+    # Used by scripts/validate_data.py: {grand totals name: department section name}
+    ME_FUNDING_SOURCE_ALIASES = {
+        'PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND': 'FAMILY PAID MEDICAL LEAVE INSURANCE FUND',
+    }
+
     # Maine position years (biennial periods)
     ME_POSITION_YEARS = ["2016-2017", "2018-2019", "2020-2021", "2022-2023", "2024-2025", "2026-2027"]
 

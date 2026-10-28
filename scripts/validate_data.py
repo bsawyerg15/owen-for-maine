@@ -41,10 +41,6 @@ POSITIONS_OUTPUT_DIR = Path("preprocessed_data/positions")
 
 GRAND_TOTALS = 'GRAND TOTALS - ALL DEPARTMENTS'
 DEPARTMENT_TOTAL = 'DEPARTMENT TOTAL'
-# The grand totals section sometimes names a fund differently from the department sections: {grand totals name: department name}
-FUNDING_SOURCE_ALIASES = {
-    'PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND': 'FAMILY PAID MEDICAL LEAVE INSURANCE FUND',
-}
 REVENUE_AMOUNT_COLUMNS =['Month Actual', 'Month Budget', 'Month Variance',
                           'FYTD Actual', 'FYTD Budget', 'FYTD Variance', 'Total Budgeted FY']
 
@@ -73,6 +69,12 @@ def check_processed_file_exists(processed_path, target):
     """The source PDF has a pre-processed file."""
     problems = [] if processed_path.exists() else [f"No pre-processed file at {processed_path}; run preprocessing"]
     return _result('processed_file_exists', target, problems)
+
+
+def check_configured(period, setting_name, setting, target):
+    """The period is listed in a config setting the app reads its periods from."""
+    problems = [] if period in setting else [f"{period} is missing from Config.{setting_name} in a_Configs/config.py, so the app won't load it"]
+    return _result(f'configured ({setting_name})', target, problems)
 
 
 def check_staleness(processed_df, source_df, target):
@@ -173,7 +175,7 @@ def check_funding_source_totals(budget_df, target):
 
     grand = budget_df.xs(GRAND_TOTALS, level='Department')
     grand_funds = grand[~grand.index.str.startswith(('SUBTOTAL', 'GRAND TOTALS'))]
-    grand_funds = grand_funds.rename(index=FUNDING_SOURCE_ALIASES).groupby(level=0).sum()
+    grand_funds = grand_funds.rename(index=Config.ME_FUNDING_SOURCE_ALIASES).groupby(level=0).sum()
 
     problems = []
     for fund in sorted(set(by_fund.index) | set(grand_funds.index)):
@@ -252,6 +254,7 @@ def validate_budget(year_range):
     departments = _department_rows(processed_df).index.get_level_values('Department').unique()
     return [
         exists,
+        check_configured(year_range, 'ME_BUDGET_END_PAGES', Config.ME_BUDGET_END_PAGES, target),
         check_staleness(processed_df, source_df, target),
         summary_pages,
         check_mapping(departments, mapping_df, 'Maine', 'As Reported', target),
@@ -299,6 +302,7 @@ def validate_positions(year_range):
     departments = processed_df.index.get_level_values('Department').unique()
     return [
         exists,
+        check_configured(year_range, 'ME_POSITION_YEARS', Config.ME_POSITION_YEARS, target),
         check_staleness(processed_df, source_df, target),
         check_mapping(departments, positions_names_df, 'Maine', 'Positions As Reported', target, maps_to='As Reported'),
         # Each backhistory name must point at a department that's in the department mapping
@@ -314,8 +318,10 @@ def _revenue_years():
     return sorted(p.stem.split()[1] for p in REVENUE_PDF_DIR.glob("FY * Revenue ME.pdf"))
 
 
-def log_results(results):
+def log_results(results, failures_only=False):
     for result in results:
+        if result.passed and failures_only:
+            continue
         if result.passed:
             logger.info(f"✓ {result.target}: {result.check}")
         else:
@@ -324,11 +330,12 @@ def log_results(results):
                 logger.error(f"    {problem}")
 
 
-def validate_all(budget=True, revenue=True, positions=True, years=None):
+def validate_all(budget=True, revenue=True, positions=True, years=None, failures_only=False):
     """Run the selected validations, log each check and return whether all passed.
 
     Periods come from the source PDFs, so a PDF without a pre-processed file is reported."""
-    logger.info("Starting data validation...")
+    if not failures_only:
+        logger.info("Starting data validation...")
     results = []
     jobs = []
     if budget:
@@ -345,7 +352,7 @@ def validate_all(budget=True, revenue=True, positions=True, years=None):
             period_results = validate(period)
         except Exception as e:
             period_results = [CheckResult('ran_without_error', f"{validate.__name__} {period}", False, [str(e)])]
-        log_results(period_results)
+        log_results(period_results, failures_only)
         results += period_results
 
     failed = [r for r in results if not r.passed]
@@ -362,6 +369,7 @@ def main():
     parser.add_argument('--revenue', action='store_true', help='Validate General Fund revenue')
     parser.add_argument('--positions', action='store_true', help='Validate positions (slow)')
     parser.add_argument('--year', action='append', help='Only validate this period, e.g. 2026-2027 or 2025. Repeatable')
+    parser.add_argument('--failures-only', action='store_true', help='Only print failed checks and the summary')
     args = parser.parse_args()
 
     run_all = not any([args.budget, args.revenue, args.positions])
@@ -370,6 +378,7 @@ def main():
         revenue=args.revenue or run_all,
         positions=args.positions or run_all,
         years=args.year,
+        failures_only=args.failures_only,
     )
     sys.exit(0 if passed else 1)
 

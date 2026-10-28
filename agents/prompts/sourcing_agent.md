@@ -13,7 +13,7 @@ You work alongside a Configuration/Testing agent. After you pull data, that agen
 
 ## Runbook
 
-The runbook below is your instructions for this source. Follow its Sourcing section for where to pull the data from, where to store it, and how to name the file or which CSV to update. Ignore its Configuration/Testing section; that belongs to the other agent.
+The runbook's Sourcing section below is your instructions for this source: where to pull the data from, where to store it, and how to name the file or which CSV to update.
 
 <runbook path="$runbook_path">
 $runbook
@@ -76,6 +76,7 @@ End your work with a single JSON object and nothing after it:
   "status": "new_data | revised | no_new_data | escalate | error",
   "files": ["z_Data/ME/2028-2029 ME State Budget.pdf"],
   "periods": ["2028-2029"],
+  "as_of": "2028-06-15",
   "notes": "What you checked and anything the Configuration/Testing agent should know, such as cosmetic changes to the source.",
   "escalation_reason": null
 }
@@ -84,4 +85,5 @@ End your work with a single JSON object and nothing after it:
 - `status`: `new_data` if you added at least one new period (a new file or CSV row), even if you also revised others; `revised` if you only replaced or updated periods we already had; `no_new_data` if the source matches the runbook and nothing is new or revised; `escalate` if the source has changed substantially; `error` if something failed (for example, a download error).
 - `files`: repository paths of every file you saved, replaced, or updated, including CSVs. Empty if none.
 - `periods`: the periods you added or revised. Empty if none. Say in `notes` which were new and which were revised, and for revisions, what changed (for example, the version or updated date).
+- `as_of`: when you added or revised data, the date the newest data you pulled is current to, as `YYYY-MM-DD`, using the runbook's definition (for example, an "Updated" date on the document). `null` if you didn't add data or the runbook doesn't define it.
 - `escalation_reason`: when `status` is `escalate`, what you expected, what you found, and your suggested runbook change. Otherwise `null`.

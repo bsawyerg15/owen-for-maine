@@ -1174,3 +1174,176 @@
 2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: funding_source_totals
 2026-10-28 16:51:25,150 - INFO - ✓ budget 2026-2027: grand_total
 2026-10-28 16:51:25,150 - INFO - ✓ All 42 checks passed
+2026-10-28 17:06:02,294 - INFO - Starting data validation...
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: processed_file_exists
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: staleness
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: summary_pages
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: mapping (As Reported)
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: department_totals
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: funding_source_totals
+2026-10-28 17:06:02,934 - INFO - ✓ budget 2016-2017: grand_total
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: processed_file_exists
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: staleness
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: summary_pages
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: mapping (As Reported)
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: department_totals
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: funding_source_totals
+2026-10-28 17:06:03,621 - INFO - ✓ budget 2018-2019: grand_total
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: processed_file_exists
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: staleness
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: summary_pages
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: mapping (As Reported)
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: department_totals
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: funding_source_totals
+2026-10-28 17:06:04,343 - INFO - ✓ budget 2020-2021: grand_total
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: processed_file_exists
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: staleness
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: summary_pages
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: mapping (As Reported)
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: department_totals
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: funding_source_totals
+2026-10-28 17:06:05,134 - INFO - ✓ budget 2022-2023: grand_total
+2026-10-28 17:06:06,023 - INFO - ✓ budget 2024-2025: processed_file_exists
+2026-10-28 17:06:06,023 - INFO - ✓ budget 2024-2025: staleness
+2026-10-28 17:06:06,023 - INFO - ✓ budget 2024-2025: summary_pages
+2026-10-28 17:06:06,023 - INFO - ✓ budget 2024-2025: mapping (As Reported)
+2026-10-28 17:06:06,023 - INFO - ✓ budget 2024-2025: department_totals
+2026-10-28 17:06:06,024 - INFO - ✓ budget 2024-2025: funding_source_totals
+2026-10-28 17:06:06,024 - INFO - ✓ budget 2024-2025: grand_total
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 17:06:06,806 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 17:06:06,806 - INFO - ✓ All 42 checks passed
+2026-10-28 17:31:16,383 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 17:31:16,384 - INFO - Processing 2024-2025 ME State Budget.pdf...
+2026-10-28 17:31:16,901 - INFO - ✓ Processed 2024-2025 ME State Budget.pdf → preprocessed_data/budgets/2024-2025_budget.pkl (342 rows)
+2026-10-28 17:31:16,901 - INFO - Processing 2020-2021 ME State Budget.pdf...
+2026-10-28 17:31:17,332 - INFO - ✓ Processed 2020-2021 ME State Budget.pdf → preprocessed_data/budgets/2020-2021_budget.pkl (287 rows)
+2026-10-28 17:31:17,332 - INFO - Processing 2018-2019 ME State Budget.pdf...
+2026-10-28 17:31:17,751 - INFO - ✓ Processed 2018-2019 ME State Budget.pdf → preprocessed_data/budgets/2018-2019_budget.pkl (291 rows)
+2026-10-28 17:31:17,751 - INFO - Processing 2016-2017 ME State Budget.pdf...
+2026-10-28 17:31:18,117 - INFO - ✓ Processed 2016-2017 ME State Budget.pdf → preprocessed_data/budgets/2016-2017_budget.pkl (296 rows)
+2026-10-28 17:31:18,117 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 17:31:18,605 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (304 rows)
+2026-10-28 17:31:18,605 - INFO - Processing 2022-2023 ME State Budget.pdf...
+2026-10-28 17:31:19,128 - INFO - ✓ Processed 2022-2023 ME State Budget.pdf → preprocessed_data/budgets/2022-2023_budget.pkl (323 rows)
+2026-10-28 17:31:19,128 - INFO - Budget PDF pre-processing complete. Processed 6 files.
+2026-10-28 17:31:19,128 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 17:31:22,614 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 17:31:22,615 - INFO - Processing positions from 2024-2025 ME State Budget.pdf...
+2026-10-28 17:31:45,572 - INFO - Processing positions from 2020-2021 ME State Budget.pdf...
+2026-10-28 17:32:04,226 - INFO - Processing positions from 2018-2019 ME State Budget.pdf...
+2026-10-28 17:32:21,513 - INFO - Processing positions from 2016-2017 ME State Budget.pdf...
+2026-10-28 17:32:37,176 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 17:32:58,082 - INFO - Processing positions from 2022-2023 ME State Budget.pdf...
+2026-10-28 17:33:20,459 - INFO - Positions PDF pre-processing complete. Processed 6 files.
+2026-10-28 17:33:20,459 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 17:33:22,718 - INFO - Starting data validation...
+2026-10-28 17:33:23,543 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 17:33:23,543 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 17:33:23,543 - ERROR - ✗ budget 2026-2027: summary_pages
+2026-10-28 17:33:23,543 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 17:33:23,543 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 17:33:23,543 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 17:33:23,543 - ERROR - ✗ budget 2026-2027: funding_source_totals
+2026-10-28 17:33:23,543 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 17:33:23,543 - ERROR - ✗ budget 2026-2027: grand_total
+2026-10-28 17:33:23,543 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 17:33:44,495 - INFO - ✓ positions 2026-2027: processed_file_exists
+2026-10-28 17:33:44,495 - INFO - ✓ positions 2026-2027: staleness
+2026-10-28 17:33:44,495 - INFO - ✓ positions 2026-2027: mapping (Positions As Reported)
+2026-10-28 17:33:44,495 - INFO - ✓ positions 2026-2027 backhistory: mapping (As Reported)
+2026-10-28 17:33:44,495 - ERROR - ✗ 3 of 11 checks failed
+2026-10-28 17:33:50,597 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 17:33:50,598 - INFO - Processing 2024-2025 ME State Budget.pdf...
+2026-10-28 17:33:51,148 - INFO - ✓ Processed 2024-2025 ME State Budget.pdf → preprocessed_data/budgets/2024-2025_budget.pkl (342 rows)
+2026-10-28 17:33:51,148 - INFO - Processing 2020-2021 ME State Budget.pdf...
+2026-10-28 17:33:51,605 - INFO - ✓ Processed 2020-2021 ME State Budget.pdf → preprocessed_data/budgets/2020-2021_budget.pkl (287 rows)
+2026-10-28 17:33:51,605 - INFO - Processing 2018-2019 ME State Budget.pdf...
+2026-10-28 17:33:52,041 - INFO - ✓ Processed 2018-2019 ME State Budget.pdf → preprocessed_data/budgets/2018-2019_budget.pkl (291 rows)
+2026-10-28 17:33:52,041 - INFO - Processing 2016-2017 ME State Budget.pdf...
+2026-10-28 17:33:52,432 - INFO - ✓ Processed 2016-2017 ME State Budget.pdf → preprocessed_data/budgets/2016-2017_budget.pkl (296 rows)
+2026-10-28 17:33:52,432 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 17:33:53,016 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (346 rows)
+2026-10-28 17:33:53,016 - INFO - Processing 2022-2023 ME State Budget.pdf...
+2026-10-28 17:33:53,533 - INFO - ✓ Processed 2022-2023 ME State Budget.pdf → preprocessed_data/budgets/2022-2023_budget.pkl (323 rows)
+2026-10-28 17:33:53,533 - INFO - Budget PDF pre-processing complete. Processed 6 files.
+2026-10-28 17:33:53,533 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 17:33:54,058 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 17:33:54,059 - INFO - Processing positions from 2024-2025 ME State Budget.pdf...
+2026-10-28 17:34:17,234 - INFO - Processing positions from 2020-2021 ME State Budget.pdf...
+2026-10-28 17:34:35,625 - INFO - Processing positions from 2018-2019 ME State Budget.pdf...
+2026-10-28 17:34:53,452 - INFO - Processing positions from 2016-2017 ME State Budget.pdf...
+2026-10-28 17:35:08,918 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 17:35:32,114 - INFO - Processing positions from 2022-2023 ME State Budget.pdf...
+2026-10-28 17:35:55,254 - INFO - Positions PDF pre-processing complete. Processed 6 files.
+2026-10-28 17:35:55,255 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 17:35:57,833 - INFO - Starting data validation...
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: processed_file_exists
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: staleness
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: summary_pages
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: mapping (As Reported)
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: department_totals
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: funding_source_totals
+2026-10-28 17:35:59,359 - INFO - ✓ budget 2026-2027: grand_total
+2026-10-28 17:36:19,602 - INFO - ✓ positions 2026-2027: processed_file_exists
+2026-10-28 17:36:19,602 - INFO - ✓ positions 2026-2027: staleness
+2026-10-28 17:36:19,602 - INFO - ✓ positions 2026-2027: mapping (Positions As Reported)
+2026-10-28 17:36:19,602 - INFO - ✓ positions 2026-2027 backhistory: mapping (As Reported)
+2026-10-28 17:36:19,602 - INFO - ✓ All 11 checks passed
+2026-10-28 18:00:00,676 - INFO - ✓ All 42 checks passed
+2026-10-28 18:00:01,248 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 18:00:01,248 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 18:00:01,804 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (346 rows)
+2026-10-28 18:00:01,805 - INFO - Budget PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:00:01,805 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 18:00:01,805 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 18:00:22,065 - INFO - Positions PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:00:22,065 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 18:01:13,209 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 18:01:13,209 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 18:01:13,731 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (346 rows)
+2026-10-28 18:01:13,731 - INFO - Budget PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:01:13,732 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 18:01:13,732 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 18:01:34,865 - INFO - Positions PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:01:34,865 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 18:01:58,547 - INFO - ✓ All 11 checks passed
+2026-10-28 18:03:16,397 - INFO - ✓ All 13 checks passed
+2026-10-28 18:04:37,523 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 18:04:37,523 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 18:04:38,057 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (346 rows)
+2026-10-28 18:04:38,058 - INFO - Budget PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:04:38,058 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 18:04:38,058 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 18:04:59,129 - INFO - Positions PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:04:59,130 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 18:05:23,745 - INFO - ✓ All 13 checks passed
+2026-10-28 18:05:35,760 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 18:05:35,760 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 18:05:36,252 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (304 rows)
+2026-10-28 18:05:36,252 - INFO - Budget PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:05:36,252 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 18:05:36,253 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 18:05:56,418 - INFO - Positions PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:05:56,418 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 18:05:59,275 - ERROR - ✗ budget 2026-2027: summary_pages
+2026-10-28 18:05:59,276 - ERROR -     ME_BUDGET_END_PAGES is 8 but the summary ends at page 8, so it should be 9
+2026-10-28 18:05:59,276 - ERROR - ✗ budget 2026-2027: funding_source_totals
+2026-10-28 18:05:59,276 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' section was parsed
+2026-10-28 18:05:59,276 - ERROR - ✗ budget 2026-2027: grand_total
+2026-10-28 18:05:59,276 - ERROR -     No 'GRAND TOTALS - ALL DEPARTMENTS' row was parsed
+2026-10-28 18:06:18,853 - ERROR - ✗ 3 of 13 checks failed
+2026-10-28 18:06:32,845 - INFO - Starting Maine budget PDF pre-processing...
+2026-10-28 18:06:32,846 - INFO - Processing 2026-2027 ME State Budget.pdf...
+2026-10-28 18:06:33,376 - INFO - ✓ Processed 2026-2027 ME State Budget.pdf → preprocessed_data/budgets/2026-2027_budget.pkl (346 rows)
+2026-10-28 18:06:33,376 - INFO - Budget PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:06:33,377 - INFO - Starting Maine positions PDF pre-processing...
+2026-10-28 18:06:33,377 - INFO - Processing positions from 2026-2027 ME State Budget.pdf...
+2026-10-28 18:06:53,430 - INFO - Positions PDF pre-processing complete. Processed 1 files.
+2026-10-28 18:06:53,430 - INFO - Pre-processing pipeline completed successfully!
+2026-10-28 18:07:15,996 - INFO - ✓ All 13 checks passed
