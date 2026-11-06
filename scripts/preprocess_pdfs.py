@@ -27,6 +27,7 @@ import numpy as np
 sys.path.append('.')
 
 from a_Configs.config import Config
+from b_App.me_budget_parser import parse_me_headline_table, read_me_budget_summary
 
 # Setup logging
 logging.basicConfig(
@@ -38,58 +39,6 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
-
-
-def parse_me_headline_table(headline_table, first_year, second_year):
-    """
-    Parse the headline_table from Maine budget text into a DataFrame.
-    Extracted from data_ingestion.py for standalone use.
-    """
-    lines = headline_table.strip().split('\n')
-    data = []
-    current_dept = None
-    funding_pattern = re.compile(r'^(.+?)\s+(\(?\d{1,3}(?:,\d{3})*\)?)\s+(\(?\d{1,3}(?:,\d{3})*\)?)$')
-
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-
-        if line[0].isdigit():
-            # New department
-            parts = line.split(' ', 1)
-            if len(parts) > 1:
-                current_dept = parts[1]
-            else:
-                current_dept = line
-        else:
-            match = funding_pattern.match(line)
-            if match:
-                # Funding source
-                funding_source = match.group(1).strip()
-                amt_first_year_str = match.group(2).replace(',', '').replace('(', '').replace(')', '')
-                amt_second_year_str = match.group(3).replace(',', '').replace('(', '').replace(')', '')
-
-                try:
-                    amt_first_year = float(amt_first_year_str)
-                except ValueError:
-                    amt_first_year = 0.0
-
-                try:
-                    amt_second_year = float(amt_second_year_str)
-                except ValueError:
-                    amt_second_year = 0.0
-
-                data.append({
-                    'Department': current_dept,
-                    'Funding Source': funding_source,
-                    first_year: amt_first_year,
-                    second_year: amt_second_year
-                })
-
-    df = pd.DataFrame(data)
-    df = df.set_index(['Department', 'Funding Source'])
-    return df
 
 
 def load_me_general_fund_source_table(year):
@@ -150,6 +99,14 @@ def load_me_general_fund_source_table(year):
     return pd.DataFrame(data, columns=columns)
 
 
+def revenue_table_to_numeric(df):
+    """Convert every column except Source to numeric."""
+    for col in df.columns:
+        if col != 'Source':  # Keep Source column as string
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+    return df
+
+
 def find_exhibit_page(pdf, exhibit_name):
     """Find the page containing the specified exhibit."""
     for i, page in enumerate(pdf.pages):
@@ -160,8 +117,8 @@ def find_exhibit_page(pdf, exhibit_name):
     return -1
 
 
-def preprocess_budget_pdfs():
-    """Process all Maine budget PDFs and save as Parquet files."""
+def preprocess_budget_pdfs(years=None):
+    """Process Maine budget PDFs and save as Pickle files. years limits it to those periods, e.g. ['2026-2027']."""
     logger.info("Starting Maine budget PDF pre-processing...")
 
     pdf_dir = Path("z_Data/ME")
@@ -173,6 +130,8 @@ def preprocess_budget_pdfs():
         try:
             # Extract year from filename (e.g., "2016-2017 ME State Budget.pdf")
             year_range = pdf_file.stem.split()[0]  # "2016-2017"
+            if years and year_range not in years:
+                continue
             first_year, second_year = year_range.split('-')
 
             logger.info(f"Processing {pdf_file.name}...")
@@ -181,9 +140,7 @@ def preprocess_budget_pdfs():
             with pdfplumber.open(pdf_file) as pdf:
                 # Get pages based on config
                 end_page = Config.ME_BUDGET_END_PAGES.get(year_range, 8)
-                pages = pdf.pages[1:end_page]
-                text_list = [page.extract_text() for page in pages]
-                headline_table = '\n'.join(text_list)
+                headline_table = read_me_budget_summary(pdf, end_page)
 
             # Parse the text into structured data
             df = parse_me_headline_table(headline_table, first_year, second_year)
@@ -206,8 +163,8 @@ def preprocess_budget_pdfs():
     logger.info(f"Budget PDF pre-processing complete. Processed {processed_count} files.")
 
 
-def preprocess_revenue_pdfs():
-    """Process all revenue PDFs and save as Pickle files."""
+def preprocess_revenue_pdfs(years=None):
+    """Process revenue PDFs and save as Pickle files. years limits it to those fiscal years, e.g. ['2025']."""
     logger.info("Starting revenue PDF pre-processing...")
 
     pdf_dir = Path("z_Data/ME General Fund Sources")
@@ -219,6 +176,8 @@ def preprocess_revenue_pdfs():
         try:
             # Extract year from filename (e.g., "FY 2016 Revenue ME.pdf")
             year = pdf_file.stem.split()[1]  # "2016"
+            if years and year not in years:
+                continue
 
             logger.info(f"Processing {pdf_file.name}...")
 
@@ -230,9 +189,7 @@ def preprocess_revenue_pdfs():
                 continue
 
             # Convert string columns to numeric types for better compatibility
-            for col in df.columns:
-                if col != 'Source':  # Keep Source column as string
-                    df[col] = pd.to_numeric(df[col], errors='coerce')
+            df = revenue_table_to_numeric(df)
 
             # Save as pickle with correct data types
             output_path = output_dir / f"revenue_{year}.pkl"
@@ -248,8 +205,8 @@ def preprocess_revenue_pdfs():
     logger.info(f"Revenue PDF pre-processing complete. Processed {processed_count} files.")
 
 
-def preprocess_positions_pdfs():
-    """Process all Maine budget PDFs and extract position data."""
+def preprocess_positions_pdfs(years=None):
+    """Extract position data from Maine budget PDFs. years limits it to those periods, e.g. ['2026-2027']."""
     logger.info("Starting Maine positions PDF pre-processing...")
 
     # Import the position extraction function
@@ -263,6 +220,8 @@ def preprocess_positions_pdfs():
     processed_count = 0
 
     for pdf_file in pdf_dir.glob("*ME State Budget.pdf"):
+        if years and pdf_file.stem.split()[0] not in years:
+            continue
         try:
             logger.info(f"Processing positions from {pdf_file.name}...")
 
@@ -277,120 +236,38 @@ def preprocess_positions_pdfs():
     logger.info(f"Positions PDF pre-processing complete. Processed {processed_count} files.")
 
 
-def validate_processed_data():
-    """Validate that processed data matches source PDFs."""
-    logger.info("Starting data validation...")
-
-    validation_passed = True
-
-    # Validate budget data
-    logger.info("Validating budget data...")
-    budget_output_dir = Path("preprocessed_data/budgets")
-
-    for pkl_file in budget_output_dir.glob("*_budget.pkl"):
-        try:
-            year_range = pkl_file.stem.split('_')[0]  # "2016-2017"
-            pdf_path = Path("z_Data/ME") / f"{year_range} ME State Budget.pdf"
-
-            if not pdf_path.exists():
-                logger.warning(f"Source PDF not found: {pdf_path}")
-                continue
-
-            # Load processed data
-            processed_df = pd.read_pickle(pkl_file)
-
-            # Parse source PDF
-            first_year, second_year = year_range.split('-')
-            with pdfplumber.open(pdf_path) as pdf:
-                end_page = Config.ME_BUDGET_END_PAGES.get(year_range, 8)
-                pages = pdf.pages[1:end_page]
-                text_list = [page.extract_text() for page in pages]
-                headline_table = '\n'.join(text_list)
-
-            source_df = parse_me_headline_table(headline_table, first_year, second_year)
-
-            # Compare
-            if len(processed_df) != len(source_df):
-                logger.error(f"Row count mismatch for {year_range}: {len(processed_df)} vs {len(source_df)}")
-                validation_passed = False
-                continue
-
-            # Compare total sums
-            processed_sum = processed_df.sum().sum()
-            source_sum = source_df.sum().sum()
-
-            if abs(processed_sum - source_sum) > 0.01:
-                logger.error(".2f")
-                validation_passed = False
-            else:
-                logger.info(f"✓ {year_range} validation passed")
-
-        except Exception as e:
-            logger.error(f"Error validating {pkl_file.name}: {e}")
-            validation_passed = False
-
-    # Validate revenue data
-    logger.info("Validating revenue data...")
-    revenue_output_dir = Path("preprocessed_data/revenue")
-
-    for pkl_file in revenue_output_dir.glob("revenue_*.pkl"):
-        try:
-            year = pkl_file.stem.split('_')[1]  # "2016"
-            pdf_path = Path("z_Data/ME General Fund Sources") / f"FY {year} Revenue ME.pdf"
-
-            if not pdf_path.exists():
-                logger.warning(f"Source PDF not found: {pdf_path}")
-                continue
-
-            # Load processed data
-            processed_df = pd.read_pickle(pkl_file)
-
-            # Parse source PDF
-            source_df = load_me_general_fund_source_table(year)
-
-            # Compare
-            if len(processed_df) != len(source_df):
-                logger.error(f"Row count mismatch for revenue {year}: {len(processed_df)} vs {len(source_df)}")
-                validation_passed = False
-                continue
-
-            logger.info(f"✓ Revenue {year} validation passed")
-
-        except Exception as e:
-            logger.error(f"Error validating {pkl_file.name}: {e}")
-            validation_passed = False
-
-    if validation_passed:
-        logger.info("✓ All validations passed!")
-    else:
-        logger.error("✗ Some validations failed. Check logs for details.")
-        sys.exit(1)
-
-
 def main():
     parser = argparse.ArgumentParser(description='Pre-process Maine budget PDFs')
     parser.add_argument('--budget-pdfs', action='store_true', help='Process Maine budget PDFs only')
     parser.add_argument('--revenue-pdfs', action='store_true', help='Process revenue PDFs only')
     parser.add_argument('--positions-pdfs', action='store_true', help='Process position data from budget PDFs only')
     parser.add_argument('--validate', action='store_true', help='Validate processed data only')
+    parser.add_argument('--year', action='append', help='Only process this period, e.g. 2026-2027 or 2025. Repeatable')
+    parser.add_argument('--quiet', action='store_true', help='Only print warnings and errors (the log file still gets everything)')
 
     args = parser.parse_args()
+    if args.quiet:
+        for handler in logging.getLogger().handlers:
+            if not isinstance(handler, logging.FileHandler):
+                handler.setLevel(logging.WARNING)
 
     # If no specific args, run everything
     run_all = not any([args.budget_pdfs, args.revenue_pdfs, args.positions_pdfs, args.validate])
 
     try:
         if args.budget_pdfs or run_all:
-            preprocess_budget_pdfs()
+            preprocess_budget_pdfs(args.year)
 
         if args.revenue_pdfs or run_all:
-            preprocess_revenue_pdfs()
+            preprocess_revenue_pdfs(args.year)
 
         if args.positions_pdfs or run_all:
-            preprocess_positions_pdfs()
+            preprocess_positions_pdfs(args.year)
 
         if args.validate or run_all:
-            validate_processed_data()
+            from validate_data import validate_all
+            if not validate_all(years=args.year):
+                sys.exit(1)
 
         logger.info("Pre-processing pipeline completed successfully!")
 

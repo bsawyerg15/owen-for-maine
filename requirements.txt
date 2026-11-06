@@ -5,3 +5,4 @@ fredapi
 plotly
 pdfplumber
 numpy
+claude-agent-sdk

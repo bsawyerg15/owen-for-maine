@@ -13,12 +13,18 @@ class Config:
 
     # Maine budget configuration
     ME_BUDGET_END_PAGES = {
-        "2026-2027": 8,
-        "2024-2025": 9,
-        "2022-2023": 8,
-        "2020-2021": 8,
-        "2018-2019": 8,
-        "2016-2017": 8
+        "2026-2027": 9,
+        "2024-2025": 8,
+        "2022-2023": 9,
+        "2020-2021": 9,
+        "2018-2019": 9,
+        "2016-2017": 9
+    }
+
+    # The budget's grand totals section sometimes names a fund differently from the department sections.
+    # Used by scripts/validate_data.py: {grand totals name: department section name}
+    ME_FUNDING_SOURCE_ALIASES = {
+        'PAID FAMILY AND MEDICAL LEAVE INSURANCE FUND': 'FAMILY PAID MEDICAL LEAVE INSURANCE FUND',
     }
 
     # Maine position years (biennial periods)
@@ -42,6 +48,7 @@ class Config:
     DATA_DIR_GEN_FUND_SOURCES = 'z_Data/ME General Fund Sources/'
     DEPARTMENT_MAPPING_FILE = 'a_Configs/department_mapping.csv'
     SUB_DEPARTMENT_MAPPING_FILE = 'a_Configs/sub_department_breakout.csv'
+    POSITIONS_BACKHISTORY_FILE = 'a_Configs/positions_backhistory.csv'  # Older positions-section names for departments in DEPARTMENT_MAPPING_FILE
     REVENUE_SOURCES_MAPPING_FILE = 'a_Configs/Revenue Sources Map.csv'
 
     # Output directories
